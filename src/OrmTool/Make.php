@@ -15,7 +15,7 @@ use \Orm\Config\PdoConfig;
  * Class make
  * @package toolsdk\dborm
  */
-final class make
+final class Make
 {
     /** @var  pdoConfig */
     protected $dbConfig;

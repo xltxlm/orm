@@ -37,7 +37,7 @@ final class SqlParser
      */
     public function setSql(string $sql): SqlParser
     {
-        $this->sql = $sql;
+        $this->sql = $sql . " ";
         return $this;
     }
 

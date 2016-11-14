@@ -111,28 +111,33 @@ final class PdoInterface
     }
 
     /**
-     * @return  array
+     * @return array
+     * @throws Exception\PdoInterfaceException
      */
     public function selectOne()
     {
         $stmt = $this->pdoexecute();
-        if ($this->className) {
-            return $stmt->fetchObject($this->className);
-        } else {
-            return $stmt->fetchObject();
+        if (!$this->className) {
+            throw new \Orm\Exception\PdoInterfaceException(
+                (new \Orm\I18N\PdoInterface)
+                    ->getMissModel()
+            );
         }
+        return $stmt->fetchObject($this->className);
     }
 
     public function selectAll()
     {
         $datas = [];
         $stmt = $this->pdoexecute();
+        if (!$this->className) {
+            throw new \Orm\Exception\PdoInterfaceException(
+                (new \Orm\I18N\PdoInterface)
+                    ->getMissModel()
+            );
+        }
         do {
-            if ($this->className) {
-                $datas[] = $stmt->fetchObject($this->className);
-            } else {
-                $datas[] = $stmt->fetchObject();
-            }
+            $datas[] = $stmt->fetchObject($this->className);
         } while ($stmt->nextRowset());
         return $datas;
     }

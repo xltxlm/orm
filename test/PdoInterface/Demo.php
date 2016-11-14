@@ -12,7 +12,7 @@ use \Orm\PdoInterface;
 use \Orm\SqlParser;
 use \setup\doc;
 
-class demo extends \PHPUnit_Framework_TestCase
+class Demo extends \PHPUnit_Framework_TestCase
 {
 
     public function test0()
@@ -30,7 +30,7 @@ class demo extends \PHPUnit_Framework_TestCase
                 (new doc())
                     ->instanceSelf()
             )
-            ->setClassName(\test\PdoInterface\data::class)
+            ->setClassName(\test\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->setDebug(true)
             ->selectVar();
@@ -49,13 +49,13 @@ class demo extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /** @var  \test\PdoInterface\data $data */
+        /** @var  \test\PdoInterface\DataModel $data */
         $data = (new PdoInterface())
             ->setPdoObject(
                 (new doc())
                     ->instanceSelf()
             )
-            ->setClassName(\test\PdoInterface\data::class)
+            ->setClassName(\test\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
         echo "<pre>-->";
@@ -70,7 +70,7 @@ class demo extends \PHPUnit_Framework_TestCase
     public function test2()
     {
         $SqlParserd = (new SqlParser())
-            ->setSql("select * from goods where id=:id and name<>:name")
+            ->setSql("select * from goods where id=:id and name<>:name ")
             ->setBind(
                 [
                     'id' => [1006, 1016],
@@ -78,13 +78,13 @@ class demo extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /** @var  \test\PdoInterface\data[] $data */
+        /** @var  \test\PdoInterface\DataModel[] $data */
         $data = (new PdoInterface())
             ->setPdoObject(
                 (new doc())
                     ->instanceSelf()
             )
-            ->setClassName(\test\PdoInterface\data::class)
+            ->setClassName(\test\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->setDebug(true)
             ->selectAll();

@@ -12,7 +12,7 @@ namespace test\pdoInterface;
  * Class data
  * @package test\pdoInterface
  */
-class data
+class DataModel
 {
     protected $name;
     protected $id;
@@ -27,7 +27,7 @@ class data
 
     /**
      * @param mixed $name
-     * @return data
+     * @return DataModel
      */
     public function setName($name)
     {
@@ -45,7 +45,7 @@ class data
 
     /**
      * @param mixed $id
-     * @return data
+     * @return DataModel
      */
     public function setId($id)
     {
