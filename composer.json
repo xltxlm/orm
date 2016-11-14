@@ -1,0 +1,26 @@
+{
+  "name": "xialintai/orm",
+  "description": "ORM类库",
+  "license": "Apache 2.0",
+  "authors": [
+    {
+      "name": "夏琳泰",
+      "email": "xltxlm@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
