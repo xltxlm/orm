@@ -23,7 +23,7 @@ class Update extends PdoAction
 
     public function __invoke()
     {
-        $sql = "UPDATE " . $this->table->getName() . " SET " .
+        $sql = "UPDATE " . $this->tableObject->getName() . " SET " .
             join(",", $this->sqls) . " WHERE " .
             join(' AND ' . $this->whereSqls);
 
@@ -31,9 +31,10 @@ class Update extends PdoAction
             ->setSql($sql)
             ->__invoke();
 
-        return (new PdoInterface())
-            ->setPdoObject($this->table->getDbConfig()->instanceSelf())
-            ->setSqlParserd($SqlParserd)
+        $this->pdoInterface = (new PdoInterface())
+            ->setPdoConfig($this->tableObject->getDbConfig())
+            ->setSqlParserd($SqlParserd);
+        return $this->pdoInterface
             ->update();
     }
 }

@@ -15,4 +15,5 @@ namespace Orm\I18N\EN;
 class PdoInterfaceI18N extends \Orm\I18N\CH\PdoInterfaceI18N
 {
     public $missModel = "miss model class.";
+    public $updateNoWhere = "UPDATE statement must bring where condition";
 }

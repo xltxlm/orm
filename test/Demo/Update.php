@@ -8,7 +8,10 @@
 
 namespace Demo;
 
-
+/**
+ * Class Update
+ * @package Demo
+ */
 class Update extends \PHPUnit_Framework_TestCase
 {
 
@@ -16,6 +19,7 @@ class Update extends \PHPUnit_Framework_TestCase
     public function test1()
     {
     }
+
     //带 where 条件更新 + 更新的字段和where字段重叠
     public function test2()
     {

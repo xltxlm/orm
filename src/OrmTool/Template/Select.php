@@ -28,7 +28,7 @@ class Select extends PdoAction
      */
     final public function __invoke()
     {
-        $sql = "SELECT * FROM " . $this->table->getName() .
+        $sql = "SELECT * FROM " . $this->tableObject->getName() .
             " WHERE " . join(" AND ", $this->getSqls());
         //有排序要求
         if ($this->getSqlsOrder()) {
@@ -41,15 +41,15 @@ class Select extends PdoAction
             ->__invoke();
 
         //执行sql
-        $pdoInterface = (new PdoInterface())
-            ->setPdoObject($this->table->getDbConfig()->instanceSelf())
+        $this->pdoInterface = (new PdoInterface())
+            ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName($this->modelClass);
         if ($this->moreData) {
-            return $pdoInterface
+            return $this->pdoInterface
                 ->selectAll();
         } else {
-            return $pdoInterface
+            return $this->pdoInterface
                 ->selectOne();
         }
     }

@@ -27,19 +27,10 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData?'All':'One'?>
 
     final public function __construct()
     {
-        $this->table=(new <?=ucfirst($table->getTABLENAME())?>);
+        $this->tableObject=(new <?=ucfirst($table->getTABLENAME())?>);
     }
 
 <?php foreach ($fields as $field) {?>
-    /**
-     * out:<?=$field->getCOLUMNCOMMENT()?>
-
-     * @return string
-     */
-    public function get<?=ucfirst($field->getCOLUMNNAME())?>()
-    {
-        return '<?=$field->getCOLUMNNAME()?>';
-    }
 
     /**
      * out:<?=$field->getCOLUMNCOMMENT()?>
@@ -56,30 +47,38 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData?'All':'One'?>
     }
 
     /**
-     * 写入sql原型
-     * @param mixed $sql
-     * @param $value
+     * 排序的方向:ASC
      * @return $this
      */
-    public function set<?=ucfirst($field->getCOLUMNNAME())?>SQL($sql, $value = "")
-    {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = '<?=$field->getCOLUMNNAME()?>=' . $sql;
-        if ($value) {
-            $this->binds['<?=$field->getCOLUMNNAME()?>'] = $value;
-        }
-        return $this;
-    }
-
-    /**
-     * 排序的方向
-     * @param mixed $<?=$field->getCOLUMNNAME()?>
-
-     * @return $this
-     */
-    public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc($<?=$field->getCOLUMNNAME()?>)
+    public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc()
     {
         $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> ASC";
         return $this;
     }
+
+    /**
+     * 排序的方向:DESC
+     * @return $this
+     */
+    public function order<?=ucfirst($field->getCOLUMNNAME())?>Desc()
+    {
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> DESC";
+        return $this;
+    }
 <?php }?>
+
+    /**
+     * 写入sql原型
+     * @param mixed $sql
+     * @param array $value
+     * @return $this
+     */
+    public function setSQL($sql, $value = [])
+    {
+        $this->sqls[] = $sql;
+        if ($value) {
+            $this->binds = array_merge($this->binds,$value);
+        }
+        return $this;
+    }
 }

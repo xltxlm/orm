@@ -79,7 +79,7 @@ class Table
             )
             ->__invoke();
         return $this->field = (new PdoInterface())
-            ->setPdoObject($this->getDbConfig()->instanceSelf())
+            ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName(\OrmTool\Unit\FieldSchema::class)
             ->selectAll();

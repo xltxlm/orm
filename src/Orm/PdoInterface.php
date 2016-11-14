@@ -8,6 +8,8 @@
 
 namespace Orm;
 
+use Orm\Config\PdoConfig;
+
 /**
  *  out:最基础的数据库执行方式.
  * Interface sqlInterface
@@ -15,8 +17,8 @@ namespace Orm;
  */
 final class PdoInterface
 {
-    /** @var  \PDO */
-    protected $pdoObject;
+    /** @var  PdoConfig 数据库配置 */
+    protected $pdoConfig;
 
     /** @var  SqlParserd */
     protected $sqlParserd;
@@ -26,6 +28,24 @@ final class PdoInterface
 
     /** @var bool 是否开启调试 */
     protected $debug = false;
+
+    /**
+     * @return PdoConfig
+     */
+    public function getPdoConfig(): PdoConfig
+    {
+        return $this->pdoConfig;
+    }
+
+    /**
+     * @param PdoConfig $pdoConfig
+     * @return PdoInterface
+     */
+    public function setPdoConfig(PdoConfig $pdoConfig): PdoInterface
+    {
+        $this->pdoConfig = $pdoConfig;
+        return $this;
+    }
 
     /**
      * @return boolean
@@ -66,24 +86,6 @@ final class PdoInterface
 
 
     /**
-     * @return \PDO
-     */
-    public function getPdoObject(): \PDO
-    {
-        return $this->pdoObject;
-    }
-
-    /**
-     * @param \PDO $pdoObject
-     * @return PdoInterface
-     */
-    public function setPdoObject(\PDO $pdoObject): PdoInterface
-    {
-        $this->pdoObject = $pdoObject;
-        return $this;
-    }
-
-    /**
      * @return SqlParserd
      */
     public function getSqlParserd(): SqlParserd
@@ -107,11 +109,11 @@ final class PdoInterface
      */
     public function selectVar()
     {
-        return current($this->selectOne());
+        return current(get_object_vars($this->selectOne()));
     }
 
     /**
-     * @return array
+     * @return object
      * @throws Exception\PdoInterfaceException
      */
     public function selectOne()
@@ -141,28 +143,89 @@ final class PdoInterface
     public function insert()
     {
         $this->pdoexecute();
-        return $this->pdoObject->lastInsertId();
+        return $this->pdoConfig->instanceSelf()->lastInsertId();
     }
 
     /**
      * @return int
+     * @throws Exception\PdoInterfaceException
      */
     public function update()
     {
+        if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
+            throw new \Orm\Exception\PdoInterfaceException(
+                (new \Orm\I18N\PdoInterfaceI18N)
+                    ->getUpdateNoWhere()
+            );
+        }
         $stmt = $this->pdoexecute();
         return $stmt->rowCount();
     }
 
     /**
+     * @param PageObject $pageObject
+     * @return array
+     */
+    public function page(\Orm\PageObject &$pageObject)
+    {
+        //查询当前条件下可以命中多少数据量
+        $str = " FROM ";
+        $pos = stripos($this->sqlParserd->getSql(), $str);
+        $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
+        $SqlParserd = (new SqlParserd())
+            ->setSql("SELECT count(*) FROM " . $whereSql);
+        foreach ($this->getSqlParserd()->getBind() as $value) {
+            $SqlParserd->setBind($value);
+        }
+
+        $num = (new PdoInterface())
+            ->setPdoConfig($this->getPdoConfig())
+            ->setSqlParserd($SqlParserd)
+            ->setClassName(\stdClass::class)
+            ->selectVar();
+
+        $pageObject
+            ->setTotal($num)
+            ->__invoke();
+
+        $this->getSqlParserd()
+            ->setSql($this->getSqlParserd()->getSql() . $pageObject->getLimitSql());
+        return $this->selectAll();
+    }
+
+    /**
      * @return \PDOStatement
+     * @throws \Exception
      */
     private function pdoexecute():\PDOStatement
     {
-        $stmt = $this->pdoObject->prepare($this->sqlParserd->getSql());
+        $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
         foreach ($this->sqlParserd->getBind() as $bind) {
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
+        $error = $stmt->errorInfo();
+        $error[0] = (int)filter_var(
+            $error[0],
+            FILTER_SANITIZE_NUMBER_INT
+        );
+
+        if ($error[0] || $error[2]) {
+            throw (new \Orm\Exception\PdoSqlError(
+                json_encode(
+                    [
+                        $this->sqlParserd->getSql(),
+                        $this->sqlParserd->getBind(),
+                        $error
+                    ]
+                )
+            )
+            )
+                ->setSql($this->sqlParserd->getSql())
+                ->setBinds($this->sqlParserd->getBind())
+                ->setErrorinfo(json_encode($error));
+        }
+
         if ($this->debug) {
             echo "\n=========================\n";
             print_r($this->sqlParserd);

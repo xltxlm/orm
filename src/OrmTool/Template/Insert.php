@@ -24,7 +24,7 @@ class Insert extends PdoAction
      */
     final public function __invoke()
     {
-        $sql = "INSERT INTO " . $this->table->getName() .
+        $sql = "INSERT INTO " . $this->tableObject->getName() .
             " (" . join(",", array_keys($this->getSqls())) . ") VALUES ( " .
             join(",", $this->getSqls()) . ") ";
 
@@ -34,10 +34,11 @@ class Insert extends PdoAction
             ->__invoke();
 
         //执行sql
-        return (new PdoInterface())
-            ->setPdoObject($this->table->getDbConfig()->getPdo()->instanceSelf())
+        $this->pdoInterface = (new PdoInterface())
+            ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
-            ->setClassName(static::class)
+            ->setClassName(static::class);
+        return $this->pdoInterface
             ->insert();
     }
 }

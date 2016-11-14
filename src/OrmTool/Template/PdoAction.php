@@ -8,6 +8,8 @@
 
 namespace OrmTool\Template;
 
+use Orm\PdoInterface;
+
 /**
  * Class PdoAction
  * @package OrmTool\Template
@@ -24,12 +26,24 @@ abstract class PdoAction
     protected $binds = [];
 
     /** @var  \OrmTool\Unit\Table */
-    protected $table;
+    protected $tableObject;
+
+    /** @var  PdoInterface */
+    protected $pdoInterface;
+
+    /**
+     * @return PdoInterface
+     */
+    public function getPdoInterface(): PdoInterface
+    {
+        return $this->pdoInterface;
+    }
+
 
     /**
      * @return array
      */
-    public function getSqlsOrder(): array
+    protected function getSqlsOrder(): array
     {
         return $this->sqlsOrder;
     }
@@ -38,7 +52,7 @@ abstract class PdoAction
     /**
      * @return array
      */
-    public function getSqls(): array
+    protected function getSqls(): array
     {
         return $this->sqls;
     }
@@ -46,7 +60,7 @@ abstract class PdoAction
     /**
      * @return array
      */
-    public function getBinds(): array
+    protected function getBinds(): array
     {
         return $this->binds;
     }
@@ -54,8 +68,8 @@ abstract class PdoAction
     /**
      * @return \OrmTool\Unit\Table
      */
-    public function getTable(): \OrmTool\Unit\Table
+    public function getTableObject(): \OrmTool\Unit\Table
     {
-        return $this->table;
+        return $this->tableObject;
     }
 }

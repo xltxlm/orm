@@ -73,7 +73,7 @@ final class Make
             ->__invoke();
         /** @var \OrmTool\Unit\TableSchema[] $tables */
         $tables = (new PdoInterface())
-            ->setPdoObject($this->dbConfig->instanceSelf())
+            ->setPdoConfig($this->dbConfig)
             ->setSqlParserd($SqlParserd)
             ->setClassName(\OrmTool\Unit\TableSchema::class)
             ->selectAll();
