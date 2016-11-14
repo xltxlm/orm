@@ -12,7 +12,7 @@ namespace Orm\I18N;
  * Class PdoInterface
  * @package Orm\I18N
  */
-class PdoInterface
+class PdoInterfaceI18N
 {
     public $missModel;
 

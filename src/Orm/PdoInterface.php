@@ -55,7 +55,7 @@ final class PdoInterface
     }
 
     /**
-     * @param \stdClass $className
+     * @param string $className
      * @return PdoInterface
      */
     public function setClassName($className): PdoInterface
@@ -119,7 +119,7 @@ final class PdoInterface
         $stmt = $this->pdoexecute();
         if (!$this->className) {
             throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\I18N\PdoInterface)
+                (new \Orm\I18N\PdoInterfaceI18N)
                     ->getMissModel()
             );
         }
@@ -128,21 +128,17 @@ final class PdoInterface
 
     public function selectAll()
     {
-        $datas = [];
         $stmt = $this->pdoexecute();
         if (!$this->className) {
             throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\I18N\PdoInterface)
+                (new \Orm\I18N\PdoInterfaceI18N)
                     ->getMissModel()
             );
         }
-        do {
-            $datas[] = $stmt->fetchObject($this->className);
-        } while ($stmt->nextRowset());
-        return $datas;
+        return $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
     }
 
-    public function add()
+    public function insert()
     {
         $this->pdoexecute();
         return $this->pdoObject->lastInsertId();

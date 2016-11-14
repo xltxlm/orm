@@ -170,10 +170,13 @@ class PdoConfig
             ":dbname=" . $this->getDb() .
             ";host=" . $this->getTNS() .
             ";port=" . $this->getPort();
+        //强制UTF8编码
+        if ($this->getDriver() == self::MYSQL) {
+            $tns .= ";charset=utf8";
+        }
 
         $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
         $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
-        $this->PDOObject->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
         //所有数据库,默认都必须开启事务
         $this->PDOObject->beginTransaction();
         return $this->PDOObject;

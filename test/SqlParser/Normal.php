@@ -55,7 +55,7 @@ class Normal extends \PHPUnit_Framework_TestCase
      */
     public function test3()
     {
-        $sql = "select * from goods where id=:id and name=:name ";
+        $sql = "select * from goods where id=:id and name=:name";
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind([
@@ -64,7 +64,7 @@ class Normal extends \PHPUnit_Framework_TestCase
             ])
             ->__invoke();
         $this->assertEquals(
-            "select * from goods where id in (:id_0,:id_1,:id_2 ) and name=:name ",
+            "select * from goods where id IN (:id_0,:id_1,:id_2 ) and name=:name ",
             $SqlParserd->getSql()
         );
     }
@@ -74,7 +74,7 @@ class Normal extends \PHPUnit_Framework_TestCase
      */
     public function test4()
     {
-        $sql = "select * from goods where id=:id and name=:name ";
+        $sql = "select * from goods where id=:id and name=:name";
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind([
@@ -83,7 +83,7 @@ class Normal extends \PHPUnit_Framework_TestCase
             ])
             ->__invoke();
         $this->assertEquals(
-            "select * from goods where id in (:id_0,:id_1,:id_2 ) and name is null ",
+            "select * from goods where id IN (:id_0,:id_1,:id_2 ) and name IS NULL ",
             $SqlParserd->getSql()
         );
     }

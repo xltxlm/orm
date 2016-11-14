@@ -60,6 +60,7 @@ final class SqlParser
     }
 
     /**
+     * 解析sql 和 bind 之间的关系
      * @return SqlParserd
      * @throws SqlParserException
      */
@@ -79,17 +80,17 @@ final class SqlParser
                     );
                 }
                 //格式一定是 :key后面至少一个空格
-                $this->sql = strtr($this->sql, ["=:$key " => " in (" . join(",", $bindField) . " ) "]);
+                $this->sql = strtr($this->sql, ["=:$key " => " IN (" . join(",", $bindField) . " ) "]);
             } elseif ($value === null) {
                 //如果绑定的是null,那么在where的位置上需要改进
                 preg_match("#where(.*)=:$key#iUs", $this->sql, $out);
                 if ($out) {
-                    $this->sql = strtr($this->sql, ["=:$key " => " is null "]);
+                    $this->sql = strtr($this->sql, ["=:$key " => " IS NULL "]);
                 } else {
-                    $this->monal($sqlParserd, $key, $value);
+                    $this->normalBind($sqlParserd, $key, $value);
                 }
             } else {
-                $this->monal($sqlParserd, $key, $value);
+                $this->normalBind($sqlParserd, $key, $value);
             }
         }
         //计算sql的需要绑定的变量数目 和 准备绑定的数目之间的差别
@@ -101,7 +102,7 @@ final class SqlParser
         if ($sqlBinds != $binds) {
             throw new SqlParserException(
                 vsprintf(
-                    (new \Orm\I18N\SqlParserException)
+                    (new \Orm\I18N\SqlParserI18N)
                         ->getBindError(),
                     [
                         json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),
@@ -121,7 +122,7 @@ final class SqlParser
      * @param $value
      * @return SqlParserd
      */
-    private function monal(SqlParserd &$sqlParserd, $key, $value)
+    private function normalBind(SqlParserd &$sqlParserd, $key, $value)
     {
         return $sqlParserd->setBind(
             (new BindPair())

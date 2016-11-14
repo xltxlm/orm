@@ -13,7 +13,7 @@ namespace Orm\I18N;
  * Class SqlParserException
  * @package orm\I18N
  */
-class SqlParserException
+class SqlParserI18N
 {
     public $bindError;
 

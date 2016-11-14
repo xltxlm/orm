@@ -43,7 +43,7 @@ abstract class I18N
         $className = $ReflectionClass->getNamespaceName() .
             '\\' . I18N::getLang() .
             '\\' . basename(debug_backtrace()[0]['file'], '.php');
-        /** @var  \Orm\I18N\SqlParserException $classObject */
+        /** @var  \Orm\I18N\SqlParserI18N $classObject */
         $classObject = (new \ReflectionClass($className))
             ->newInstance();
         return $classObject->$key;

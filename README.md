@@ -45,7 +45,7 @@ test目录下有另外一份指引文档
 * 所有数据库,默认都必须开启事务
 * 数据库不支持delete操作 - 所以不提供此方法,应该是加一个字段标记已删除状态
 * **查询的返回结果是预先设定的Model类,绝不支持返回数组**
-* phpunit作为单元测试 bootstrap file 为 vendor\autoload.php
+* phpunit作为单元测试工具. bootstrap file 为 vendor\autoload.php
 * 编辑器为 phpstrom 2016.2 以上版本,配置好 php,phpunit,PHP Code Sniffer
 
 ### 支持数据库

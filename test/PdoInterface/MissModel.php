@@ -24,6 +24,8 @@ class MissModel extends \PHPUnit_Framework_TestCase
      */
     public function test1()
     {
+        $this->expectException(\Orm\Exception\PdoInterfaceException::class);
+
         $SqlParserd = (new SqlParser())
             ->setSql("select * from goods where id=:id ")
             ->setBind(

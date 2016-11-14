@@ -12,7 +12,7 @@ namespace Orm\I18N\EN;
  * Class SqlParserException
  * @package orm\I18N\EN
  */
-class SqlParserException extends \Orm\I18N\CH\SqlParserException
+class SqlParserI18N extends \Orm\I18N\CH\SqlParserI18N
 {
     public $bindError = "binds pairs error,need:%s,actually:%s";
 }

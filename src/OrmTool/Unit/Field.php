@@ -29,6 +29,7 @@ final class Field
     const DATETIME = "datetime";
     const DECIMAL = "decimal";
     const ENUM = "enum";
+
     /** @var  \OrmTool\Unit\Table 表格实例 */
     protected $table;
     /** @var string 字段的描述 */
