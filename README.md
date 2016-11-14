@@ -44,7 +44,7 @@ test目录下有另外一份指引文档
 * 开启PDO模块
 * 所有数据库,默认都必须开启事务
 * 数据库不支持delete操作 - 所以不提供此方法,应该是加一个字段标记已删除状态
-* <font color=red>查询的返回结果是预先设定的Model类,绝不支持返回数组</font>
+* **查询的返回结果是预先设定的Model类,绝不支持返回数组**
 * phpunit作为单元测试 bootstrap file 为 vendor\autoload.php
 * 编辑器为 phpstrom 2016.2 以上版本,配置好 php,phpunit,PHP Code Sniffer
 
