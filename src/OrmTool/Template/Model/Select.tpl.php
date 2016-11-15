@@ -66,7 +66,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
         $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
-<?php 
+<?php
 }?>
 
     /**

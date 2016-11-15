@@ -75,6 +75,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Update extends \<?=\OrmTool\Temp
         }
         return $this;
     }
-<?php 
+<?php
 }?>
 }

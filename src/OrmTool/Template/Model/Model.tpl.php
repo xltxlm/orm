@@ -36,6 +36,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Model
         $this-><?=$field->getCOLUMNNAME()?>=$<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
-<?php 
+<?php
 }?>
 }

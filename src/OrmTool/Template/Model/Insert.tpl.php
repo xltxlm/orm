@@ -46,6 +46,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Insert extends \<?=\OrmTool\Temp
         }
         return $this;
     }
-<?php 
+<?php
 }?>
 }
