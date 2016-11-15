@@ -7,7 +7,7 @@
  */
 namespace sqlParser;
 
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 
 /**
  * out: 1.正常的绑定变量方式

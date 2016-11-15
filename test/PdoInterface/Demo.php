@@ -9,7 +9,7 @@ namespace test\PdoInterface;
 
 use Orm\PageObject;
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 use setup\doc;
 
 class Demo extends \PHPUnit_Framework_TestCase

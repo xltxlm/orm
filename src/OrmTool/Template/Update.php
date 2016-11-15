@@ -8,7 +8,7 @@
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 
 /**
  * out:更新数据的底层

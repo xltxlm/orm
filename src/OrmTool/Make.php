@@ -9,7 +9,7 @@ namespace OrmTool;
 
 use Orm\Config\PdoConfig;
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 use OrmTool\Unit\Table;
 
 /**
@@ -58,6 +58,7 @@ final class Make
         $path = dirname($ReflectionClass->getFileName()).'/'.basename(get_class($this->dbConfig));
         $this->dbNameSpace = $ReflectionClass->getNamespaceName();
         mkdir($path);
+        mkdir($path."/enum/");
 
         //获取数据库的全部表列表
         $sql = 'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=:TABLE_SCHEMA ';

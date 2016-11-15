@@ -5,7 +5,7 @@
  * Date: 2016-11-13
  * Time: 下午 9:25.
  */
-namespace Orm;
+namespace Orm\Sql;
 
 use Orm\Exception\SqlParserException;
 use Orm\Unit\BindPair;

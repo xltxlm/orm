@@ -8,7 +8,7 @@
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 
 /**
  * out:基础类 - 写入数据库

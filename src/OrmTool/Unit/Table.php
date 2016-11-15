@@ -9,7 +9,7 @@ namespace OrmTool\Unit;
 
 use Orm\Config\PdoConfig;
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 
 /**
  * output:table的各种定义获取

@@ -8,7 +8,7 @@
 namespace PdoInterface;
 
 use Orm\PdoInterface;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 use setup\doc;
 
 /**

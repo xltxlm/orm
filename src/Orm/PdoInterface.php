@@ -8,6 +8,7 @@
 namespace Orm;
 
 use Orm\Config\PdoConfig;
+use Orm\Sql\SqlParserd;
 
 /**
  *  out:最基础的数据库执行方式.

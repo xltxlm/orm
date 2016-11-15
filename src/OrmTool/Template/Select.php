@@ -8,8 +8,8 @@
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
-use Orm\SqlParser;
-use Orm\SqlParserd;
+use Orm\Sql\SqlParser;
+use Orm\Sql\SqlParserd;
 
 /**
  * Class SelectOne.
@@ -19,7 +19,7 @@ class Select extends PdoAction
     /** @var bool 一维查询 还是 二维查询 */
     protected $moreData = false;
     /** @var string 模型类 */
-    protected $modelClass = '';
+    private $modelClass = '';
 
     /**
      * @return SqlParserd

@@ -9,7 +9,7 @@ namespace sqlParser;
 
 use Orm\Exception\SqlParserException;
 use Orm\I18N\I18N;
-use Orm\SqlParser;
+use Orm\Sql\SqlParser;
 
 /**
  * out:当sql绑定参数缺少的时候
