@@ -3,28 +3,25 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-13
- * Time: 下午 8:39
+ * Time: 下午 8:39.
  */
-
 namespace OrmTool;
 
 use Orm\Config\PdoConfig;
 use Orm\PdoInterface;
 use Orm\SqlParser;
-use OrmTool\Unit\Field;
 use OrmTool\Unit\Table;
 
 /**
  * out:把setup目录下的配置生成批量的配置类
- * Class make
- * @package toolsdk\dborm
+ * Class make.
  */
 final class Make
 {
-    /** @var  PdoConfig */
+    /** @var PdoConfig */
     protected $dbConfig;
 
-    protected $dbNameSpace = "";
+    protected $dbNameSpace = '';
 
     /**
      * @return string
@@ -33,7 +30,6 @@ final class Make
     {
         return $this->dbNameSpace;
     }
-
 
     /**
      * @return PdoConfig
@@ -45,11 +41,13 @@ final class Make
 
     /**
      * @param PdoConfig $dbConfig
+     *
      * @return Make
      */
     public function setDbConfig(PdoConfig $dbConfig): Make
     {
         $this->dbConfig = $dbConfig;
+
         return $this;
     }
 
@@ -57,17 +55,17 @@ final class Make
     {
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
-        $path = dirname($ReflectionClass->getFileName()) . "/" . basename(get_class($this->dbConfig));
+        $path = dirname($ReflectionClass->getFileName()).'/'.basename(get_class($this->dbConfig));
         $this->dbNameSpace = $ReflectionClass->getNamespaceName();
         mkdir($path);
 
         //获取数据库的全部表列表
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=:TABLE_SCHEMA ";
+        $sql = 'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=:TABLE_SCHEMA ';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind(
                 [
-                    'TABLE_SCHEMA' => $this->getDbConfig()->getDb()
+                    'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
                 ]
             )
             ->__invoke();
@@ -80,8 +78,8 @@ final class Make
         foreach ($tables as $table) {
             //表格定义
             ob_start();
-            include __DIR__ . "/Template/Model/Table.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . '.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Table.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'.php', ob_get_clean());
 
 
             $fields = (new Table())
@@ -91,27 +89,27 @@ final class Make
 
             //基本表字段模型
             ob_start();
-            include __DIR__ . "/Template/Model/Model.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Model.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Model.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'Model.php', ob_get_clean());
 
             //操作 - 一维查询
             $moreData = false;
             ob_start();
-            include __DIR__ . "/Template/Model/Select.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'SelectOne.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Select.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'SelectOne.php', ob_get_clean());
             //操作 - 二维查询
             ob_start();
             $moreData = true;
-            include __DIR__ . "/Template/Model/Select.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'SelectAll.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Select.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'SelectAll.php', ob_get_clean());
             //写入数据 模型
             ob_start();
-            include __DIR__ . "/Template/Model/Insert.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Insert.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Insert.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'Insert.php', ob_get_clean());
             // 更新数据库操作
             ob_start();
-            include __DIR__ . "/Template/Model/Update.tpl.php";
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Update.php', ob_get_clean());
+            include __DIR__.'/Template/Model/Update.tpl.php';
+            file_put_contents($path.'/'.ucfirst($table->getTABLENAME()).'Update.php', ob_get_clean());
         }
     }
 }

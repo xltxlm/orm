@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 2:39
+ * Time: 下午 2:39.
  */
-
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
@@ -13,26 +12,25 @@ use Orm\SqlParser;
 use Orm\SqlParserd;
 
 /**
- * Class SelectOne
- * @package OrmTool\Template
+ * Class SelectOne.
  */
 class Select extends PdoAction
 {
-    /** @var bool  一维查询 还是 二维查询 */
+    /** @var bool 一维查询 还是 二维查询 */
     protected $moreData = false;
-    /** @var string  模型类 */
-    protected $modelClass = "";
+    /** @var string 模型类 */
+    protected $modelClass = '';
 
     /**
      * @return SqlParserd
      */
     final public function __invoke()
     {
-        $sql = "SELECT * FROM " . $this->tableObject->getName() .
-            " WHERE " . join(" AND ", $this->getSqls());
+        $sql = 'SELECT * FROM '.$this->tableObject->getName().
+            ' WHERE '.implode(' AND ', $this->getSqls());
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= " Order By " . join(",", $this->getSqlsOrder());
+            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
         }
 
         $SqlParserd = (new SqlParser())

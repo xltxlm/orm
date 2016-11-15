@@ -3,59 +3,57 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 6:11
+ * Time: 下午 6:11.
  */
-
 namespace OrmTool\Unit;
 
 /**
- * Class FieldSchema
- * @package OrmTool\Unit
+ * Class FieldSchema.
  */
 final class FieldSchema
 {
-    protected $TABLE_CATALOG = "";
+    protected $TABLE_CATALOG = '';
 
-    protected $TABLE_SCHEMA = "";
+    protected $TABLE_SCHEMA = '';
     /** @var string 所在的表名称 */
-    protected $TABLE_NAME = "";
+    protected $TABLE_NAME = '';
     /** @var string 字段名称 */
-    protected $COLUMN_NAME = "";
+    protected $COLUMN_NAME = '';
 
-    protected $ORDINAL_POSITION = "";
+    protected $ORDINAL_POSITION = '';
 
-    protected $COLUMN_DEFAULT = "";
+    protected $COLUMN_DEFAULT = '';
 
-    protected $IS_NULLABLE = "";
+    protected $IS_NULLABLE = '';
 
     /** @var string 字段类型 */
-    protected $DATA_TYPE = "";
+    protected $DATA_TYPE = '';
 
-    protected $CHARACTER_MAXIMUM_LENGTH = "";
+    protected $CHARACTER_MAXIMUM_LENGTH = '';
 
-    protected $CHARACTER_OCTET_LENGTH = "";
+    protected $CHARACTER_OCTET_LENGTH = '';
 
-    protected $NUMERIC_PRECISION = "";
+    protected $NUMERIC_PRECISION = '';
 
-    protected $NUMERIC_SCALE = "";
+    protected $NUMERIC_SCALE = '';
 
-    protected $DATETIME_PRECISION = "";
+    protected $DATETIME_PRECISION = '';
 
-    protected $CHARACTER_SET_NAME = "";
+    protected $CHARACTER_SET_NAME = '';
 
-    protected $COLLATION_NAME = "";
+    protected $COLLATION_NAME = '';
 
-    protected $COLUMN_TYPE = "";
+    protected $COLUMN_TYPE = '';
 
-    protected $COLUMN_KEY = "";
+    protected $COLUMN_KEY = '';
 
-    protected $EXTRA = "";
+    protected $EXTRA = '';
 
-    protected $PRIVILEGES = "";
+    protected $PRIVILEGES = '';
     /** @var string 字段注释 */
-    protected $COLUMN_COMMENT = "";
+    protected $COLUMN_COMMENT = '';
 
-    protected $GENERATION_EXPRESSION = "";
+    protected $GENERATION_EXPRESSION = '';
 
     /**
      * @return string

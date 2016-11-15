@@ -3,15 +3,13 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 上午 10:47
+ * Time: 上午 10:47.
  */
-
 namespace Orm\I18N;
 
 /**
  * out:翻译
- * Class SqlParserException
- * @package orm\I18N
+ * Class SqlParserException.
  */
 class SqlParserI18N
 {

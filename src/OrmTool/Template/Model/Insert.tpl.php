@@ -14,7 +14,8 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 final class <?=ucfirst($table->getTABLENAME())?>Insert extends \<?=\OrmTool\Template\Insert::class?>
 
 {
-<?php foreach ($fields as $field) { ?>
+<?php foreach ($fields as $field) {
+    ?>
     protected $<?=$field->getCOLUMNNAME()?>;
 
     /**
@@ -45,5 +46,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Insert extends \<?=\OrmTool\Temp
         }
         return $this;
     }
-<?php }?>
+<?php 
+}?>
 }

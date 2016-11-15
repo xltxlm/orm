@@ -16,11 +16,11 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
  * Class select
  * @package OrmTool\Template\Model
  */
-final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData?'All':'One'?> extends \<?=\OrmTool\Template\Select::class?>
+final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?=\OrmTool\Template\Select::class?>
 
 {
     /** @var bool  一维查询 还是 二维查询 */
-    protected $moreData = <?=$moreData?'true':'false'?>;
+    protected $moreData = <?=$moreData ? 'true' : 'false'?>;
 
     /** @var string  模型类 */
     protected $modelClass = <?=ucfirst($table->getTABLENAME())?>Model::class;
@@ -30,7 +30,8 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData?'All':'One'?>
         $this->tableObject=(new <?=ucfirst($table->getTABLENAME())?>);
     }
 
-<?php foreach ($fields as $field) {?>
+<?php foreach ($fields as $field) {
+    ?>
 
     /**
      * out:<?=$field->getCOLUMNCOMMENT()?>
@@ -65,7 +66,8 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData?'All':'One'?>
         $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
-<?php }?>
+<?php 
+}?>
 
     /**
      * 写入sql原型

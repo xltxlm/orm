@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-12
- * Time: 上午 11:43
+ * Time: 上午 11:43.
  */
-
 namespace OrmTool\Unit;
 
 use Orm\Config\PdoConfig;
@@ -14,17 +13,16 @@ use Orm\SqlParser;
 
 /**
  * output:table的各种定义获取
- * Class table
- * @package toolsdk\dborm
+ * Class table.
  */
 class Table
 {
-    /** @var  PdoConfig 所属的数据库类 */
+    /** @var PdoConfig 所属的数据库类 */
     protected $DbConfig;
     /** @var string 表格的名称 */
-    protected $name = "";
+    protected $name = '';
     /** @var string 表格的描述 */
-    protected $comment = "";
+    protected $comment = '';
     /** @var \OrmTool\Unit\Field[] 字段 */
     protected $field = [];
 
@@ -38,11 +36,13 @@ class Table
 
     /**
      * @param string $name
+     *
      * @return Table
      */
     public function setName(string $name): Table
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -56,11 +56,13 @@ class Table
 
     /**
      * @param PdoConfig $DbConfig
+     *
      * @return Table
      */
     public function setDbConfig(PdoConfig $DbConfig): Table
     {
         $this->DbConfig = $DbConfig;
+
         return $this;
     }
 
@@ -69,15 +71,16 @@ class Table
      */
     public function getField(): array
     {
-        $sql = "select * from information_schema.COLUMNS where table_name=:table_name ";
+        $sql = 'select * from information_schema.COLUMNS where table_name=:table_name ';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind(
                 [
-                    'table_name' => $this->getName()
+                    'table_name' => $this->getName(),
                 ]
             )
             ->__invoke();
+
         return $this->field = (new PdoInterface())
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)

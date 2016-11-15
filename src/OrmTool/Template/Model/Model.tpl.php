@@ -11,7 +11,8 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 */
 final class <?=ucfirst($table->getTABLENAME())?>Model
 {
-<?php foreach ($fields as $field) { ?>
+<?php foreach ($fields as $field) {
+    ?>
     protected $<?=$field->getCOLUMNNAME()?>;
     /**
      * out:<?=$field->getCOLUMNCOMMENT()?>
@@ -35,5 +36,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Model
         $this-><?=$field->getCOLUMNNAME()?>=$<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
-<?php }?>
+<?php 
+}?>
 }
