@@ -3,16 +3,14 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 2:50
+ * Time: 下午 2:50.
  */
-
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
 
 /**
- * Class PdoAction
- * @package OrmTool\Template
+ * Class PdoAction.
  */
 abstract class PdoAction
 {
@@ -25,10 +23,10 @@ abstract class PdoAction
     /** @var array 绑定的变量 */
     protected $binds = [];
 
-    /** @var  \OrmTool\Unit\Table */
+    /** @var \OrmTool\Unit\Table */
     protected $tableObject;
 
-    /** @var  PdoInterface */
+    /** @var PdoInterface */
     protected $pdoInterface;
 
     /**
@@ -39,7 +37,6 @@ abstract class PdoAction
         return $this->pdoInterface;
     }
 
-
     /**
      * @return array
      */
@@ -47,7 +44,6 @@ abstract class PdoAction
     {
         return $this->sqlsOrder;
     }
-
 
     /**
      * @return array

@@ -3,14 +3,12 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 1:05
+ * Time: 下午 1:05.
  */
-
 namespace Orm\I18N;
 
 /**
- * Class PdoInterface
- * @package Orm\I18N
+ * Class PdoInterface.
  */
 class PdoInterfaceI18N
 {

@@ -3,21 +3,18 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 8:01
+ * Time: 下午 8:01.
  */
-
 namespace test\Demo;
 
 use setup\doc\GoodsSelectOne;
 
 /**
  * out:验证普通的sql查询
- * Class selectOne
- * @package test\Demo
+ * Class selectOne.
  */
 class SelectOne extends \PHPUnit_Framework_TestCase
 {
-
     // 带where条件, like 查询
     public function test0()
     {
@@ -28,12 +25,12 @@ class SelectOne extends \PHPUnit_Framework_TestCase
             ->__invoke();
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
-        echo "<pre>-->";
+        echo '<pre>-->';
         print_r($data);
-        echo "<--@in " . __FILE__ . " on line " . __LINE__ . "\n";
+        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
 
         $this->assertEquals(
-            "SELECT * FROM goods WHERE id=:id ",
+            'SELECT * FROM goods WHERE id=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -48,12 +45,12 @@ class SelectOne extends \PHPUnit_Framework_TestCase
             ->__invoke();
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
-        echo "<pre>-->";
+        echo '<pre>-->';
         print_r($data);
-        echo "<--@in " . __FILE__ . " on line " . __LINE__ . "\n";
+        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
 
         $this->assertEquals(
-            "SELECT * FROM goods WHERE id=:id ",
+            'SELECT * FROM goods WHERE id=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -70,7 +67,7 @@ class SelectOne extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
         $this->assertEquals(
-            "SELECT * FROM goods WHERE id=:id Order By id DESC ",
+            'SELECT * FROM goods WHERE id=:id Order By id DESC ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }

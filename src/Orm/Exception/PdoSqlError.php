@@ -3,20 +3,18 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 9:39
+ * Time: 下午 9:39.
  */
-
 namespace Orm\Exception;
 
 /**
- * Class PdoSqlError
- * @package Orm\Exception
+ * Class PdoSqlError.
  */
 class PdoSqlError extends \Exception
 {
     protected $sql;
     protected $binds;
-    protected $errorinfo = "";
+    protected $errorinfo = '';
 
     /**
      * @return mixed
@@ -28,11 +26,13 @@ class PdoSqlError extends \Exception
 
     /**
      * @param mixed $sql
+     *
      * @return PdoSqlError
      */
     public function setSql($sql)
     {
         $this->sql = $sql;
+
         return $this;
     }
 
@@ -46,11 +46,13 @@ class PdoSqlError extends \Exception
 
     /**
      * @param mixed $binds
+     *
      * @return PdoSqlError
      */
     public function setBinds($binds)
     {
         $this->binds = $binds;
+
         return $this;
     }
 
@@ -64,11 +66,13 @@ class PdoSqlError extends \Exception
 
     /**
      * @param string $errorinfo
+     *
      * @return PdoSqlError
      */
     public function setErrorinfo(string $errorinfo): PdoSqlError
     {
         $this->errorinfo = $errorinfo;
+
         return $this;
     }
 }

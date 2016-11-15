@@ -3,59 +3,57 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-14
- * Time: 下午 4:25
+ * Time: 下午 4:25.
  */
-
 namespace OrmTool\Unit;
 
 /**
  * Mysql数据库的结构体
- * Class TableSchema
- * @package OrmTool\Unit
+ * Class TableSchema.
  */
 final class TableSchema
 {
-    protected $TABLE_CATALOG = "";
+    protected $TABLE_CATALOG = '';
     /** @var string 所属数据库名称 */
-    protected $TABLE_SCHEMA = "";
+    protected $TABLE_SCHEMA = '';
     /** @var string 表格名称 */
-    protected $TABLE_NAME = "";
+    protected $TABLE_NAME = '';
 
-    protected $TABLE_TYPE = "";
+    protected $TABLE_TYPE = '';
 
-    protected $ENGINE = "";
+    protected $ENGINE = '';
 
-    protected $VERSION = "";
+    protected $VERSION = '';
 
-    protected $ROW_FORMAT = "";
+    protected $ROW_FORMAT = '';
 
-    protected $TABLE_ROWS = "";
+    protected $TABLE_ROWS = '';
 
-    protected $AVG_ROW_LENGTH = "";
+    protected $AVG_ROW_LENGTH = '';
 
-    protected $DATA_LENGTH = "";
+    protected $DATA_LENGTH = '';
 
-    protected $MAX_DATA_LENGTH = "";
+    protected $MAX_DATA_LENGTH = '';
 
-    protected $INDEX_LENGTH = "";
+    protected $INDEX_LENGTH = '';
 
-    protected $DATA_FREE = "";
+    protected $DATA_FREE = '';
 
-    protected $AUTO_INCREMENT = "";
+    protected $AUTO_INCREMENT = '';
 
-    protected $CREATE_TIME = "";
+    protected $CREATE_TIME = '';
 
-    protected $UPDATE_TIME = "";
+    protected $UPDATE_TIME = '';
 
-    protected $CHECK_TIME = "";
+    protected $CHECK_TIME = '';
 
-    protected $TABLE_COLLATION = "";
+    protected $TABLE_COLLATION = '';
 
-    protected $CHECKSUM = "";
+    protected $CHECKSUM = '';
 
-    protected $CREATE_OPTIONS = "";
+    protected $CREATE_OPTIONS = '';
     /** @var string 表格注释 */
-    protected $TABLE_COMMENT = "";
+    protected $TABLE_COMMENT = '';
 
     /**
      * @return string

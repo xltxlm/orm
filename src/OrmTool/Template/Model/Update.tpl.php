@@ -14,7 +14,8 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 final class <?=ucfirst($table->getTABLENAME())?>Update extends \<?=\OrmTool\Template\Update::class?>
 
 {
-<?php foreach ($fields as $field) { ?>
+<?php foreach ($fields as $field) {
+    ?>
     protected $<?=$field->getCOLUMNNAME()?>;
 
     /**
@@ -74,5 +75,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Update extends \<?=\OrmTool\Temp
         }
         return $this;
     }
-<?php }?>
+<?php 
+}?>
 }

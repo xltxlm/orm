@@ -3,36 +3,34 @@
  * Created by PhpStorm.
  * User: sahara
  * Date: 2015/12/27
- * Time: 21:54
+ * Time: 21:54.
  */
-
 namespace Orm\Config;
 
 /**
  * PDO配置的参数清单
- * Class pdoConfig
- * @package libs\db\define
+ * Class pdoConfig.
  */
 class PdoConfig
 {
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';
 
-    /** @var  \PDO */
+    /** @var \PDO */
     protected $PDOObject;
     /** @var string 数据库的驱动 */
     protected $driver = self::MYSQL;
-    /** @var  string 服务器的ip地址 */
+    /** @var string 服务器的ip地址 */
     protected $TNS;
-    /** @var  string 服务器的端口 */
+    /** @var string 服务器的端口 */
     protected $port = 3306;
     /** @var string 数据的编码 */
-    protected $encode = "utf8";
-    /** @var  string 数据库的名称 */
+    protected $encode = 'utf8';
+    /** @var string 数据库的名称 */
     protected $db;
-    /** @var  string 数据库账户 */
+    /** @var string 数据库账户 */
     protected $username;
-    /** @var  string 数据密码 */
+    /** @var string 数据密码 */
     protected $password;
 
     /**
@@ -45,11 +43,13 @@ class PdoConfig
 
     /**
      * @param string $driver
+     *
      * @return $this
      */
     public function setDriver(string $driver)
     {
         $this->driver = $driver;
+
         return $this;
     }
 
@@ -63,11 +63,13 @@ class PdoConfig
 
     /**
      * @param string $TNS
+     *
      * @return $this
      */
     public function setTNS(string $TNS)
     {
         $this->TNS = $TNS;
+
         return $this;
     }
 
@@ -81,11 +83,13 @@ class PdoConfig
 
     /**
      * @param string $port
+     *
      * @return $this
      */
     public function setPort(string $port)
     {
         $this->port = $port;
+
         return $this;
     }
 
@@ -99,11 +103,13 @@ class PdoConfig
 
     /**
      * @param string $encode
+     *
      * @return $this
      */
     public function setEncode(string $encode)
     {
         $this->encode = $encode;
+
         return $this;
     }
 
@@ -117,11 +123,13 @@ class PdoConfig
 
     /**
      * @param string $db
+     *
      * @return $this
      */
     public function setDb(string $db)
     {
         $this->db = $db;
+
         return $this;
     }
 
@@ -135,11 +143,13 @@ class PdoConfig
 
     /**
      * @param string $username
+     *
      * @return $this
      */
     public function setUsername(string $username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -153,37 +163,40 @@ class PdoConfig
 
     /**
      * @param string $password
+     *
      * @return $this
      */
     public function setPassword(string $password)
     {
         $this->password = $password;
+
         return $this;
     }
 
     /**
-     * 返回链接,重新链接
+     * 返回链接,重新链接.
      */
     public function instance()
     {
-        $tns = $this->getDriver() .
-            ":dbname=" . $this->getDb() .
-            ";host=" . $this->getTNS() .
-            ";port=" . $this->getPort();
+        $tns = $this->getDriver().
+            ':dbname='.$this->getDb().
+            ';host='.$this->getTNS().
+            ';port='.$this->getPort();
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
-            $tns .= ";charset=utf8";
+            $tns .= ';charset=utf8';
         }
 
         $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
         $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
         //所有数据库,默认都必须开启事务
         $this->PDOObject->beginTransaction();
+
         return $this->PDOObject;
     }
 
     /**
-     * 返回链接,单例
+     * 返回链接,单例.
      */
     public function instanceSelf()
     {
@@ -191,6 +204,7 @@ class PdoConfig
         if (!$instance) {
             $instance = $this->instance();
         }
+
         return $instance;
     }
 
