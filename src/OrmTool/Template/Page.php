@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-15
- * Time: 下午 2:26
+ * Time: 下午 2:26.
  */
-
 namespace OrmTool\Template;
 
 use Orm\PageObject;
@@ -15,12 +14,11 @@ use Orm\Sql\SqlParserd;
 
 /**
  * out:按照分页处理的模型
- * Class Page
- * @package OrmTool\Template
+ * Class Page.
  */
 class Page extends PdoAction
 {
-    /** @var  PageObject */
+    /** @var PageObject */
     protected $pageObject;
     /** @var string 模型类 */
     private $modelClass = '';
@@ -40,11 +38,13 @@ class Page extends PdoAction
 
     /**
      * @param int $pageID
+     *
      * @return Page
      */
     public function setPageID(int $pageID): Page
     {
         $this->pageID = $pageID;
+
         return $this;
     }
 
@@ -58,11 +58,13 @@ class Page extends PdoAction
 
     /**
      * @param int $prepage
+     *
      * @return Page
      */
     public function setPrepage(int $prepage): Page
     {
         $this->prepage = $prepage;
+
         return $this;
     }
 
@@ -79,11 +81,11 @@ class Page extends PdoAction
      */
     final public function __invoke()
     {
-        $sql = 'SELECT * FROM ' . $this->tableObject->getName() .
-            ' WHERE ' . implode(' AND ', $this->getSqls());
+        $sql = 'SELECT * FROM '.$this->tableObject->getName().
+            ' WHERE '.implode(' AND ', $this->getSqls());
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= ' Order By ' . implode(',', $this->getSqlsOrder());
+            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
         }
 
         $SqlParserd = (new SqlParser())
