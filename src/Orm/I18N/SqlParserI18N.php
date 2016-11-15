@@ -20,6 +20,6 @@ class SqlParserI18N
      */
     public function getBindError()
     {
-        return I18N::getVal('bindError');
+        return I18N::getVal(lcfirst(substr(__FUNCTION__, 3)));
     }
 }

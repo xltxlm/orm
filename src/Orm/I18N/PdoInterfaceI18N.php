@@ -20,7 +20,7 @@ class PdoInterfaceI18N
      */
     public function getMissModel()
     {
-        return I18N::getVal('missModel');
+        return I18N::getVal(lcfirst(substr(__FUNCTION__, 3)));
     }
 
     /**
@@ -28,6 +28,6 @@ class PdoInterfaceI18N
      */
     public function getUpdateNoWhere()
     {
-        return I18N::getVal('updateNoWhere');
+        return I18N::getVal(lcfirst(substr(__FUNCTION__, 3)));
     }
 }
