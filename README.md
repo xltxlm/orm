@@ -1,4 +1,8 @@
 [![StyleCI](https://styleci.io/repos/73656835/shield?branch=master)](https://styleci.io/repos/73656835)
+#<font color=red>目前还未全部完工，缺少group by 和 join 操作</font>
+
+11.25 之后继续更新
+
 # orm
 实现数据库的面向对象编程
 
@@ -9,8 +13,9 @@ ORM是干什么用的。根据维基百科的解释是，ORM完成数据和面�
 
 所以制造了一个
 
-### 不满意的类型
-下图实现的是面向过程的编程方式 [http://www.jooq.org/]
+### 不满意的操作方式
+
+下图实现的是<font color=red>面向过程的编程方式</font> 参考文档[http://www.jooq.org/]
 ![](./images/jOOQ DSL.png)
 
 还有这个 
@@ -18,11 +23,11 @@ ORM是干什么用的。根据维基百科的解释是，ORM完成数据和面�
 
 ![](./images/laravel-1.png)
 
-下面这个操作方式也不满意.无法做到链式操作数据
+下面这种操作方式也不满意.无法做到链式操作数据
 比如
 ```php
 $flight
-->setName('test')
+->setName('myname')
 ->setAge(18)
 ->save();
 ```
@@ -45,7 +50,7 @@ test目录下有另外一份指引文档
 * 开启PDO模块
 * 所有数据库,默认都必须开启事务
 * 数据库不支持delete操作 - 所以不提供此方法,应该是加一个字段标记已删除状态
-* **查询的返回结果是预先设定的Model类,绝不支持返回数组**
+* **<font color=red>查询的返回结果存储在预先设定的Model类,不支持返回数组</font>**
 * phpunit作为单元测试工具. bootstrap file 为 vendor\autoload.php
 * 编辑器为 phpstrom 2016.2 以上版本,配置好 php,phpunit,PHP Code Sniffer
 
@@ -53,3 +58,4 @@ test目录下有另外一份指引文档
 
 * mysql - 必须是 utf8 编码
 * postgresql (准备中)
+
