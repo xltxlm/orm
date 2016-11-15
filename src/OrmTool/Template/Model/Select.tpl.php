@@ -67,6 +67,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
         return $this;
     }
 <?php
+
 }?>
 
     /**

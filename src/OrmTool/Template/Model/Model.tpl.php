@@ -37,5 +37,6 @@ final class <?=ucfirst($table->getTABLENAME())?>Model
         return $this;
     }
 <?php
+
 }?>
 }
