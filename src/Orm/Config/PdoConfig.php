@@ -11,7 +11,7 @@ namespace Orm\Config;
  * PDO配置的参数清单
  * Class pdoConfig.
  */
-class PdoConfig
+abstract class PdoConfig
 {
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';

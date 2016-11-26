@@ -13,6 +13,12 @@
     "ext-pdo": "*",
     "monolog/monolog": "*"
   },
+
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "squizlabs/php_codesniffer": "*"
+  },
+
   "autoload": {
     "psr-4": {
       "": [

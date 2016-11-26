@@ -112,7 +112,7 @@ class Demo extends \PHPUnit_Framework_TestCase
             ->setPageID(4)
             ->setPrepage(3);
         $data = (new PdoInterface())
-            ->setPdoConfig((new doc()))
+            ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
             ->setClassName(\test\PdoInterface\DataModel::class)
             ->page($pageObject);

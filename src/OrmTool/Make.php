@@ -21,7 +21,7 @@ final class Make
     /** @var PdoConfig */
     protected $dbConfig;
 
-    protected $dbNameSpace = '';
+    private $dbNameSpace = '';
 
     /**
      * @return string

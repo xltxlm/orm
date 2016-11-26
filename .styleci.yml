@@ -1,0 +1,8 @@
+preset: PSR2
+risky: false
+
+finder:
+  name:
+    - "*.php"
+  path:
+    - "src"
