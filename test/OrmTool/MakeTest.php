@@ -7,12 +7,13 @@
  */
 namespace test\OrmTool;
 
-use setup\doc;
+use PHPUnit\Framework\TestCase;
+use setup\Doc;
 
 /**
  * Class Make.
  */
-class Make extends \PHPUnit_Framework_TestCase
+class MakeTest extends TestCase
 {
     /**
      * 生成Model类.
@@ -20,7 +21,7 @@ class Make extends \PHPUnit_Framework_TestCase
     public function test1()
     {
         (new \OrmTool\Make())
-            ->setDbConfig(new doc())
+            ->setDbConfig(new Doc())
             ->__invoke();
     }
 }

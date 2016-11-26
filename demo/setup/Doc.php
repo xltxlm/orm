@@ -12,7 +12,7 @@ use Orm\Config\PdoConfig;
 /**
  * Class doc.
  */
-class doc extends PdoConfig
+class Doc extends PdoConfig
 {
     protected $driver = self::MYSQL;
     protected $TNS = '127.0.0.1';

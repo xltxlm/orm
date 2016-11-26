@@ -7,6 +7,7 @@
  */
 namespace test\Demo;
 
+use PHPUnit\Framework\TestCase;
 use setup\doc\GoodsSelectAll;
 
 /**
@@ -14,25 +15,27 @@ use setup\doc\GoodsSelectAll;
  * 查询
  * Class selectAll.
  */
-class SelectAll extends \PHPUnit_Framework_TestCase
+class SelectAllTest extends TestCase
 {
-    // 带 where 条件,非赋值查询
+    /**
+     * 带 where 条件,非赋值查询
+     * @covers \setup\doc\GoodsSelectAll
+     */
     public function test0()
     {
         $goodsSelectOne = new GoodsSelectAll();
 
         $data = $goodsSelectOne
             ->setSQL('id>=:id', ['id' => 1200])
-            ->orderIdAsc()
             ->__invoke();
         $this->assertTrue(is_array($data));
 
         echo '<pre>-->';
         print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
+        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
 
         $this->assertEquals(
-            'SELECT * FROM goods WHERE id=:id ',
+            'SELECT * FROM goods WHERE id>=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -49,10 +52,10 @@ class SelectAll extends \PHPUnit_Framework_TestCase
 
         echo '<pre>-->';
         print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
+        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
 
         $this->assertEquals(
-            'SELECT * FROM goods WHERE id=:id ',
+            'SELECT * FROM goods WHERE goods.id=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -60,5 +63,22 @@ class SelectAll extends \PHPUnit_Framework_TestCase
     //带where + 排序
     public function test2()
     {
+        $goodsSelectOne = new GoodsSelectAll();
+
+        $data = $goodsSelectOne
+            ->setId(1061)
+            ->orderIdDesc()
+            ->__invoke();
+
+        echo "<pre>-->";
+        print_r($data);
+        echo "<--@in " . __FILE__ . " on line " . __LINE__ . "\n";
+
+        $this->assertTrue(is_array($data));
+
+        $this->assertEquals(
+            'SELECT * FROM goods WHERE goods.id=:id Order By goods.id DESC ',
+            $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
+        );
     }
 }

@@ -120,9 +120,9 @@ final class FieldSchema
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCHARACTERMAXIMUMLENGTH(): string
+    public function getCHARACTERMAXIMUMLENGTH()
     {
         return $this->CHARACTER_MAXIMUM_LENGTH;
     }

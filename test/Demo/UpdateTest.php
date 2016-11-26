@@ -10,7 +10,7 @@ namespace Demo;
 /**
  * Class Update.
  */
-class Update extends \PHPUnit_Framework_TestCase
+class UpdateTest extends \PHPUnit_Framework_TestCase
 {
     //带 where 条件更新
     public function test1()

@@ -42,7 +42,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -53,7 +53,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> ASC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
         return $this;
     }
 
@@ -63,7 +63,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Desc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?> DESC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
 <?php

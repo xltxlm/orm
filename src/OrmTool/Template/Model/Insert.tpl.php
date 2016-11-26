@@ -19,7 +19,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Insert extends \<?=\OrmTool\Temp
     protected $<?=$field->getCOLUMNNAME()?>;
 
     /**
-     * out:<?=$field->getCOLUMNCOMMENT()?>
+     * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getDATATYPE()?> <?=$field->getCHARACTERMAXIMUMLENGTH()?>
 
      * @param mixed $<?=$field->getCOLUMNNAME()?>
 

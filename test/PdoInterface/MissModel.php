@@ -9,7 +9,7 @@ namespace PdoInterface;
 
 use Orm\PdoInterface;
 use Orm\Sql\SqlParser;
-use setup\doc;
+use setup\Doc;
 
 /**
  * Class MissModel.
@@ -18,11 +18,10 @@ class MissModel extends \PHPUnit_Framework_TestCase
 {
     /**
      * 查询时候,不指定model类,不予返回结果.
+     * @expectedException  \Orm\Exception\PdoInterfaceException
      */
     public function test1()
     {
-        $this->expectException(\Orm\Exception\PdoInterfaceException::class);
-
         $SqlParserd = (new SqlParser())
             ->setSql('select * from goods where id=:id ')
             ->setBind(
@@ -32,12 +31,12 @@ class MissModel extends \PHPUnit_Framework_TestCase
             )
             ->__invoke();
         $data = (new PdoInterface())
-            ->setPdoConfig((new doc()))
+            ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
             ->selectVar();
         echo '<pre>-->';
         print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
+        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
     }
 
     // update 查询不带上 where 条件,抛异常
@@ -55,7 +54,7 @@ class MissModel extends \PHPUnit_Framework_TestCase
             ->__invoke();
 
         (new PdoInterface())
-            ->setPdoConfig((new doc()))
+            ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
             ->update();
     }

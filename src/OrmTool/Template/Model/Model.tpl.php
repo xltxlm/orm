@@ -13,9 +13,10 @@ final class <?=ucfirst($table->getTABLENAME())?>Model
 {
 <?php foreach ($fields as $field) {
     ?>
+    /** @var string <?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?> */
     protected $<?=$field->getCOLUMNNAME()?>;
     /**
-     * out:<?=$field->getCOLUMNCOMMENT()?>
+     * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
 
      * @return string
      */

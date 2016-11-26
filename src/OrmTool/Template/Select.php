@@ -19,7 +19,7 @@ class Select extends PdoAction
     /** @var bool 一维查询 还是 二维查询 */
     protected $moreData = false;
     /** @var string 模型类 */
-    private $modelClass = '';
+    protected $modelClass = '';
 
     /**
      * @return SqlParserd
