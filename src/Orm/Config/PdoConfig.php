@@ -178,10 +178,10 @@ class PdoConfig
      */
     public function instance()
     {
-        $tns = $this->getDriver().
-            ':dbname='.$this->getDb().
-            ';host='.$this->getTNS().
-            ';port='.$this->getPort();
+        $tns = $this->getDriver() .
+            ':dbname=' . $this->getDb() .
+            ';host=' . $this->getTNS() .
+            ';port=' . $this->getPort();
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
             $tns .= ';charset=utf8';

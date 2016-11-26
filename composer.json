@@ -1,6 +1,6 @@
 {
-  "name": "xialintai/orm",
-  "description": "ORM类库",
+  "name": "xltxlm/orm",
+  "description": "ORM类库,根据数据库直接生成类",
   "license": "Apache 2.0",
   "authors": [
     {
@@ -10,7 +10,8 @@
   ],
   "require": {
     "php": ">=7.0",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "monolog/monolog": "*"
   },
   "autoload": {
     "psr-4": {

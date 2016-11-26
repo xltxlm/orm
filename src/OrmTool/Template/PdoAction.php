@@ -10,6 +10,7 @@ namespace OrmTool\Template;
 use Orm\PdoInterface;
 
 /**
+ * 数据库操作的基础类库
  * Class PdoAction.
  */
 abstract class PdoAction
@@ -28,6 +29,31 @@ abstract class PdoAction
 
     /** @var PdoInterface */
     protected $pdoInterface;
+
+    /** @var  callable 执行完毕回调的数据,可以用来矫正数据 或者 记录日志 */
+    protected $CallableFunction;
+
+    /** @var  \Monolog\Logger */
+    protected $logObject;
+
+    /**
+     * @return \Monolog\Logger
+     */
+    public function getLogObject(): \Monolog\Logger
+    {
+        return $this->logObject;
+    }
+
+    /**
+     * @param \Monolog\Logger $logObject
+     * @return PdoAction
+     */
+    public function setLogObject(\Monolog\Logger $logObject): PdoAction
+    {
+        $this->logObject = $logObject;
+        return $this;
+    }
+
 
     /**
      * @return PdoInterface
@@ -67,5 +93,16 @@ abstract class PdoAction
     public function getTableObject(): \OrmTool\Unit\Table
     {
         return $this->tableObject;
+    }
+
+    /**
+     * 回调处理函数
+     * @param callable $callableFunction
+     * @return $this
+     */
+    public function then(callable $callableFunction)
+    {
+        $this->CallableFunction = $callableFunction;
+        return $this;
     }
 }
