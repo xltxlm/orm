@@ -16,7 +16,7 @@ use Orm\Sql\SqlParser;
  *
  * Class normal
  */
-class Normal extends \PHPUnit_Framework_TestCase
+class NormalTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * 演示最常规的绑定.

@@ -21,9 +21,9 @@ class Update extends PdoAction
 
     public function __invoke()
     {
-        $sql = 'UPDATE '.$this->tableObject->getName().' SET '.
-            implode(',', $this->sqls).' WHERE '.
-            implode(' AND '.$this->whereSqls);
+        $sql = 'UPDATE ' . $this->tableObject->getName() . ' SET ' .
+            implode(',', $this->sqls) . ' WHERE ' .
+            implode(' AND ' . $this->whereSqls);
 
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
@@ -31,7 +31,8 @@ class Update extends PdoAction
 
         $this->pdoInterface = (new PdoInterface())
             ->setPdoConfig($this->tableObject->getDbConfig())
-            ->setSqlParserd($SqlParserd);
+            ->setSqlParserd($SqlParserd)
+            ->setDebug($this->debug);
 
         return $this->pdoInterface
             ->update();

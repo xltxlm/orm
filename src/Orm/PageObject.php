@@ -49,7 +49,7 @@ final class PageObject
      *
      * @return int
      */
-    public function plusNUM()
+    public function shiftNum()
     {
         return ($this->pageID - 1) * $this->prepage;
     }

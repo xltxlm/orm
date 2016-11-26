@@ -35,6 +35,8 @@ abstract class PdoAction
 
     /** @var  \Monolog\Logger */
     protected $logObject;
+    /** @var bool 是否打印调试信息 */
+    protected $debug = false;
 
     /**
      * @return \Monolog\Logger

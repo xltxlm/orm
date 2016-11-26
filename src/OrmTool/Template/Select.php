@@ -42,6 +42,7 @@ class Select extends PdoAction
         $this->pdoInterface = (new PdoInterface())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
+            ->setDebug($this->debug)
             ->setClassName($this->modelClass);
         if ($this->moreData) {
             return $this->pdoInterface

@@ -34,6 +34,7 @@ class Insert extends PdoAction
         $this->pdoInterface = (new PdoInterface())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
+            ->setDebug($this->debug)
             ->setClassName(static::class);
 
         return $this->pdoInterface

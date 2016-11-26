@@ -19,7 +19,6 @@ class SelectAllTest extends TestCase
 {
     /**
      * 带 where 条件,非赋值查询
-     * @covers \setup\doc\GoodsSelectAll
      */
     public function test0()
     {

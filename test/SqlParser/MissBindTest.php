@@ -16,7 +16,7 @@ use Orm\Sql\SqlParser;
  * 另外演示了如何切换报错语言
  * Class MissBind.
  */
-class MissBind extends \PHPUnit_Framework_TestCase
+class MissBindTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * 缺少绑定变量.

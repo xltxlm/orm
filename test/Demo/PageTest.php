@@ -7,15 +7,35 @@
  */
 namespace Demo;
 
+use setup\doc\GoodsPage;
+
 class PageTest extends \PHPUnit_Framework_TestCase
 {
-    // 普通查询数据
+    /**
+     * 带 where 条件,非赋值查询
+     */
     public function test1()
     {
-    }
+        $goodsSelectOne = new GoodsPage();
 
-    // 普通查询数据 + 连表查询
-    public function test2()
-    {
+        $data = $goodsSelectOne
+            ->setSQL('id>=:id', ['id' => 1200])
+            ->setPageID(2)
+            ->setPrepage(3)
+            ->__invoke();
+
+        $this->assertTrue(is_array($data));
+
+        echo '<pre>-->';
+        print_r($data);
+        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
+
+        $this->assertEquals(
+            'SELECT * FROM goods WHERE id>=:id  LIMIT 3, 3 ',
+            $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
+        );
+
+        $this->assertEquals($goodsSelectOne->getPageObject()->getPrepage(), 3);
+        $this->assertEquals($goodsSelectOne->getPageObject()->getPageID(), 2);
     }
 }

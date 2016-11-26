@@ -21,7 +21,7 @@ class Page extends PdoAction
     /** @var PageObject */
     protected $pageObject;
     /** @var string 模型类 */
-    private $modelClass = '';
+    protected $modelClass = '';
 
     /** @var int 传递过来指明当前第几页 */
     protected $pageID;
@@ -81,11 +81,11 @@ class Page extends PdoAction
      */
     final public function __invoke()
     {
-        $sql = 'SELECT * FROM '.$this->tableObject->getName().
-            ' WHERE '.implode(' AND ', $this->getSqls());
+        $sql = 'SELECT * FROM ' . $this->tableObject->getName() .
+            ' WHERE ' . implode(' AND ', $this->getSqls());
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
+            $sql .= ' Order By ' . implode(',', $this->getSqlsOrder());
         }
 
         $SqlParserd = (new SqlParser())
@@ -97,13 +97,13 @@ class Page extends PdoAction
         $this->pdoInterface = (new PdoInterface())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
+            ->setDebug($this->debug)
             ->setClassName($this->modelClass);
 
         //结果分页条
         $this->pageObject = (new PageObject())
             ->setPageID($this->pageID)
-            ->setPrepage($this->prepage)
-            ->__invoke();
+            ->setPrepage($this->prepage);
 
         return $this->pdoInterface
             ->page($this->pageObject);

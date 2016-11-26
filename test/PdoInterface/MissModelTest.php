@@ -14,7 +14,7 @@ use setup\Doc;
 /**
  * Class MissModel.
  */
-class MissModel extends \PHPUnit_Framework_TestCase
+class MissModelTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * 查询时候,不指定model类,不予返回结果.

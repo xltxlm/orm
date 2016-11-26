@@ -23,8 +23,10 @@ class Table
     protected $name = '';
     /** @var string 表格的描述 */
     protected $comment = '';
-    /** @var \OrmTool\Unit\Field[] 字段 */
-    protected $field = [];
+    /** @var  \OrmTool\Unit\FieldSchema */
+    private $fieldSchema;
+    /** @var  \OrmTool\Unit\ForeignKey 外键对 */
+    private $ForeignKey;
 
     /**
      * @return string
@@ -67,9 +69,18 @@ class Table
     }
 
     /**
+     * @return ForeignKey
+     */
+    public function getForeignKey(): ForeignKey
+    {
+        return $this->ForeignKey;
+    }
+
+
+    /**
      * @return \OrmTool\Unit\FieldSchema[]
      */
-    public function getField(): array
+    public function getFieldSchema(): array
     {
         $sql = 'select * from information_schema.COLUMNS where table_name=:table_name ';
         $SqlParserd = (new SqlParser())
@@ -81,7 +92,7 @@ class Table
             )
             ->__invoke();
 
-        return $this->field = (new PdoInterface())
+        return $this->fieldSchema = (new PdoInterface())
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName(\OrmTool\Unit\FieldSchema::class)

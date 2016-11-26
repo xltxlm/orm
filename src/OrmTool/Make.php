@@ -87,7 +87,7 @@ final class Make
             $fields = (new Table())
                 ->setDbConfig($this->dbConfig)
                 ->setName($table->getTABLENAME())
-                ->getField();
+                ->getFieldSchema();
 
             //基本表字段模型
             ob_start();
@@ -104,6 +104,10 @@ final class Make
             $moreData = true;
             include __DIR__ . '/Template/Model/Select.tpl.php';
             file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'SelectAll.php', ob_get_clean());
+            //操作 - 二维查询 - 带分页条
+            ob_start();
+            include __DIR__ . '/Template/Model/Page.tpl.php';
+            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Page.php', ob_get_clean());
             //写入数据 模型
             ob_start();
             include __DIR__ . '/Template/Model/Insert.tpl.php';
