@@ -11,14 +11,13 @@
   "require": {
     "php": ">=7.0",
     "ext-pdo": "*",
+    "overtrue/pinyin": "~3.0",
     "monolog/monolog": "*"
   },
-
   "require-dev": {
     "phpunit/phpunit": "*",
     "squizlabs/php_codesniffer": "*"
   },
-
   "autoload": {
     "psr-4": {
       "": [

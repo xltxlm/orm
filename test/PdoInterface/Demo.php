@@ -14,16 +14,6 @@ use setup\doc;
 
 class Demo extends \PHPUnit_Framework_TestCase
 {
-    public function abc(){
-
-        if(1)
-        {
-
-        }elseif (2)
-        {
-
-        }
-    }
     //最普通的查询:不带参数
     public function test0()
     {

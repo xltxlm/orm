@@ -8,6 +8,11 @@
 
 namespace OrmTool\Unit;
 
+/**
+ * 外键结构类
+ * Class ForeignKey
+ * @package OrmTool\Unit
+ */
 class ForeignKey
 {
     public function abc()

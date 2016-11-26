@@ -12,6 +12,21 @@ namespace OrmTool\Unit;
  */
 final class FieldSchema
 {
+    const VARCHAR = 'varchar';
+    const INT = 'int';
+    const FLOAT = 'float';
+    const BIGINT = 'bigint';
+    const TEXT = 'text';
+    const DATE = 'date';
+    const TIME = 'time';
+    const MEDIUMTEXT = 'mediumtext';
+    const TINYINT = 'tinyint';
+    const TIMESTAMP = 'timestamp';
+    const LONGTEXT = 'longtext';
+    const DATETIME = 'datetime';
+    const DECIMAL = 'decimal';
+    const ENUM = 'enum';
+
     protected $TABLE_CATALOG = '';
 
     protected $TABLE_SCHEMA = '';
@@ -54,6 +69,30 @@ final class FieldSchema
     protected $COLUMN_COMMENT = '';
 
     protected $GENERATION_EXPRESSION = '';
+
+    /** @var array 枚举类型的值列表 */
+    private $ENUM_ARRAY = [];
+
+    /**
+     * @return array
+     */
+    public function getENUMARRAY(): array
+    {
+        //准备拼音类
+        static $pinyin;
+        if (!$pinyin) {
+            $pinyin = new \Overtrue\Pinyin\Pinyin();
+        }
+        preg_match_all("#'([^']+)'#iUs", $this->getCOLUMNTYPE(), $out);
+        foreach ($out[1] as $key => $item) {
+            $sentence = $pinyin->sentence($item);
+            $itemPinyin = strtr(strtoupper($sentence), [' ' => '_']);
+            $out[1][$itemPinyin] = $item;
+            unset($out[1][$key]);
+        }
+        return $this->ENUM_ARRAY = $out[1];
+    }
+
 
     /**
      * @return string
