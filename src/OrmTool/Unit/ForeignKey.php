@@ -8,12 +8,17 @@
 
 namespace OrmTool\Unit;
 
+
 class ForeignKey
 {
-    public function abc()
-    {
-        if (1) {
-        } elseif (2) {
+    public function abc(){
+
+        if(1)
+        {
+
+        }elseif (2)
+        {
+
         }
     }
 }
