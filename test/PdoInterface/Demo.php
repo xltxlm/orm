@@ -22,7 +22,7 @@ class Demo extends \PHPUnit_Framework_TestCase
             ->__invoke();
         /** @var \test\PdoInterface\DataModel $data */
         $data = (new PdoInterface())
-            ->setPdoConfig((new doc()))
+            ->setPdoConfig((new Doc()))
             ->setClassName(\test\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();

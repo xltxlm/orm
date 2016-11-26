@@ -176,7 +176,7 @@ class PdoConfig
     /**
      * 返回链接,重新链接.
      */
-    public function instance()
+    private function instance()
     {
         $tns = $this->getDriver() .
             ':dbname=' . $this->getDb() .
@@ -198,7 +198,7 @@ class PdoConfig
     /**
      * 返回链接,单例.
      */
-    public function instanceSelf()
+    final public function instanceSelf()
     {
         static $instance;
         if (!$instance) {

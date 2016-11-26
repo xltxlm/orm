@@ -10,6 +10,7 @@ namespace setup;
 use Orm\Config\PdoConfig;
 
 /**
+ * 数据库的基础配置:账户密码等
  * Class doc.
  */
 class Doc extends PdoConfig
