@@ -14,7 +14,9 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 class Enum<?=ucfirst($table->getTABLENAME())?><?=ucfirst($field->getCOLUMNNAME())?>
 
 {
-<?php foreach ($field->getENUMARRAY() as $key=>$value){ ?>
+<?php foreach ($field->getENUMARRAY() as $key=>$value) {
+    ?>
     const <?=$key?>='<?=$value?>';
-<?php }?>
+<?php 
+}?>
 }
