@@ -35,5 +35,8 @@
         <log type="coverage-clover" target="coverage.xml" showUncoveredFiles="true"/>
     </logging>
 
+    <php>
+        <ini name="error_reporting" value="22517"></ini>
+    </php>
 
 </phpunit>
