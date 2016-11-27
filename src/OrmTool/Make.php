@@ -55,7 +55,7 @@ final class Make
     {
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
-        $className = basename(get_class($this->dbConfig));
+        $className = array_pop(explode('\\', get_class($this->dbConfig)));
         $path = dirname($ReflectionClass->getFileName()) . '/' . $className;
         $this->dbNameSpace = $ReflectionClass->getNamespaceName().'\\'.$className;
         mkdir($path);
