@@ -11,7 +11,3 @@ build:
 
       hosts:
           local.dev: '127.0.0.1'
-
-    dependencies:
-      before:
-        - "mysql -u root -e 'source tests/doc.sql' "
