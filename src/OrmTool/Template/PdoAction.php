@@ -15,6 +15,11 @@ use Orm\PdoInterface;
  */
 abstract class PdoAction
 {
+    /** @var array 连表查询的SQl */
+    protected $joinSql = [];
+    /** @var array 需要关联的表 */
+    protected $joinTable = [];
+
     /** @var array 组合的sql段 */
     protected $sqlsOrder = [];
 
@@ -38,19 +43,60 @@ abstract class PdoAction
     /** @var bool 是否打印调试信息 */
     protected $debug = false;
 
+    /** @var \stdClass 本次查询的结果 */
+    protected $result;
+
+    /**
+     * @param string $joinTable
+     * @return static
+     */
+    final public function setJoinTable(string $joinTable)
+    {
+        $this->joinTable[] = $joinTable;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getJoinTable()
+    {
+        $this->joinTable[$this->tableObject->getName()] = $this->tableObject->getName() . ".*";
+        return join(",", $this->joinTable);
+    }
+
+
+    /**
+     * @return boolean
+     */
+    final public function getDebug(): bool
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param boolean $debug
+     * @return static
+     */
+    final public function setDebug(bool $debug)
+    {
+        $this->debug = $debug;
+        return $this;
+    }
+
     /**
      * @return \Monolog\Logger
      */
-    public function getLogObject(): \Monolog\Logger
+    final public function getLogObject(): \Monolog\Logger
     {
         return $this->logObject;
     }
 
     /**
      * @param \Monolog\Logger $logObject
-     * @return PdoAction
+     * @return static
      */
-    public function setLogObject(\Monolog\Logger $logObject): PdoAction
+    final public function setLogObject(\Monolog\Logger $logObject)
     {
         $this->logObject = $logObject;
         return $this;
@@ -60,7 +106,7 @@ abstract class PdoAction
     /**
      * @return PdoInterface
      */
-    public function getPdoInterface(): PdoInterface
+    final public function getPdoInterface(): PdoInterface
     {
         return $this->pdoInterface;
     }
@@ -92,7 +138,7 @@ abstract class PdoAction
     /**
      * @return \OrmTool\Unit\Table
      */
-    public function getTableObject(): \OrmTool\Unit\Table
+    final public function getTableObject(): \OrmTool\Unit\Table
     {
         return $this->tableObject;
     }
@@ -102,7 +148,7 @@ abstract class PdoAction
      * @param callable $callableFunction
      * @return $this
      */
-    public function then(callable $callableFunction)
+    final public function then(callable $callableFunction)
     {
         $this->CallableFunction = $callableFunction;
         return $this;

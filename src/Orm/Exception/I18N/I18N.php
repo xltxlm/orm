@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 10:49.
  */
-namespace Orm\I18N;
+namespace Orm\Exception\I18N;
 
 /**
  * out:可翻译的语言配置
@@ -20,7 +20,7 @@ abstract class I18N
     /**
      * @return string
      */
-    public static function getLang(): string
+    final public static function getLang(): string
     {
         return self::$lang;
     }
@@ -30,18 +30,19 @@ abstract class I18N
      *
      * @return string
      */
-    public static function setLang(string $lang): string
+    final public static function setLang(string $lang): string
     {
         return self::$lang = $lang;
     }
 
-    final public static function getVal($key)
+    final public static function getVal()
     {
+        $key = debug_backtrace()[1]['function'];
         $ReflectionClass = new \ReflectionClass(__CLASS__);
-        $className = $ReflectionClass->getNamespaceName().
-            '\\'.self::getLang().
-            '\\'.basename(debug_backtrace()[0]['file'], '.php');
-        /** @var \Orm\I18N\SqlParserI18N $classObject */
+        $className = $ReflectionClass->getNamespaceName() .
+            '\\' . self::getLang() .
+            '\\' . basename(debug_backtrace()[0]['file'], '.php');
+        /** @var \Orm\Exception\I18N\SqlParserI18N $classObject */
         $classObject = (new \ReflectionClass($className))
             ->newInstance();
 

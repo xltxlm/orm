@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 8:01.
  */
-namespace test\Demo;
+namespace tests\Demo;
 
 use setup\doc\GoodsSelectOne;
 
@@ -27,12 +27,8 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
         //返回的数据结构是 GoodsModel 类实体
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
-
         $this->assertEquals(
-            'SELECT * FROM goods WHERE id like :id AND id>1 ',
+            'SELECT goods.* FROM goods WHERE id like :id AND id>1 ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -47,12 +43,8 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
             ->__invoke();
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
-
         $this->assertEquals(
-            'SELECT * FROM goods WHERE goods.id=:id ',
+            'SELECT goods.* FROM goods WHERE goods.id=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -69,7 +61,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_a($data, \setup\doc\GoodsModel::class));
 
         $this->assertEquals(
-            'SELECT * FROM goods WHERE goods.id=:id Order By goods.id DESC ',
+            'SELECT goods.* FROM goods WHERE goods.id=:id Order By goods.id DESC ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }

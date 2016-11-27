@@ -1,5 +1,5 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \OrmTool\Unit\FieldSchema $field */?>
 <<?='?'?>php
 /**
@@ -11,7 +11,7 @@
 
 namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 
-class Enum<?=ucfirst($table->getTABLENAME())?><?=ucfirst($field->getCOLUMNNAME())?>
+class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMNNAME())?>
 
 {
 <?php foreach ($field->getENUMARRAY() as $key=>$value) {

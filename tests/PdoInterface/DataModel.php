@@ -5,7 +5,7 @@
  * Date: 2016-11-13
  * Time: 下午 11:38.
  */
-namespace test\pdoInterface;
+namespace tests\pdoInterface;
 
 /**
  * Class data.

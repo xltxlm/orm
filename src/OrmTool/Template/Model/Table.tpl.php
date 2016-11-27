@@ -1,20 +1,20 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <<?='?'?>php
 
-namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+    namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 
-use <?=Orm\Config\PdoConfig::class?>;
+    use <?=Orm\Config\PdoConfig::class?>;
 
-final class <?=ucfirst($table->getTABLENAME())?> extends \<?=\OrmTool\Unit\Table::class?>
+    final class <?=ucfirst($tableSchema->getTABLENAME())?> extends \<?=\OrmTool\Unit\Table::class?>
 
-{
+    {
 
     /** @var string 表格的名称 */
-    protected $name = "<?=$table->getTABLENAME()?>";
+    protected $name = "<?=$tableSchema->getTABLENAME()?>";
 
     /** @var string 表格的描述 */
-    protected $comment = "<?=$table->getTABLECOMMENT()?>";
+    protected $comment = "<?=$tableSchema->getTABLECOMMENT()?>";
 
     /**
     * @return PdoConfig

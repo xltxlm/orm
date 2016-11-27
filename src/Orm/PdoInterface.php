@@ -51,7 +51,7 @@ final class PdoInterface
     /**
      * @return bool
      */
-    public function isDebug(): bool
+    public function getDebug(): bool
     {
         return $this->debug;
     }
@@ -126,7 +126,7 @@ final class PdoInterface
         $stmt = $this->pdoexecute();
         if (!$this->className) {
             throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\I18N\PdoInterfaceI18N())
+                (new \Orm\Exception\I18N\PdoInterfaceI18N())
                     ->getMissModel()
             );
         }
@@ -139,7 +139,7 @@ final class PdoInterface
         $stmt = $this->pdoexecute();
         if (!$this->className) {
             throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\I18N\PdoInterfaceI18N())
+                (new \Orm\Exception\I18N\PdoInterfaceI18N())
                     ->getMissModel()
             );
         }
@@ -163,7 +163,7 @@ final class PdoInterface
     {
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
             throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\I18N\PdoInterfaceI18N())
+                (new \Orm\Exception\I18N\PdoInterfaceI18N())
                     ->getUpdateNoWhere()
             );
         }
@@ -228,7 +228,7 @@ final class PdoInterface
                 json_encode(
                     [
                         $this->sqlParserd->getSql(),
-                        $this->sqlParserd->getBind(),
+                        $this->sqlParserd->getBindArray(),
                         $error,
                     ]
                 )

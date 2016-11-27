@@ -106,7 +106,7 @@ final class SqlParser
         if ($sqlBinds != $binds) {
             throw new SqlParserException(
                 vsprintf(
-                    (new \Orm\I18N\SqlParserI18N())
+                    (new \Orm\Exception\I18N\SqlParserI18N())
                         ->getBindError(),
                     [
                         json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),

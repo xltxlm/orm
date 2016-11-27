@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 8:01.
  */
-namespace test\Demo;
+namespace tests\Demo;
 
 use PHPUnit\Framework\TestCase;
 use setup\doc\GoodsSelectAll;
@@ -29,12 +29,8 @@ class SelectAllTest extends TestCase
             ->__invoke();
         $this->assertTrue(is_array($data));
 
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
-
         $this->assertEquals(
-            'SELECT * FROM goods WHERE id>=:id ',
+            'SELECT goods.* FROM goods WHERE id>=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -49,12 +45,8 @@ class SelectAllTest extends TestCase
             ->__invoke();
         $this->assertTrue(is_array($data));
 
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
-
         $this->assertEquals(
-            'SELECT * FROM goods WHERE goods.id=:id ',
+            'SELECT goods.* FROM goods WHERE goods.id=:id ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -69,14 +61,10 @@ class SelectAllTest extends TestCase
             ->orderIdDesc()
             ->__invoke();
 
-        echo "<pre>-->";
-        print_r($data);
-        echo "<--@in " . __FILE__ . " on line " . __LINE__ . "\n";
-
         $this->assertTrue(is_array($data));
 
         $this->assertEquals(
-            'SELECT * FROM goods WHERE goods.id=:id Order By goods.id DESC ',
+            'SELECT goods.* FROM goods WHERE goods.id=:id Order By goods.id DESC ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }

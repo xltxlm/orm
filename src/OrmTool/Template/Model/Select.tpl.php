@@ -1,7 +1,8 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
-<?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
-<?php /** @var \OrmTool\Unit\ForeignKey[] $ForeignKeys */?>
+<?php /** @var \OrmTool\Unit\Table $tableObject */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
+<?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
+<?php /** @var \OrmTool\Unit\ForeignKey[] $foreignKeys */?>
 <?php /** @var bool $moreData */?>
 <<?='?'?>php
 /**
@@ -17,21 +18,21 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
  * Class select
  * @package OrmTool\Template\Model
  */
-final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?=\OrmTool\Template\Select::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?=\OrmTool\Template\Select::class?>
 
 {
     /** @var bool  一维查询 还是 二维查询 */
     protected $moreData = <?=$moreData ? 'true' : 'false'?>;
 
     /** @var string  模型类 */
-    protected $modelClass = <?=ucfirst($table->getTABLENAME())?>Model::class;
+    protected $modelClass = <?=ucfirst($tableSchema->getTABLENAME())?>Model::class;
 
     final public function __construct()
     {
-        $this->tableObject=(new <?=ucfirst($table->getTABLENAME())?>);
+        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
     }
 
-<?php foreach ($fields as $field) {
+<?php foreach ($fieldSchema as $field) {
     ?>
 
     /**
@@ -43,7 +44,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -54,7 +55,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
         return $this;
     }
 
@@ -64,9 +65,49 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Desc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
+<?php
+
+}?>
+
+<?php
+foreach ($foreignKeys as $foreignKey){
+
+?>
+    /**
+    * @return $this
+    */
+    public function joinOn<?=ucfirst($foreignKey->getReferTableName())?>By<?=join("And",$foreignKey->getKeysArray())?>()
+    {
+        $this->joinSql[]=" JOIN <?=$foreignKey->getReferTableName()?> ON (<?=$foreignKey->getJoinSql()?>) ";
+        $this->joinTable["<?=$foreignKey->getReferTableName()?>"]="<?=$foreignKey->getJoinFieldAs()?>";
+        return $this;
+    }
+
+<?php
+
+}?>
+
+<?php foreach ($tableObject->getJoinTables() as $table){
+?>
+    /**
+    * 获取关联表的结果对象 关联查询的时候可用
+    * @return <?=ucfirst($table)?>Model
+    */
+    public function getTable<?=ucfirst($table)?>()
+    {
+        $modelObject=(new <?=ucfirst($table)?>Model);
+        foreach( $this->result as $key => $result ) {
+            if( strpos($key,'AS')===0) {
+                $filedFunction='set'.ucfirst(substr($key,3+strlen("<?=$table?>")));
+                $modelObject->$filedFunction($result);
+            }
+        }
+        return $modelObject;
+    }
+
 <?php
 
 }?>
@@ -84,5 +125,13 @@ final class <?=ucfirst($table->getTABLENAME())?>Select<?=$moreData ? 'All' : 'On
             $this->binds = array_merge($this->binds,$value);
         }
         return $this;
+    }
+
+    /**
+     * @return <?=ucfirst($tableSchema->getTABLENAME())?>Model
+     */
+    final public function __invoke()
+    {
+        return parent::__invoke();
     }
 }

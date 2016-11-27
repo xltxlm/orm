@@ -1,5 +1,5 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
 <<?='?'?>php
 /**
@@ -11,7 +11,7 @@
 
 namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 
-final class <?=ucfirst($table->getTABLENAME())?>Insert extends \<?=\OrmTool\Template\Insert::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends \<?=\OrmTool\Template\Insert::class?>
 
 {
 <?php foreach ($fields as $field) {

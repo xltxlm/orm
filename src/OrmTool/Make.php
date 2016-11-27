@@ -70,59 +70,64 @@ final class Make
                 ]
             )
             ->__invoke();
-        /** @var \OrmTool\Unit\TableSchema[] $tables */
-        $tables = (new PdoInterface())
+        /** @var \OrmTool\Unit\TableSchema[] $tableSchemas */
+        $tableSchemas = (new PdoInterface())
             ->setPdoConfig($this->dbConfig)
             ->setSqlParserd($SqlParserd)
             ->setClassName(\OrmTool\Unit\TableSchema::class)
             ->selectAll();
-        foreach ($tables as $table) {
+        foreach ($tableSchemas as $tableSchema) {
             //表格定义
             ob_start();
             include __DIR__ . '/Template/Model/Table.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . '.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . '.php', ob_get_clean());
 
 
-            $fields = (new Table())
+            //字段列表
+            $tableObject = (new Table())
                 ->setDbConfig($this->dbConfig)
-                ->setName($table->getTABLENAME())
+                ->setName($tableSchema->getTABLENAME());
+            $fieldSchema = $tableObject
                 ->getFieldSchema();
+            //外键列表
+            $foreignKeys = $tableObject
+                ->getForeignKey();
 
             //基本表字段模型
             ob_start();
             include __DIR__ . '/Template/Model/Model.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Model.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Model.php', ob_get_clean());
 
             //操作 - 一维查询
             $moreData = false;
             ob_start();
             include __DIR__ . '/Template/Model/Select.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'SelectOne.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectOne.php', ob_get_clean());
             //操作 - 二维查询
             ob_start();
             $moreData = true;
             include __DIR__ . '/Template/Model/Select.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'SelectAll.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectAll.php', ob_get_clean());
             //操作 - 二维查询 - 带分页条
             ob_start();
             include __DIR__ . '/Template/Model/Page.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Page.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Page.php', ob_get_clean());
             //写入数据 模型
             ob_start();
             include __DIR__ . '/Template/Model/Insert.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Insert.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Insert.php', ob_get_clean());
             // 更新数据库操作
             ob_start();
             include __DIR__ . '/Template/Model/Update.tpl.php';
-            file_put_contents($path . '/' . ucfirst($table->getTABLENAME()) . 'Update.php', ob_get_clean());
+            file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Update.php', ob_get_clean());
 
             //枚举类型类
-            foreach ($fields as $field) {
+            foreach ($fieldSchema as $field) {
                 if ($field->getDATATYPE() == \OrmTool\Unit\FieldSchema::ENUM) {
                     ob_start();
                     include __DIR__ . "/Template/Model/Enum.tpl.php";
                     file_put_contents(
-                        $path . '/enum/Enum' . ucfirst($table->getTABLENAME()) .
+                        $path . '/enum/Enum' . ucfirst($tableSchema->getTABLENAME()) .
                         ucfirst($field->getCOLUMNNAME()) . ".php",
                         ob_get_clean()
                     );

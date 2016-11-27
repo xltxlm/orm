@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 10:47.
  */
-namespace Orm\I18N;
+namespace Orm\Exception\I18N;
 
 /**
  * out:翻译
@@ -20,6 +20,6 @@ class SqlParserI18N
      */
     public function getBindError()
     {
-        return I18N::getVal(lcfirst(substr(__FUNCTION__, 3)));
+        return I18N::getVal();
     }
 }

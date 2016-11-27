@@ -5,7 +5,7 @@
  * Date: 2016-11-13
  * Time: 下午 11:27.
  */
-namespace test\PdoInterface;
+namespace tests\PdoInterface;
 
 use Orm\PageObject;
 use Orm\PdoInterface;
@@ -20,22 +20,14 @@ class DemoTest extends \PHPUnit_Framework_TestCase
         $SqlParserd = (new SqlParser())
             ->setSql('select * from goods where id=1060  ')
             ->__invoke();
-        /** @var \test\PdoInterface\DataModel $data */
+        /** @var \tests\PdoInterface\DataModel $data */
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
-            ->setClassName(\test\PdoInterface\DataModel::class)
+            ->setClassName(\tests\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
 
-        $this->assertTrue(is_a($data, \test\pdoInterface\DataModel::class));
-
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
-
-        echo '<pre>-->';
-        print_r($data->getName());
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
+        $this->assertTrue(is_a($data, \tests\pdoInterface\DataModel::class));
     }
 
     //最普通的查询:带参数
@@ -49,19 +41,13 @@ class DemoTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /** @var \test\PdoInterface\DataModel $data */
+        /** @var \tests\PdoInterface\DataModel $data */
         $data = (new PdoInterface())
-            ->setPdoConfig((new doc()))
-            ->setClassName(\test\PdoInterface\DataModel::class)
+            ->setPdoConfig((new Doc()))
+            ->setClassName(\tests\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
-
-        echo '<pre>-->';
-        print_r($data->getName());
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
+        $this->assertEquals(\tests\pdoInterface\DataModel::class, get_class($data));
     }
 
     //最普通的查询 + 绑定多个参数 + 其中某个参数值是数组,改变原来的sql结构
@@ -72,27 +58,20 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             ->setSql('select * from goods where id=:id and name<>:name ')
             ->setBind(
                 [
-                    'id'   => [1006, 1016],
+                    'id' => [1006, 1016],
                     'name' => 'noname',
                 ]
             )
             ->__invoke();
-        /** @var \test\PdoInterface\DataModel[] $data */
-        $data = (new PdoInterface())
-            ->setPdoConfig((new doc()))
-            ->setClassName(\test\PdoInterface\DataModel::class)
-            ->setSqlParserd($SqlParserd)
-            ->setDebug(true)
-            ->selectAll();
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
 
-        foreach ($data as $item) {
-            echo '<pre>-->';
-            print_r($item->getName());
-            echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
-        }
+        /** @var \tests\PdoInterface\DataModel[] $data */
+        $data = (new PdoInterface())
+            ->setPdoConfig((new Doc()))
+            ->setClassName(\tests\PdoInterface\DataModel::class)
+            ->setSqlParserd($SqlParserd)
+            ->selectAll();
+
+        $this->assertEquals(\tests\pdoInterface\DataModel::class, get_class($data[0]));
     }
 
     //普通查询: 带分页效果
@@ -107,20 +86,17 @@ class DemoTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /* @var \test\pdoInterface\DataModel[] $data */
+        /* @var \tests\pdoInterface\DataModel[] $data */
         $pageObject = (new PageObject())
             ->setPageID(4)
             ->setPrepage(3);
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
-            ->setClassName(\test\PdoInterface\DataModel::class)
+            ->setClassName(\tests\PdoInterface\DataModel::class)
             ->page($pageObject);
 
         $this->assertTrue(is_array($data));
         $this->assertEquals(count($data), 3);
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
     }
 }

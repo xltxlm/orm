@@ -19,6 +19,16 @@ final class SqlParserd
     protected $sql = '';
     /** @var \Orm\Unit\BindPair[] 返回绑定的 字段=>值 */
     protected $bind = [];
+    /** @var array  返回绑定的 字段=>值*/
+    private $bindArray = [];
+
+    /**
+     * @return array
+     */
+    public function getBindArray(): array
+    {
+        return $this->bindArray;
+    }
 
     /**
      * @return string
@@ -56,6 +66,7 @@ final class SqlParserd
     public function setBind(BindPair $bind): SqlParserd
     {
         $this->bind[$bind->getKey()] = $bind;
+        $this->bindArray[$bind->getKey()] = $bind->getValue();
 
         return $this;
     }

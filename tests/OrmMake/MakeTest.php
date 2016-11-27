@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 1:29.
  */
-namespace test\OrmMake;
+namespace tests\OrmMake;
 
 use PHPUnit\Framework\TestCase;
 use setup\Doc;

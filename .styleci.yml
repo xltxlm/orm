@@ -2,6 +2,8 @@ preset: PSR2
 risky: false
 
 finder:
+  exclude:
+  - "demo"
   name:
     - "*.php"
   path:

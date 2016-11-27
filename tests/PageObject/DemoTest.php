@@ -28,6 +28,6 @@ class DemoTest extends TestCase
             ->setPageID(2)
             ->setPrepage(3)
             ->__invoke();
-        echo "<pre>-->";print_r($PageObject->getLimitSql());echo "<--@in ".__FILE__." on line ".__LINE__."\n";
+        $this->assertEquals(" LIMIT 3, 3 ", $PageObject->getLimitSql());
     }
 }

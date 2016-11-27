@@ -26,10 +26,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_array($data));
 
-        echo '<pre>-->';
-        print_r($data);
-        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
-
         $this->assertEquals(
             'SELECT * FROM goods WHERE id>=:id  LIMIT 3, 3 ',
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()

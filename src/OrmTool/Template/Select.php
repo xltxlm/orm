@@ -22,15 +22,17 @@ class Select extends PdoAction
     protected $modelClass = '';
 
     /**
-     * @return SqlParserd
+     * @return object
      */
-    final public function __invoke()
+    public function __invoke()
     {
-        $sql = 'SELECT * FROM '.$this->tableObject->getName().
-            ' WHERE '.implode(' AND ', $this->getSqls());
+        $sql = 'SELECT ' . $this->getJoinTable() . ' FROM ' . $this->tableObject->getName() .
+            join(" ", $this->joinSql) .
+            ' WHERE ' . implode(' AND ', $this->getSqls());
+
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
+            $sql .= ' Order By ' . implode(',', $this->getSqlsOrder());
         }
 
         $SqlParserd = (new SqlParser())
@@ -48,8 +50,9 @@ class Select extends PdoAction
             return $this->pdoInterface
                 ->selectAll();
         } else {
-            return $this->pdoInterface
+            $this->result = $this->pdoInterface
                 ->selectOne();
+            return $this->result;
         }
     }
 }

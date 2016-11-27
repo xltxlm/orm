@@ -1,5 +1,5 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
 <<?='?'?>php
 /**
@@ -15,15 +15,15 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
  * Class select
  * @package OrmTool\Template\Model
  */
-final class <?=ucfirst($table->getTABLENAME())?>Page extends \<?=\OrmTool\Template\Page::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends \<?=\OrmTool\Template\Page::class?>
 
 {
     /** @var string  模型类 */
-    protected $modelClass = <?=ucfirst($table->getTABLENAME())?>Model::class;
+    protected $modelClass = <?=ucfirst($tableSchema->getTABLENAME())?>Model::class;
 
     final public function __construct()
     {
-        $this->tableObject=(new <?=ucfirst($table->getTABLENAME())?>);
+        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
     }
 
 <?php foreach ($fields as $field) {
@@ -38,7 +38,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Page extends \<?=\OrmTool\Templa
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -49,7 +49,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Page extends \<?=\OrmTool\Templa
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
         return $this;
     }
 
@@ -59,7 +59,7 @@ final class <?=ucfirst($table->getTABLENAME())?>Page extends \<?=\OrmTool\Templa
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Desc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$table->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
 <?php

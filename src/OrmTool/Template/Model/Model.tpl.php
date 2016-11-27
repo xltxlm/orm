@@ -1,6 +1,6 @@
 <?php /** @var \OrmTool\Make $this */?>
-<?php /** @var \OrmTool\Unit\TableSchema $table */?>
-<?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
+<?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 
 namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
@@ -9,9 +9,9 @@ namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
 * Class select
 * @package OrmTool\Template\Model
 */
-final class <?=ucfirst($table->getTABLENAME())?>Model
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Model
 {
-<?php foreach ($fields as $field) {
+<?php foreach ($fieldSchema as $field) {
     ?>
     /** @var string <?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?> */
     protected $<?=$field->getCOLUMNNAME()?>;
