@@ -18,5 +18,5 @@ notifications:
     - xltxlm@qq.com
 
 after_script:
-  - tree .
-  - phpunit
+  - tree demo
+  - cat vendor/composer/autoload_psr4.php
