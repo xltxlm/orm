@@ -122,18 +122,6 @@ abstract class PdoConfig
     }
 
     /**
-     * @param string $db
-     *
-     * @return $this
-     */
-    private function setDb(string $db)
-    {
-        $this->db = $db;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getUsername(): string

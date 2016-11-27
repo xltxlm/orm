@@ -11,3 +11,10 @@ before_script:
   - mysql -uroot doc -e 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = "goods_logs" AND REFERENCED_TABLE_NAME IS NOT NULL;'
   - composer self-update
   - composer update
+
+notifications:
+  email:
+    - xltxlm@qq.com
+
+after_script:
+  - tree demo
