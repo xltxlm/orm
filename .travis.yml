@@ -20,3 +20,4 @@ notifications:
 after_script:
   - tree demo
   - cat vendor/composer/autoload_psr4.php
+  - cat demo/setup/Doc/GoodsSelectOne.php
