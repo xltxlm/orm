@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 11:44.
  */
-namespace sqlParser;
+namespace SqlParser;
 
 use Orm\Sql\SqlParser;
 

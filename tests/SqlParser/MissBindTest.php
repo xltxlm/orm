@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 10:16.
  */
-namespace sqlParser;
+namespace SqlParser;
 
 use Orm\Exception\SqlParserException;
 use Orm\Exception\I18N\I18N;

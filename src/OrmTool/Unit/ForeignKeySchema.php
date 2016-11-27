@@ -15,7 +15,6 @@ namespace OrmTool\Unit;
  */
 class ForeignKeySchema
 {
-
     protected $CONSTRAINT_CATALOG = "";
 
     protected $CONSTRAINT_SCHEMA = "";

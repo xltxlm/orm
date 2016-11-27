@@ -73,13 +73,12 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
 }?>
 
 <?php
-foreach ($foreignKeys as $foreignKey){
-
-?>
+foreach ($foreignKeys as $foreignKey) {
+    ?>
     /**
     * @return $this
     */
-    public function joinOn<?=ucfirst($foreignKey->getReferTableName())?>By<?=join("And",$foreignKey->getKeysArray())?>()
+    public function joinOn<?=ucfirst($foreignKey->getReferTableName())?>By<?=join("And", $foreignKey->getKeysArray())?>()
     {
         $this->joinSql[]=" JOIN <?=$foreignKey->getReferTableName()?> ON (<?=$foreignKey->getJoinSql()?>) ";
         $this->joinTable["<?=$foreignKey->getReferTableName()?>"]="<?=$foreignKey->getJoinFieldAs()?>";
@@ -90,8 +89,8 @@ foreach ($foreignKeys as $foreignKey){
 
 }?>
 
-<?php foreach ($tableObject->getJoinTables() as $table){
-?>
+<?php foreach ($tableObject->getJoinTables() as $table) {
+    ?>
     /**
     * 获取关联表的结果对象 关联查询的时候可用
     * @return <?=ucfirst($table)?>Model
