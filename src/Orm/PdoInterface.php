@@ -124,12 +124,7 @@ final class PdoInterface
     public function selectOne()
     {
         $stmt = $this->pdoexecute();
-        if (!$this->className) {
-            throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\Exception\I18N\PdoInterfaceI18N())
-                    ->getMissModel()
-            );
-        }
+        $this->checkClassName();
 
         return $stmt->fetchObject($this->className);
     }
@@ -137,12 +132,7 @@ final class PdoInterface
     public function selectAll()
     {
         $stmt = $this->pdoexecute();
-        if (!$this->className) {
-            throw new \Orm\Exception\PdoInterfaceException(
-                (new \Orm\Exception\I18N\PdoInterfaceI18N())
-                    ->getMissModel()
-            );
-        }
+        $this->checkClassName();
 
         return $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
     }
@@ -246,5 +236,15 @@ final class PdoInterface
         }
 
         return $stmt;
+    }
+
+    private function checkClassName():void
+    {
+        if (!$this->className) {
+            throw new \Orm\Exception\PdoInterfaceException(
+                (new \Orm\Exception\I18N\PdoInterfaceI18N())
+                    ->getMissModel()
+            );
+        }
     }
 }

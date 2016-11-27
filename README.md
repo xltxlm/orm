@@ -1,7 +1,5 @@
 [![StyleCI](https://styleci.io/repos/73656835/shield?branch=master)](https://styleci.io/repos/73656835)
-#<font color=red>目前还未全部完工，缺少group by 和 join 操作</font>
-
-11.25 之后继续更新
+[![代码质量](https://scrutinizer-ci.com/g/xltxlm/orm/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/xltxlm/orm/)
 
 # orm
 实现数据库的面向对象编程
@@ -49,6 +47,7 @@ test目录下有另外一份指引文档
 * php 7 以上版本
 * 开启PDO模块
 * 所有数据库,默认都必须开启事务
+* 默认查询全部字段 * ，不提供具体字段查询接口
 * 数据库不支持delete操作 - 所以不提供此方法,应该是加一个字段标记已删除状态
 * **<font color=red>查询的返回结果存储在预先设定的Model类,不支持返回数组</font>**
 * phpunit作为单元测试工具. bootstrap file 为 vendor\autoload.php
