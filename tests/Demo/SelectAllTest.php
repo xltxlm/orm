@@ -8,7 +8,7 @@
 namespace tests\Demo;
 
 use PHPUnit\Framework\TestCase;
-use setup\doc\GoodsSelectAll;
+use setup\Doc\GoodsSelectAll;
 
 /**
  * 验证多条结果的数据

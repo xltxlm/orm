@@ -7,7 +7,7 @@
  */
 namespace Demo;
 
-use setup\doc\GoodsPage;
+use setup\Doc\GoodsPage;
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {

@@ -9,9 +9,9 @@
 namespace Demo;
 
 use PHPUnit\Framework\TestCase;
-use setup\doc\Goods_logsModel;
-use setup\doc\Goods_logsSelectOne;
-use setup\doc\GoodsModel;
+use setup\Doc\Goods_logsModel;
+use setup\Doc\Goods_logsSelectOne;
+use setup\Doc\GoodsModel;
 
 /**
  * 联合表进行查询
