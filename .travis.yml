@@ -8,6 +8,6 @@ before_script:
   - "mysql -uroot doc -e 'source tests/doc.sql;'"
   - "mysql -uroot doc -e 'show tables ;'"
   - "mysql -uroot doc -e 'desc goods_logs ;'"
-  - "mysql -uroot doc -e 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = \'goods_logs\' AND REFERENCED_TABLE_NAME IS NOT NULL;'"
+  - mysql -uroot doc -e 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = "goods_logs" AND REFERENCED_TABLE_NAME IS NOT NULL;'
   - composer self-update
   - composer update
