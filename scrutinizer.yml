@@ -5,3 +5,7 @@ filter:
 build:
     environment:
         php: 7.0.8
+    dependencies:
+        before:
+          - "mysql -uroot -e 'create database IF NOT EXISTS `doc`;'"
+          - "mysql -uroot doc -e 'source tests/doc.sql;'"
