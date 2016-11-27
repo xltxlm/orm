@@ -5,7 +5,7 @@ services:
   - mysql
 before_script:
   - "mysql -e 'create database `doc`;'"
-  - "mysql -e 'CREATE USER doc@\'%\' IDENTIFIED BY \'123456\'; ' "
-  - "mysql -e 'GRANT ALL ON doc.* TO doc@\'%\'; ' "
+  - "mysql -e 'CREATE USER doc IDENTIFIED BY 123456; ' "
+  - "mysql -e 'GRANT ALL ON doc.* TO doc; ' "
   - composer self-update
   - composer update
