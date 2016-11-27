@@ -18,6 +18,6 @@ class Doc extends PdoConfig
     protected $driver = self::MYSQL;
     protected $TNS = '127.0.0.1';
     protected $db = 'doc';
-    protected $username = 'doc';
-    protected $password = '123456';
+    protected $username = 'root';
+    protected $password = '';
 }
