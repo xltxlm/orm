@@ -118,7 +118,7 @@ abstract class PdoConfig
      */
     public function getDb(): string
     {
-        return strtolower(basename(static::class));
+        return strtolower(basename('\\'.static::class));
     }
 
     /**
