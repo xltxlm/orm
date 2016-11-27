@@ -1,19 +1,17 @@
 #代码质量检测
 filter:
-    excluded_paths:
-        - tests/*
+    paths: [ "src/*" ]
 
 #构建系统
 build:
     environment:
-      timezone: PRC
       mysql: 5.7
       php:
-          version: 7.0
+          version: "7.0"
 
       hosts:
           local.dev: '127.0.0.1'
 
-dependencies:
-  before:
-    - "mysql -u root -e 'source tests/doc.sql' "
+    dependencies:
+      before:
+        - "mysql -u root -e 'source tests/doc.sql' "
