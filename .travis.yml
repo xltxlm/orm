@@ -6,5 +6,7 @@ services:
 before_script:
   - "mysql -uroot -e 'create database IF NOT EXISTS `doc`;'"
   - "mysql -uroot doc -e 'source tests/doc.sql;'"
+  - "mysql -uroot doc -e 'show tables ;'"
+  - "mysql -uroot doc -e 'desc goods_logs ;'"
   - composer self-update
   - composer update

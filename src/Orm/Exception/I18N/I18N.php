@@ -37,7 +37,7 @@ abstract class I18N
 
     final public static function getVal()
     {
-        $key = debug_backtrace()[1]['function'];
+        $key = lcfirst(substr(debug_backtrace()[1]['function'], 3));
         $ReflectionClass = new \ReflectionClass(__CLASS__);
         $className = $ReflectionClass->getNamespaceName() .
             '\\' . self::getLang() .
