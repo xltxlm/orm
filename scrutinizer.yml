@@ -2,12 +2,3 @@
 filter:
     paths: [ "src/*" ]
 
-#构建系统
-build:
-    environment:
-      mysql: 5.7
-      php:
-          version: "7.0"
-
-      hosts:
-          local.dev: '127.0.0.1'
