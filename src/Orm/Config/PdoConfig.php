@@ -118,7 +118,7 @@ abstract class PdoConfig
      */
     public function getDb(): string
     {
-        return $this->db;
+        return strtolower(basename(static::class));
     }
 
     /**
@@ -126,7 +126,7 @@ abstract class PdoConfig
      *
      * @return $this
      */
-    public function setDb(string $db)
+    private function setDb(string $db)
     {
         $this->db = $db;
 

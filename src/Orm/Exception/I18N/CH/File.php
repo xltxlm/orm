@@ -10,5 +10,5 @@ namespace Orm\Exception\I18N\CH;
 
 class File extends \Orm\Exception\I18N\File
 {
-    protected $makeDirError="创建文件夹失败";
+    public $makeDirError="创建文件夹失败";
 }

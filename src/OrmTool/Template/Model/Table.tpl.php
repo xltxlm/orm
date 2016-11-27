@@ -2,7 +2,7 @@
 <?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <<?='?'?>php
 
-    namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+    namespace <?=$this->getDbNameSpace()?>;
 
     use <?=Orm\Config\PdoConfig::class?>;
 

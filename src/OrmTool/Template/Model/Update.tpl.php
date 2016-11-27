@@ -9,7 +9,7 @@
  * Time: 下午 7:42
  */
 
-namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+namespace <?=$this->getDbNameSpace()?>;
 
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends \<?=\OrmTool\Template\Update::class?>
 

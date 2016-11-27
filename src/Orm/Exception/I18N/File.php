@@ -15,7 +15,7 @@ namespace Orm\Exception\I18N;
  */
 class File
 {
-    protected $makeDirError;
+    public $makeDirError;
 
     /**
      * @return mixed

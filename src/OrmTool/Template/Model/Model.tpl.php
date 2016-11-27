@@ -3,7 +3,7 @@
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 
-namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+namespace <?=$this->getDbNameSpace()?>;
 
 /**
 * Class select

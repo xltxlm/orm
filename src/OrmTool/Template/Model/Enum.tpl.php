@@ -9,7 +9,7 @@
  * Time: 下午 7:26
  */
 
-namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+namespace <?=$this->getDbNameSpace()?>;
 
 class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMNNAME())?>
 

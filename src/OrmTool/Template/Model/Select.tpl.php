@@ -12,7 +12,7 @@
  * Time: 下午 5:31
  */
 
-namespace <?=$this->getDbNameSpace()?>\<?=$this->getDbConfig()->getDb()?>;
+namespace <?=$this->getDbNameSpace()?>;
 
 /**
  * Class select
