@@ -2,5 +2,3 @@
 filter:
     paths: [ "src/*" ]
 
-#构建系统
-build: false
