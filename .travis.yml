@@ -4,7 +4,6 @@ php:
 services:
   - mysql
 before_script:
-  - sudo apt-get install tree
   - "mysql -uroot -e 'create database IF NOT EXISTS `doc`;'"
   - "mysql -uroot doc -e 'source tests/doc.sql;'"
   - "mysql -uroot doc -e 'show tables ;'"
@@ -13,11 +12,14 @@ before_script:
   - composer self-update
   - composer update
 
+addons:
+  apt:
+    packages:
+      - tree
+
 notifications:
   email:
     - xltxlm@qq.com
 
 after_script:
   - tree demo
-  - cat vendor/composer/autoload_psr4.php
-  - cat demo/setup/Doc/GoodsSelectOne.php
