@@ -1,6 +1,8 @@
 language: php
 php:
   - "7.0"
+services:
+  - mysql
 before_script:
   - "mysql -e 'create database `doc`;'"
   - "mysql -e 'CREATE USER doc@\'%\' IDENTIFIED BY \'123456\'; ' "
