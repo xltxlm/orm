@@ -18,4 +18,5 @@ notifications:
     - xltxlm@qq.com
 
 after_script:
-  - tree demo
+  - tree .
+  - phpunit
