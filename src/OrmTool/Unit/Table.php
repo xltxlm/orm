@@ -78,12 +78,13 @@ class Table
     final public function getForeignKey()
     {
         $sql = 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE ' .
-            'WHERE TABLE_NAME = :TABLE_NAME AND REFERENCED_TABLE_NAME IS NOT NULL';
+            'WHERE TABLE_NAME = :TABLE_NAME AND TABLE_SCHEMA=:TABLE_SCHEMA AND REFERENCED_TABLE_NAME IS NOT NULL';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind(
                 [
-                    'TABLE_NAME' => $this->getName()
+                    'TABLE_NAME' => $this->getName(),
+                    'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
                 ]
             )
             ->__invoke();
@@ -92,6 +93,7 @@ class Table
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName(ForeignKeySchema::class)
+            ->setDebug(true)
             ->selectAll();
         foreach ($ForeignKeySchema as $item) {
             if (!$this->foreignKey[$item->getCONSTRAINTNAME()]) {
@@ -125,12 +127,13 @@ class Table
      */
     final public function getFieldSchema(): array
     {
-        $sql = 'select * from information_schema.COLUMNS where table_name=:table_name ';
+        $sql = 'select * from information_schema.COLUMNS WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind(
                 [
                     'table_name' => $this->getName(),
+                    'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
                 ]
             )
             ->__invoke();
