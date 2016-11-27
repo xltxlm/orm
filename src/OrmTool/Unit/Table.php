@@ -29,7 +29,7 @@ class Table
     /** @var  \OrmTool\Unit\FieldSchema */
     private $fieldSchema;
     /** @var  \OrmTool\Unit\ForeignKey[] 外键对 */
-    private $foreignKey;
+    private $foreignKey=[];
 
     /**
      * @return string
@@ -93,7 +93,6 @@ class Table
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName(ForeignKeySchema::class)
-            ->setDebug(true)
             ->selectAll();
         foreach ($ForeignKeySchema as $item) {
             if (!$this->foreignKey[$item->getCONSTRAINTNAME()]) {
