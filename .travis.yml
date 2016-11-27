@@ -4,7 +4,7 @@ php:
 services:
   - mysql
 before_script:
-  - "mysql -e 'create database IF NOT EXISTS `doc`;'"
-  - "mysql -e 'source tests/doc.sql;'"
+  - "mysql -uroot -e 'create database IF NOT EXISTS `doc`;'"
+  - "mysql -uroot doc -e 'source tests/doc.sql;'"
   - composer self-update
   - composer update
