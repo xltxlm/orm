@@ -238,7 +238,7 @@ final class PdoInterface
         return $stmt;
     }
 
-    private function checkClassName():void
+    private function checkClassName()
     {
         if (!$this->className) {
             throw new \Orm\Exception\PdoInterfaceException(

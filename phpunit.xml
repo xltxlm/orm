@@ -12,9 +12,15 @@
 >
 
     <testsuites>
-        <testsuite name="ormtest">
-            <directory suffix=".php">./tests/</directory>
+        <testsuite name="makeOrm">
+            <directory suffix=".php">./tests/OrmMake/</directory>
         </testsuite>
+
+        <testsuite name="testOrm">
+            <directory suffix=".php">./tests/</directory>
+            <exclude>./tests/OrmMake</exclude>
+        </testsuite>
+
     </testsuites>
 
     <filter>

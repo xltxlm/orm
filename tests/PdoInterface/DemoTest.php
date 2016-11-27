@@ -27,7 +27,7 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             ->setSqlParserd($SqlParserd)
             ->selectOne();
 
-        $this->assertTrue(is_a($data, \tests\pdoInterface\DataModel::class));
+        $this->assertTrue(is_a($data, \tests\PdoInterface\DataModel::class));
     }
 
     //最普通的查询:带参数
@@ -47,7 +47,7 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             ->setClassName(\tests\PdoInterface\DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
-        $this->assertEquals(\tests\pdoInterface\DataModel::class, get_class($data));
+        $this->assertEquals(\tests\PdoInterface\DataModel::class, get_class($data));
     }
 
     //最普通的查询 + 绑定多个参数 + 其中某个参数值是数组,改变原来的sql结构
@@ -71,7 +71,7 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             ->setSqlParserd($SqlParserd)
             ->selectAll();
 
-        $this->assertEquals(\tests\pdoInterface\DataModel::class, get_class($data[0]));
+        $this->assertEquals(\tests\PdoInterface\DataModel::class, get_class($data[0]));
     }
 
     //普通查询: 带分页效果
@@ -86,7 +86,7 @@ class DemoTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /* @var \tests\pdoInterface\DataModel[] $data */
+        /* @var \tests\PdoInterface\DataModel[] $data */
         $pageObject = (new PageObject())
             ->setPageID(4)
             ->setPrepage(3);
