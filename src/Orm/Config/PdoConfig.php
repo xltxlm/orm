@@ -178,15 +178,7 @@ abstract class PdoConfig
      */
     private function instance()
     {
-        $tns = $this->getDriver() .
-            ':dbname=' . $this->getDb() .
-            ';host=' . $this->getTNS() .
-            ';port=' . $this->getPort();
-        //强制UTF8编码
-        if ($this->getDriver() == self::MYSQL) {
-            $tns .= ';charset=utf8';
-        }
-
+        $tns = $this->getPdoString();
         $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
         $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
         //所有数据库,默认都必须开启事务
@@ -213,5 +205,23 @@ abstract class PdoConfig
         if ($this->PDOObject) {
             $this->PDOObject->commit();
         }
+    }
+
+    /**
+     * 获取PDO链接的字符串
+     * @return string
+     */
+    public function getPdoString():string
+    {
+        $tns = $this->getDriver() .
+            ':dbname=' . $this->getDb() .
+            ';host=' . $this->getTNS() .
+            ';port=' . $this->getPort();
+        //强制UTF8编码
+        if ($this->getDriver() == self::MYSQL) {
+            $tns .= ';charset=utf8';
+            return $tns;
+        }
+        return $tns;
     }
 }

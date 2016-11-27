@@ -8,12 +8,14 @@
 
 namespace Demo;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * 联合表进行查询
  * Class JoinTest
  * @package Demo
  */
-class JoinTest
+class JoinTest extends TestCase
 {
 
 }

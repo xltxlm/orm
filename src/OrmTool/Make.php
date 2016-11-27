@@ -11,7 +11,6 @@ use Orm\Config\PdoConfig;
 use Orm\PdoInterface;
 use Orm\Sql\SqlParser;
 use OrmTool\Unit\Table;
-use setup\doc\EnumInterviewStatus;
 
 /**
  * out:把setup目录下的配置生成批量的配置类
@@ -123,7 +122,8 @@ final class Make
                     ob_start();
                     include __DIR__ . "/Template/Model/Enum.tpl.php";
                     file_put_contents(
-                        $path . '/enum/Enum' . ucfirst($table->getTABLENAME()) . ucfirst($field->getCOLUMNNAME()) . ".php",
+                        $path . '/enum/Enum' . ucfirst($table->getTABLENAME()) .
+                        ucfirst($field->getCOLUMNNAME()) . ".php",
                         ob_get_clean()
                     );
                 }

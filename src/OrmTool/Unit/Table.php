@@ -69,10 +69,26 @@ class Table
     }
 
     /**
+     * 获取外键
      * @return ForeignKey
      */
     public function getForeignKey(): ForeignKey
     {
+        $sql = 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE ' .
+            'WHERE TABLE_NAME = :TABLE_NAME AND REFERENCED_TABLE_NAME IS NOT NULL';
+        $SqlParserd = (new SqlParser())
+            ->setSql($sql)
+            ->setBind(
+                [
+                    'TABLE_NAME' => $this->getName()
+                ]
+            )
+            ->__invoke();
+        $this->ForeignKey = (new PdoInterface())
+            ->setPdoConfig($this->getDbConfig())
+            ->setSqlParserd($SqlParserd)
+            ->setClassName(ForeignKey::class)
+            ->selectAll();
         return $this->ForeignKey;
     }
 

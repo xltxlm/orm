@@ -1,6 +1,7 @@
 <?php /** @var \OrmTool\Make $this */?>
 <?php /** @var \OrmTool\Unit\TableSchema $table */?>
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
+<?php /** @var \OrmTool\Unit\ForeignKey[] $ForeignKeys */?>
 <?php /** @var bool $moreData */?>
 <<?='?'?>php
 /**
