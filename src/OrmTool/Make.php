@@ -58,7 +58,19 @@ final class Make
         $path = dirname($ReflectionClass->getFileName()) . '/' . basename(get_class($this->dbConfig));
         $this->dbNameSpace = $ReflectionClass->getNamespaceName();
         mkdir($path);
+        if (!is_dir($path)) {
+            throw new \Orm\Exception\FileException(
+                (new \Orm\Exception\I18N\File)
+                    ->getMakeDirError()
+            );
+        }
         mkdir($path . '/enum/');
+        if (!is_dir($path . '/enum/')) {
+            throw new \Orm\Exception\FileException(
+                (new \Orm\Exception\I18N\File)
+                    ->getMakeDirError()
+            );
+        }
 
         //获取数据库的全部表列表
         $sql = 'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=:TABLE_SCHEMA ';
