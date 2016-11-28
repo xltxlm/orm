@@ -7,5 +7,12 @@ build:
         php: 7.0.8
     dependencies:
         before:
-          - "mysql -uroot -e 'create database IF NOT EXISTS `doc`;'"
-          - "mysql -uroot doc -e 'source tests/doc.sql;'"
+          - mysql -uroot -e 'create database IF NOT EXISTS `doc`;'
+          - mysql -uroot doc -e 'source tests/doc.sql;'
+    tests:
+        override:
+            -
+                command: 'phpunit --coverage-clover=some-file'
+                coverage:
+                    file: 'some-file'
+                    format: 'clover'
