@@ -4,12 +4,6 @@ php:
 dist: trusty
 sudo: required
 
-#缓存
-cache:
-  bundler: true
-  directories:
-    - vendor
-
 services:
   - mysql
 before_script:
