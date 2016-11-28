@@ -31,8 +31,8 @@
 
 
     <logging>
-        <log type="coverage-html" target="coverage" showUncoveredFiles="true"/>
-        <log type="coverage-clover" target="coverage.xml" showUncoveredFiles="true"/>
+        <!-- log type="coverage-html" target="coverage" showUncoveredFiles="true"/>
+        <log type="coverage-clover" target="coverage.xml" showUncoveredFiles="true"/ -->
     </logging>
 
     <php>

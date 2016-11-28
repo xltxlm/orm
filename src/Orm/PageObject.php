@@ -13,9 +13,9 @@ final class PageObject
 
     /** @var int 传递过来指明当前第几页 */
     protected $pageID;
-    /** @var int 每页显示多少条 */
+    /** @var double 每页显示多少条 */
     protected $prepage = 10;
-    /** @var int 一共可分多少页 */
+    /** @var double 一共可分多少页 */
     protected $pages;
     /** @var int 一共有多少条数据 */
     protected $total;

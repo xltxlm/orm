@@ -87,7 +87,8 @@ final class SqlParser
                 $this->sql = strtr($this->sql, ["=:$key " => ' IN ('.implode(',', $bindField).' ) ']);
             } elseif ($value === null) {
                 //如果绑定的是null,那么在where的位置上需要改进
-                preg_match("#where(.*)=:$key#iUs", $this->sql, $out);
+                preg_match("#where(.*)=:$key#iU
+                s", $this->sql, $out);
                 if (!empty($out)) {
                     $this->sql = strtr($this->sql, ["=:$key " => ' IS NULL ']);
                 } else {

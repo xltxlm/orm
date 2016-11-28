@@ -1,4 +1,7 @@
-<?php
+<?php /** @var \OrmTool\Make $this */?>
+<?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
+<?php /** @var \OrmTool\Unit\FieldSchema $field */?>
+<<?='?'?>php
 /**
  * Created by PhpStorm.
  * User: Administrator

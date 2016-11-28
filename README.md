@@ -1,5 +1,7 @@
 [![StyleCI](https://styleci.io/repos/73656835/shield?branch=master)](https://styleci.io/repos/73656835)
 [![代码质量](https://scrutinizer-ci.com/g/xltxlm/orm/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/xltxlm/orm/)
+[![代码质量](https://scrutinizer-ci.com/g/xltxlm/orm/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/xltxlm/orm/)
+
 [![Build Status](https://travis-ci.org/xltxlm/orm.svg?branch=master)](https://travis-ci.org/xltxlm/orm)
 
 # orm

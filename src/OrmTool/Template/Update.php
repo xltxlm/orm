@@ -5,6 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 7:50.
  */
+
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
@@ -19,14 +20,14 @@ class Update extends PdoAction
     /** @var array where 部分的sql */
     protected $whereSqls = [];
 
-    public function __invoke()
+    final public function __invoke()
     {
-        $sql = 'UPDATE ' . $this->tableObject->getName() . ' SET ' .
-            implode(',', $this->sqls) . ' WHERE ' .
-            implode(' AND ' . $this->whereSqls);
-
+        $sql = 'UPDATE '.$this->tableObject->getName().' SET '.
+            implode(',', $this->sqls).' WHERE '.
+            implode(' AND ', $this->whereSqls);
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
+            ->setBind($this->getBinds())
             ->__invoke();
 
         $this->pdoInterface = (new PdoInterface())

@@ -232,6 +232,7 @@ final class PdoInterface
         if ($this->debug) {
             echo "\n=========================\n";
             print_r($this->sqlParserd);
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
         }
 

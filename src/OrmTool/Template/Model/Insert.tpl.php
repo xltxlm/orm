@@ -1,6 +1,6 @@
 <?php /** @var \OrmTool\Make $this */?>
 <?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
+<?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -14,7 +14,12 @@ namespace <?=$this->getDbNameSpace()?>;
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends \<?=\OrmTool\Template\Insert::class?>
 
 {
-<?php foreach ($fields as $field) {
+
+    final public function __construct()
+    {
+        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
+    }
+<?php foreach ($fieldSchema as $field) {
     ?>
     protected $<?=$field->getCOLUMNNAME()?>;
 
@@ -27,7 +32,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends \<?=\OrmToo
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = ":<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }

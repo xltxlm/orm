@@ -12,8 +12,8 @@ namespace Orm\Exception\I18N;
  */
 class PdoInterfaceI18N
 {
-    public $missModel;
-    public $updateNoWhere;
+    protected $missModel;
+    protected $updateNoWhere;
 
     /**
      * @return mixed

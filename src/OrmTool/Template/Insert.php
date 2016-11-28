@@ -5,6 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 2:24.
  */
+
 namespace OrmTool\Template;
 
 use Orm\PdoInterface;
@@ -23,7 +24,7 @@ class Insert extends PdoAction
     {
         $sql = 'INSERT INTO '.$this->tableObject->getName().
             ' ('.implode(',', array_keys($this->getSqls())).') VALUES ( '.
-            implode(',', $this->getSqls()).') ';
+            implode(',', $this->getSqls()).' ) ';
 
         $SqlParserd = (new SqlParser())
             ->setSql($sql)

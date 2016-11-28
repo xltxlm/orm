@@ -12,5 +12,5 @@ namespace Orm\Exception\I18N\CH;
  */
 class SqlParserI18N extends \Orm\Exception\I18N\SqlParserI18N
 {
-    public $bindError = '绑定参数不对称,sql要求绑定:%s,实际绑定:%s';
+    protected $bindError = '绑定参数不对称,sql要求绑定:%s,实际绑定:%s';
 }

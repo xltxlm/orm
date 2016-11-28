@@ -5,6 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 10:49.
  */
+
 namespace Orm\Exception\I18N;
 
 /**
@@ -13,8 +14,8 @@ namespace Orm\Exception\I18N;
  */
 abstract class I18N
 {
-    const CH = 'CH';
-    const EN = 'EN';
+    const CH               = 'CH';
+    const EN               = 'EN';
     protected static $lang = self::CH;
 
     /**
@@ -37,15 +38,18 @@ abstract class I18N
 
     final public static function getVal()
     {
-        $key = lcfirst(substr(debug_backtrace()[1]['function'], 3));
+        $debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $key             = lcfirst(substr($debug_backtrace[1]['function'], 3));
         $ReflectionClass = new \ReflectionClass(__CLASS__);
-        $className = $ReflectionClass->getNamespaceName() .
-            '\\' . self::getLang() .
-            '\\' . basename(debug_backtrace()[0]['file'], '.php');
+        $className       = $ReflectionClass->getNamespaceName().
+            '\\'.self::getLang().
+            '\\'.basename($debug_backtrace[0]['file'], '.php');
         /** @var \Orm\Exception\I18N\SqlParserI18N $classObject */
-        $classObject = (new \ReflectionClass($className))
-            ->newInstance();
+        $I18NObject      = new $className();
+        $reflectionClass = new \ReflectionClass($I18NObject);
+        $property        = $reflectionClass->getProperty($key);
+        $property->setAccessible(true);
 
-        return $classObject->$key;
+        return $property->getValue($I18NObject);
     }
 }

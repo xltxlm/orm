@@ -13,7 +13,7 @@ namespace Orm\Exception\I18N;
  */
 class SqlParserI18N
 {
-    public $bindError;
+    protected $bindError;
 
     /**
      * @return string

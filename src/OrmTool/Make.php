@@ -61,14 +61,14 @@ final class Make
         mkdir($path);
         if (!is_dir($path)) {
             throw new \Orm\Exception\FileException(
-                (new \Orm\Exception\I18N\File)
+                (new \Orm\Exception\I18N\FileI18N)
                     ->getMakeDirError()
             );
         }
         mkdir($path . '/enum/');
         if (!is_dir($path . '/enum/')) {
             throw new \Orm\Exception\FileException(
-                (new \Orm\Exception\I18N\File)
+                (new \Orm\Exception\I18N\FileI18N)
                     ->getMakeDirError()
             );
         }

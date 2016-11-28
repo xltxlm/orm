@@ -1,6 +1,6 @@
 <?php /** @var \OrmTool\Make $this */?>
 <?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \OrmTool\Unit\FieldSchema[] $fields */?>
+<?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -14,7 +14,12 @@ namespace <?=$this->getDbNameSpace()?>;
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends \<?=\OrmTool\Template\Update::class?>
 
 {
-<?php foreach ($fields as $field) {
+    final public function __construct()
+    {
+        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
+    }
+
+<?php foreach ($fieldSchema as $field) {
     ?>
     protected $<?=$field->getCOLUMNNAME()?>;
 

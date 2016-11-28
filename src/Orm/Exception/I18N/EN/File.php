@@ -8,7 +8,7 @@
 
 namespace Orm\Exception\I18N\EN;
 
-class File extends \Orm\Exception\I18N\CH\File
+class File extends \Orm\Exception\I18N\CH\FileI18N
 {
     public $makeDirError="Create folder failed";
 }
