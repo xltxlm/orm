@@ -5,6 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 10:16.
  */
+
 namespace SqlParser;
 
 use Orm\Exception\SqlParserException;
@@ -49,6 +50,21 @@ class MissBindTest extends \PHPUnit_Framework_TestCase
             ->setBind([
                 'id' => 1,
                 'dd' => 'dd',
+            ])
+            ->__invoke();
+    }
+    /**
+     * 绑定的参数不一致.
+     */
+    public function test3()
+    {
+        file_put_contents(__DIR__.'/a.log', date("r\n"), FILE_APPEND);
+        $sql = 'insert into goods (id,name) values (:id,:name)';
+        (new SqlParser())
+            ->setSql($sql)
+            ->setBind([
+                'id' => 1,
+                'name' => 'dd',
             ])
             ->__invoke();
     }

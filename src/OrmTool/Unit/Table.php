@@ -5,6 +5,7 @@
  * Date: 2016-11-12
  * Time: 上午 11:43.
  */
+
 namespace OrmTool\Unit;
 
 use Orm\Config\PdoConfig;
@@ -26,10 +27,10 @@ class Table
 
     /** @var array */
     protected $joinTables = [];
-    /** @var  \OrmTool\Unit\FieldSchema */
-    private $fieldSchema;
-    /** @var  \OrmTool\Unit\ForeignKey[] 外键对 */
-    private $foreignKey=[];
+    /** @var \OrmTool\Unit\FieldSchema[] */
+    private $fieldSchema = [];
+    /** @var \OrmTool\Unit\ForeignKey[] 外键对 */
+    private $foreignKey = [];
 
     /**
      * @return string
@@ -72,12 +73,13 @@ class Table
     }
 
     /**
-     * 获取外键
+     * 获取外键.
+     *
      * @return ForeignKey[]
      */
     final public function getForeignKey()
     {
-        $sql = 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE ' .
+        $sql = 'SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE '.
             'WHERE TABLE_NAME = :TABLE_NAME AND TABLE_SCHEMA=:TABLE_SCHEMA AND REFERENCED_TABLE_NAME IS NOT NULL';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
@@ -113,7 +115,8 @@ class Table
     }
 
     /**
-     * 返回此表关联的表数组
+     * 返回此表关联的表数组.
+     *
      * @return array
      */
     public function getJoinTables():array
@@ -122,12 +125,16 @@ class Table
     }
 
     /**
+     * 获取表格的字段，以类集合形式返回.
+     *
      * @return \OrmTool\Unit\FieldSchema[]
      */
-    final public function getFieldSchema(): array
+    final public function getFieldSchemas(): array
     {
-        $sql = 'select * from information_schema.COLUMNS WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
-        $SqlParserd = (new SqlParser())
+        if (!$this->fieldSchema) {
+            $sql = 'select * from information_schema.COLUMNS '.
+            'WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
+            $SqlParserd = (new SqlParser())
             ->setSql($sql)
             ->setBind(
                 [
@@ -137,25 +144,43 @@ class Table
             )
             ->__invoke();
 
-        return $this->fieldSchema = (new PdoInterface())
+            $this->fieldSchema = (new PdoInterface())
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setClassName(\OrmTool\Unit\FieldSchema::class)
             ->selectAll();
+        }
+
+        return $this->fieldSchema;
     }
 
     /**
-     * 返回表的全部字段别名
+     * 返回当前表的字段数组.
+     */
+    public function getFields()
+    {
+        $fields       = [];
+        $fieldSchemas = $this->getFieldSchemas();
+        foreach ($fieldSchemas as $fieldSchema) {
+            $fields[] = '`'.$fieldSchema->getCOLUMNNAME().'`';
+        }
+
+        return $fields;
+    }
+    /**
+     * 返回表的全部字段别名.
+     *
      * @return string
      */
     public function getFieldsAs()
     {
-        $array = [];
-        $FieldSchemas = $this->getFieldSchema();
+        $array        = [];
+        $FieldSchemas = $this->getFieldSchemas();
         foreach ($FieldSchemas as $fieldSchema) {
-            $array[] = $this->getName() . '.' . $fieldSchema->getCOLUMNNAME() . ' AS AS' .
-                $this->getName() . '_' . $fieldSchema->getCOLUMNNAME();
+            $array[] = $this->getName().'.'.$fieldSchema->getCOLUMNNAME().' AS AS'.
+                $this->getName().'_'.$fieldSchema->getCOLUMNNAME();
         }
-        return join(",", $array);
+
+        return implode(',', $array);
     }
 }

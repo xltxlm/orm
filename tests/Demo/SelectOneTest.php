@@ -39,7 +39,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
         $goodsSelectOne = new GoodsSelectOne();
 
         $data = $goodsSelectOne
-            ->setId(1061)
+            ->whereId(1061)
             ->__invoke();
         $this->assertTrue(is_a($data, \setup\Doc\GoodsModel::class));
 
@@ -55,7 +55,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
         $goodsSelectOne = new GoodsSelectOne();
 
         $data = $goodsSelectOne
-            ->setId(1061)
+            ->whereId(1061)
             ->orderIdDesc()
             ->__invoke();
         $this->assertTrue(is_a($data, \setup\Doc\GoodsModel::class));

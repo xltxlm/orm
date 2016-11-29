@@ -99,7 +99,7 @@ final class SqlParser
             }
         }
         //计算sql的需要绑定的变量数目 和 准备绑定的数目之间的差别
-        preg_match_all('#:([a-z|0-9|_]+)[ ,]#iUS', $this->getSql(), $out);
+        preg_match_all('#:([a-z|0-9|_]+)[ ,)]#iUS', $this->getSql(), $out);
         $sqlBinds = array_values($out[1]);
         sort($sqlBinds);
         $binds = array_keys($sqlParserd->getBind());

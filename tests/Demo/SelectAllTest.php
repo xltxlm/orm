@@ -41,7 +41,7 @@ class SelectAllTest extends TestCase
         $goodsSelectOne = new GoodsSelectAll();
 
         $data = $goodsSelectOne
-            ->setId(1020)
+            ->whereId(1020)
             ->__invoke();
         $this->assertTrue(is_array($data));
 
@@ -57,7 +57,7 @@ class SelectAllTest extends TestCase
         $goodsSelectOne = new GoodsSelectAll();
 
         $data = $goodsSelectOne
-            ->setId(1061)
+            ->whereId(1061)
             ->orderIdDesc()
             ->__invoke();
 

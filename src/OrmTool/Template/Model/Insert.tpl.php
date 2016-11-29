@@ -1,4 +1,4 @@
-<?php /** @var \OrmTool\Make $this */?>
+<?php /** @var \OrmTool\Maker $this */?>
 <?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php

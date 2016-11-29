@@ -12,13 +12,18 @@
 >
 
     <testsuites>
+        <!-- 先生成表结构-->
         <testsuite name="makeOrm">
             <directory suffix=".php">./tests/OrmMake/</directory>
         </testsuite>
-
+        <!--运行框架单元测试-->
         <testsuite name="testOrm">
             <directory suffix=".php">./tests/</directory>
             <exclude>./tests/OrmMake</exclude>
+        </testsuite>
+        <!-- 高并发请求下的表现-->
+        <testsuite name="testOrm">
+            <directory suffix=".php">./duplicateTests/</directory>
         </testsuite>
 
     </testsuites>

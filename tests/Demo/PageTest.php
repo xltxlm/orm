@@ -5,14 +5,16 @@
  * Date: 2016-11-14
  * Time: 下午 8:26.
  */
+
 namespace Demo;
 
+use setup\Doc\GoodsModel;
 use setup\Doc\GoodsPage;
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * 带 where 条件,非赋值查询
+     * 带 where 条件,非赋值查询.
      */
     public function test1()
     {
@@ -25,6 +27,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertTrue(is_array($data));
+        $this->assertEquals(GoodsModel::class, get_class(current($data)));
 
         $this->assertEquals(
             'SELECT * FROM goods WHERE id>=:id  LIMIT 3, 3 ',

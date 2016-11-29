@@ -5,6 +5,7 @@
  * Date: 2016-11-13
  * Time: 下午 9:40.
  */
+
 namespace Orm;
 
 use Orm\Config\PdoConfig;
@@ -145,6 +146,16 @@ final class PdoInterface
     }
 
     /**
+     * 纯粹执行sql.
+     *
+     * @return \PDOStatement
+     */
+    public function execute()
+    {
+        return $this->pdoexecute();
+    }
+
+    /**
      * @throws Exception\PdoInterfaceException
      *
      * @return int
@@ -170,9 +181,9 @@ final class PdoInterface
     public function page(\Orm\PageObject &$pageObject)
     {
         //查询当前条件下可以命中多少数据量
-        $str = ' FROM ';
-        $pos = stripos($this->sqlParserd->getSql(), $str);
-        $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
+        $str        = ' FROM ';
+        $pos        = stripos($this->sqlParserd->getSql(), $str);
+        $whereSql   = substr($this->sqlParserd->getSql(), $pos + strlen($str));
         $SqlParserd = (new SqlParserd())
             ->setSql('SELECT count(*) FROM '.$whereSql);
         foreach ($this->getSqlParserd()->getBind() as $value) {
@@ -207,7 +218,7 @@ final class PdoInterface
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
-        $error = $stmt->errorInfo();
+        $error    = $stmt->errorInfo();
         $error[0] = (int) filter_var(
             $error[0],
             FILTER_SANITIZE_NUMBER_INT
@@ -231,7 +242,11 @@ final class PdoInterface
 
         if ($this->debug) {
             echo "\n=========================\n";
+            echo "SQL:\n";
             print_r($this->sqlParserd);
+            echo "\nTNS:\n";
+            print_r($this->getPdoConfig()->getPdoString());
+            echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
         }

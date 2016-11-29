@@ -1,9 +1,10 @@
-<?php /** @var \OrmTool\Make $this */?>
+<?php /** @var \OrmTool\Maker $this */?>
 <?php /** @var \OrmTool\Unit\Table $tableObject */?>
 <?php /** @var \OrmTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \OrmTool\Unit\FieldSchema[] $fieldSchema */?>
 <?php /** @var \OrmTool\Unit\ForeignKey[] $foreignKeys */?>
 <?php /** @var bool $moreData */?>
+<?php /** @var bool $pageClass */?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -16,9 +17,12 @@ namespace <?=$this->getDbNameSpace()?>;
 
 /**
  * Class select
- * @package OrmTool\Template\Model
  */
+<?php if($pageClass){?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends \<?=\OrmTool\Template\Page::class?>
+<?php }else{ ?>
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?=\OrmTool\Template\Select::class?>
+<?}?>
 
 {
     /** @var bool  一维查询 还是 二维查询 */
@@ -42,7 +46,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
 
      * @return $this
      */
-    public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
         $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;

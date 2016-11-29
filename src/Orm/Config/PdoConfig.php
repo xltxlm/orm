@@ -5,6 +5,7 @@
  * Date: 2015/12/27
  * Time: 21:54.
  */
+
 namespace Orm\Config;
 
 /**
@@ -13,8 +14,12 @@ namespace Orm\Config;
  */
 abstract class PdoConfig
 {
+    /** @var array 确保一个进程相同配置只能链接一次 */
+    private static $instance = [];
+
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';
+    private $link;
 
     /** @var \PDO */
     protected $PDOObject;
@@ -177,15 +182,29 @@ abstract class PdoConfig
 
     /**
      * 返回链接,单例.
+     *
+     * @return \PDO
      */
     final public function instanceSelf()
     {
-        static $instance;
-        if (!$instance) {
-            $instance = $this->instance();
+        if (!self::$instance[$this->getPdoString()]) {
+            self::$instance[$this->getPdoString()] = $this->instance();
         }
 
-        return $instance;
+        return self::$instance[$this->getPdoString()];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getInstance(): array
+    {
+        return self::$instance;
+    }
+
+    public static function clearInstance()
+    {
+        self::$instance = [];
     }
 
     public function __destruct()
@@ -196,20 +215,21 @@ abstract class PdoConfig
     }
 
     /**
-     * 获取PDO链接的字符串
+     * 获取PDO链接的字符串.
+     *
      * @return string
      */
     public function getPdoString():string
     {
-        $tns = $this->getDriver() .
-            ':dbname=' . $this->getDb() .
-            ';host=' . $this->getTNS() .
-            ';port=' . $this->getPort();
+        $this->link = $this->getDriver().
+            ':dbname='.$this->getDb().
+            ';host='.$this->getTNS().
+            ';port='.$this->getPort();
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
-            $tns .= ';charset=utf8';
-            return $tns;
+            $this->link .= ';charset=utf8';
         }
-        return $tns;
+
+        return $this->link;
     }
 }

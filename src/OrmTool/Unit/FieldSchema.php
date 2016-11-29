@@ -90,6 +90,7 @@ final class FieldSchema
             $out[1][$itemPinyin] = $item;
             unset($out[1][$key]);
         }
+
         return $this->ENUM_ARRAY = $out[1];
     }
 
@@ -135,9 +136,9 @@ final class FieldSchema
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCOLUMNDEFAULT(): string
+    public function getCOLUMNDEFAULT()
     {
         return $this->COLUMN_DEFAULT;
     }

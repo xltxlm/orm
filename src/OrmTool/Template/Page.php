@@ -77,9 +77,9 @@ class Page extends PdoAction
     }
 
     /**
-     * @return SqlParserd
+     * @return \stdClass
      */
-    final public function __invoke()
+    public function __invoke()
     {
         $sql = 'SELECT * FROM ' . $this->tableObject->getName() .
             ' WHERE ' . implode(' AND ', $this->getSqls());

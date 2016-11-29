@@ -29,7 +29,7 @@ class JoinTest extends TestCase
     {
         $Goods_logsSelectOneObject = (new Goods_logsSelectOne())
             ->joinOnGoodsByidAndname()
-            ->setId(2);
+            ->whereId(2);
 
         $Goods_logsModel = $Goods_logsSelectOneObject
             ->__invoke();

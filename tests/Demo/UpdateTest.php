@@ -27,7 +27,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
             ->__invoke();
         $this->assertEquals(1, $num);
         $goods = (new GoodsSelectOne())
-            ->setId(1008)
+            ->whereId(1008)
             ->__invoke();
         $this->assertEquals($name, $goods->getName());
     }

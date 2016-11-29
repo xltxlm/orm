@@ -3,46 +3,27 @@
 namespace Orm;
 
 /**
- * out:分页类
+ * 分页类，根据参数，计算出分页结构
  * Class page.
  */
 final class PageObject
 {
-    protected $min;
-    protected $max;
+    /** @var int 显示的最小分页条数目 */
+    private $min = 1;
+    /** @var int 显示的最大分页条数目 */
+    private $max = 1;
 
     /** @var int 传递过来指明当前第几页 */
     protected $pageID;
-    /** @var double 每页显示多少条 */
+    /** @var int 每页显示多少条 */
     protected $prepage = 10;
-    /** @var double 一共可分多少页 */
-    protected $pages;
+    /** @var int 一共可分多少页 */
+    private $pages;
+
     /** @var int 一共有多少条数据 */
     protected $total;
     /** @var string 追加的SQL */
-    protected $limitSql = '';
-    /** @var object[] 数据 */
-    protected $data = [];
-
-    /**
-     * @return array
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param object[] $data
-     *
-     * @return PageObject
-     */
-    public function setData(array $data): PageObject
-    {
-        $this->data = $data;
-
-        return $this;
-    }
+    private $limitSql = '';
 
     /**
      * 当前条数从第几条开始算起.
@@ -79,11 +60,11 @@ final class PageObject
     }
 
     /**
-     * @param int $pageID
+     * @param float $pageID
      *
      * @return PageObject
      */
-    public function setPageID(int $pageID): PageObject
+    public function setPageID(float $pageID): PageObject
     {
         $this->pageID = $pageID;
 
@@ -177,12 +158,12 @@ final class PageObject
      */
     public function __invoke()
     {
-        $total = intval($this->total);
-        $this->pages = max(1, abs(ceil(($total / $this->prepage))));
-        $this->pageID = min(max((int) $this->pageID, 1), $this->pages); //2
-        $pageadd = 5;
+        $total        = intval($this->total);
+        $this->pages  = (int) max(1, abs(ceil(($total / $this->prepage))));
+        $this->pageID = (int) min(max($this->pageID, 1), $this->pages); //2
+        $pageadd      = 5;
         //每次最多显示多少页目
-        $num = ceil($pageadd / 2);
+        $num       = ceil($pageadd / 2);
         $this->max = min(max($this->pageID + $num, $pageadd), $this->pages);
         $this->min = max(min($this->pageID - $num, $this->pages - $pageadd), 1);
 

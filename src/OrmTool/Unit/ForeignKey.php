@@ -3,24 +3,23 @@
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016-11-27
- * Time: 下午 2:53
+ * Time: 下午 2:53.
  */
 
 namespace OrmTool\Unit;
 
 /**
  * 表的实际外键
- * Class ForeignKey
- * @package OrmTool\Unit
+ * Class ForeignKey.
  */
 final class ForeignKey
 {
-    /** @var  Table  从表实体 */
+    /** @var Table 从表实体 */
     protected $tableObject;
     /** @var string 当前表的名称 - 下级表 */
-    protected $tableName = "";
+    protected $tableName = '';
     /** @var string 关联的原始表的名称 */
-    protected $referTableName = "";
+    protected $referTableName = '';
     /** @var array 外键对应字段 */
     protected $keysArray = [];
 
@@ -34,14 +33,15 @@ final class ForeignKey
 
     /**
      * @param Table $tableObject
+     *
      * @return ForeignKey
      */
     public function setTableObject(Table $tableObject): ForeignKey
     {
         $this->tableObject = $tableObject;
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -52,31 +52,36 @@ final class ForeignKey
     }
 
     /**
-     * 返回可以用于sql拼接的join语句
+     * 返回可以用于sql拼接的join语句.
      */
     public function getJoinSql()
     {
         $str = [];
         foreach ($this->getKeysArray() as $column => $reColumn) {
-            $str[] = $this->getTableName() . ".$column=" . $this->getReferTableName() . ".$reColumn";
+            $str[] = $this->getTableName().".$column=".$this->getReferTableName().".$reColumn";
         }
-        return join(" AND ", $str);
+
+        return implode(' AND ', $str);
     }
 
     public function getJoinFieldAs()
     {
-        $tableObject = $this->tableObject
+        $tableObject = (new Table())
+            ->setDbConfig($this->tableObject->getDbConfig())
             ->setName($this->referTableName);
+
         return $tableObject->getFieldsAs();
     }
 
     /**
      * @param string $tableName
+     *
      * @return ForeignKey
      */
     public function setTableName(string $tableName): ForeignKey
     {
         $this->tableName = $tableName;
+
         return $this;
     }
 
@@ -90,11 +95,13 @@ final class ForeignKey
 
     /**
      * @param string $referTableName
+     *
      * @return ForeignKey
      */
     public function setReferTableName(string $referTableName): ForeignKey
     {
         $this->referTableName = $referTableName;
+
         return $this;
     }
 
@@ -108,11 +115,13 @@ final class ForeignKey
 
     /**
      * @param array $keysArray
+     *
      * @return ForeignKey
      */
     public function setKeysArray(array $keysArray): ForeignKey
     {
         $this->keysArray = array_merge($this->keysArray, $keysArray);
+
         return $this;
     }
 }
