@@ -60,15 +60,15 @@ final class TriggerMaker
                 `logid` int(20) unsigned NOT NULL AUTO_INCREMENT,
                 `logactiontype` varchar(50) NOT NULL,
                 `logupdatetype` varchar(50),
-                `logtime`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,'."\n";
+                `logtime`  datetime NOT NULL,'."\n";
             foreach ($tableFields as $tableField) {
                 $nullable = '';
-                $DEFAULT  = ' DEFAULT NULL ';
+                $DEFAULT = ' DEFAULT NULL ';
                 if ($tableField->getISNULLABLE() == 'NO') {
                     $nullable = ' NOT NULL ';
-                    $DEFAULT  = '';
+                    $DEFAULT = '';
                 }
-                if ($tableField->getCOLUMNDEFAULT()) {
+                if ($tableField->getCOLUMNDEFAULT() !== null) {
                     $DEFAULT = " DEFAULT '".$tableField->getCOLUMNDEFAULT()."' ";
                 }
                 $sql .= $tableField->getCOLUMNNAME().' '.$tableField->getCOLUMNTYPE()." $nullable  $DEFAULT COMMENT '".
@@ -94,7 +94,7 @@ final class TriggerMaker
             //写入触发器
             ob_start();
             include __DIR__.'/Template/Trigger/Insert.tpl.php';
-            $insertSql  = ob_get_clean();
+            $insertSql = ob_get_clean();
             $SqlParserd = (new SqlParser())
                 ->setSql($insertSql)
                 ->__invoke();
@@ -105,7 +105,7 @@ final class TriggerMaker
             //更新触发器
             ob_start();
             include __DIR__.'/Template/Trigger/Update.tpl.php';
-            $insertSql  = ob_get_clean();
+            $insertSql = ob_get_clean();
             $SqlParserd = (new SqlParser())
                 ->setSql($insertSql)
                 ->__invoke();
@@ -116,7 +116,7 @@ final class TriggerMaker
             //删除触发器
             ob_start();
             include __DIR__.'/Template/Trigger/Delete.tpl.php';
-            $insertSql  = ob_get_clean();
+            $insertSql = ob_get_clean();
             $SqlParserd = (new SqlParser())
                 ->setSql($insertSql)
                 ->__invoke();

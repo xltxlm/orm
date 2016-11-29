@@ -6,5 +6,5 @@ CREATE TRIGGER `<?=$tableObject->getName()?>_insert`
 AFTER INSERT ON <?=$tableObject->getDbConfig()->getDb()?>.<?=$tableObject->getName()?>
 
 FOR EACH ROW
-    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`, <?=implode(',', $tableObject->getFields())?>)
-    VALUES ('insert', <?=implode(',', $this->getNewTriggerTableFields())?>)
+    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`,`logtime`, <?=implode(',', $tableObject->getFields())?>)
+    VALUES ('insert',now(), <?=implode(',', $this->getNewTriggerTableFields())?>)

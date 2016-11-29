@@ -7,8 +7,8 @@ AFTER UPDATE ON <?=$tableObject->getDbConfig()->getDb()?>.<?=$tableObject->getNa
 
 FOR EACH ROW
 BEGIN
-    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`,`logupdatetype`, <?=implode(',', $tableObject->getFields())?>)
-    VALUES ('update', 'old',<?=implode(',', $this->getOldTriggerTableFields())?>);
-    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`,`logupdatetype`, <?=implode(',', $tableObject->getFields())?>)
-    VALUES ('update', 'new',<?=implode(',', $this->getNewTriggerTableFields())?>);
+    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`,`logupdatetype`,`logtime`, <?=implode(',', $tableObject->getFields())?>)
+    VALUES ('update', 'old',now(),<?=implode(',', $this->getOldTriggerTableFields())?>);
+    INSERT INTO <?=$this->getLogDB()->getDb()?>.<?=$tableObject->getName()?> (`logactiontype`,`logupdatetype`, `logtime`,<?=implode(',', $tableObject->getFields())?>)
+    VALUES ('update', 'new',now(),<?=implode(',', $this->getNewTriggerTableFields())?>);
 END;
