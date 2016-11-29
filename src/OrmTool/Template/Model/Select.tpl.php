@@ -18,11 +18,11 @@ namespace <?=$this->getDbNameSpace()?>;
 /**
  * Class select
  */
-<?php if($pageClass){?>
+<?php if($pageClass) {?>
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends \<?=\OrmTool\Template\Page::class?>
 <?php }else{ ?>
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?=\OrmTool\Template\Select::class?>
-<?}?>
+<?php }?>
 
 {
     /** @var bool  一维查询 还是 二维查询 */
