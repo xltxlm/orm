@@ -8,6 +8,7 @@ build:
     dependencies:
         before:
           - mysql -uroot -e 'create database IF NOT EXISTS `doc`;'
+          - mysql -uroot -e 'create database IF NOT EXISTS `doclog`;'
           - mysql -uroot doc -e 'source tests/doc.sql;'
     tests:
         override:
