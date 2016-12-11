@@ -6,7 +6,7 @@
  * Time: 下午 8:26.
  */
 
-namespace tests\Demo;
+namespace xltxlm\orm\tests\Demo;
 
 use setup\Doc\GoodsModel;
 use setup\Doc\GoodsPage;

@@ -1,6 +1,6 @@
 <?php
 
-namespace  tests\Jmeter;
+namespace xltxlm\orm\tests\Jmeter;
 
 use xltxlm\Jmeter\Config\JmeterConfig;
 

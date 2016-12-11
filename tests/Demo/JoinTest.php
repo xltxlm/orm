@@ -6,7 +6,7 @@
  * Time: 下午 2:19
  */
 
-namespace tests\Demo;
+namespace xltxlm\orm\tests\Demo;
 
 use PHPUnit\Framework\TestCase;
 use setup\Doc\Goods_logsModel;

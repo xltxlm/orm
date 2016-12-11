@@ -6,7 +6,7 @@
  * Time: 下午 1:39.
  */
 
-namespace tests\Jmeter;
+namespace xltxlm\orm\tests\Jmeter;
 
 use PHPUnit\Framework\TestCase;
 use xltxlm\Jmeter\Maker;

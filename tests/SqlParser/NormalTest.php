@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 上午 11:44.
  */
-namespace tests\SqlParser;
+namespace xltxlm\orm\tests\SqlParser;
 
 use xltxlm\orm\Sql\SqlParser;
 

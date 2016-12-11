@@ -6,7 +6,7 @@
  * Time: 下午 3:45.
  */
 
-namespace tests\docker;
+namespace xltxlm\orm\tests\docker;
 
 use PHPUnit\Framework\TestCase;
 use setup\Doc\enum\EnumGoodsStatus;

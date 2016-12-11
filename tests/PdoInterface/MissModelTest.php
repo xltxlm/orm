@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 1:11.
  */
-namespace tests\PdoInterface;
+namespace xltxlm\orm\tests\PdoInterface;
 
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;

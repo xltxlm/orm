@@ -6,7 +6,7 @@
  * Time: 下午 6:06.
  */
 
-namespace tests\OrmMake;
+namespace xltxlm\orm\tests\OrmMake;
 
 use demo\setup\Doclog;
 use xltxlm\ormTool\TriggerMaker;

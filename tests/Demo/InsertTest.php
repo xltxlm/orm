@@ -6,7 +6,7 @@
  * Time: 下午 2:00.
  */
 
-namespace tests\Demo;
+namespace xltxlm\orm\tests\Demo;
 
 use PHPUnit\Framework\TestCase;
 use setup\Doc\enum\EnumGoodsStatus;

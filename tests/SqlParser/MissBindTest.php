@@ -6,7 +6,7 @@
  * Time: 上午 10:16.
  */
 
-namespace tests\SqlParser;
+namespace xltxlm\orm\tests\SqlParser;
 
 use xltxlm\orm\Exception\SqlParserException;
 use xltxlm\orm\Exception\I18N\I18N;

@@ -6,7 +6,7 @@
  * Time: 下午 8:15.
  */
 
-namespace tests\Demo;
+namespace xltxlm\orm\tests\Demo;
 
 use setup\Doc\GoodsSelectOne;
 use setup\Doc\GoodsUpdate;

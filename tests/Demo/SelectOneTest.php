@@ -5,7 +5,7 @@
  * Date: 2016-11-14
  * Time: 下午 8:01.
  */
-namespace tests\Demo;
+namespace xltxlm\orm\tests\Demo;
 
 use setup\Doc\GoodsSelectOne;
 
