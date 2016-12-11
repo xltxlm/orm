@@ -12,32 +12,30 @@
     "php": ">=7.0",
     "ext-pdo": "*",
     "overtrue/pinyin": "~3.0",
-    "monolog/monolog": "*"
+    "xltxlm/helper": "*",
+    "xltxlm/logger": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
+    "xltxlm/jmeter": "*",
     "squizlabs/php_codesniffer": "*",
-    "friendsofphp/php-cs-fixer": "*"
+    "friendsofphp/php-cs-fixer": "~v2."
   },
   "autoload": {
     "psr-4": {
-      "": [
+      "xltxlm\\": [
         "src/"
+      ],
+      "xltxlm\\orm\\tests\\": [
+        "tests/"
       ]
     }
   },
   "autoload-dev": {
     "psr-4": {
       "": [
-        "demo/",
-        "./"
+        "demo/"
       ]
-    }
-  },
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
     }
   }
 }

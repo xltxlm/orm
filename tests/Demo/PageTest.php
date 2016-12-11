@@ -6,7 +6,7 @@
  * Time: 下午 8:26.
  */
 
-namespace Demo;
+namespace tests\Demo;
 
 use setup\Doc\GoodsModel;
 use setup\Doc\GoodsPage;
@@ -18,10 +18,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
      */
     public function test1()
     {
-        $goodsSelectOne = new GoodsPage();
+        $goodsPage = new GoodsPage();
 
-        $data = $goodsSelectOne
-            ->setSQL('id>=:id', ['id' => 1200])
+        $data = $goodsPage
+            ->setSQL('id>=:id', ['id' => 1])
             ->setPageID(2)
             ->setPrepage(3)
             ->__invoke();
@@ -31,10 +31,37 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM goods WHERE id>=:id  LIMIT 3, 3 ',
-            $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
+            $goodsPage->getPdoInterface()->getSqlParserd()->getSql()
         );
 
-        $this->assertEquals($goodsSelectOne->getPageObject()->getPrepage(), 3);
-        $this->assertEquals($goodsSelectOne->getPageObject()->getPageID(), 2);
+        $this->assertEquals($goodsPage->getPageObject()->getPrepage(), 3);
+        $this->assertEquals($goodsPage->getPageObject()->getPageID(), 2);
+    }
+
+    /**
+     * 根据传递的字段，进行查询。如果字段值没传递=null，那就不查询
+     * 只支持 字符串，数字类型的查询.
+     */
+    public function testmabey()
+    {
+        //查询结果只有单条
+        $goodsPage = new GoodsPage();
+        $data = $goodsPage
+            ->setSQL('id>=:id', ['id' => 1])
+            ->whereNameMaybe('商品名称-10')
+            ->setDebug(true)
+            ->setPageID(2)
+            ->setPrepage(3)
+            ->__invoke();
+        echo "<pre>-->";print_r($data);echo "<--@in ".__FILE__." on line ".__LINE__."\n";
+        $this->assertEquals(1, count($data));
+
+        //查询结果又多条
+        $data = (new GoodsPage())
+            ->whereNameMaybe(null)
+            ->setPageID(2)
+            ->setPrepage(3)
+            ->__invoke();
+        $this->assertGreaterThan(1, count($data));
     }
 }

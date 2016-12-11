@@ -5,9 +5,9 @@
  * Date: 2016-11-14
  * Time: 上午 11:44.
  */
-namespace SqlParser;
+namespace tests\SqlParser;
 
-use Orm\Sql\SqlParser;
+use xltxlm\orm\Sql\SqlParser;
 
 /**
  * out: 1.正常的绑定变量方式

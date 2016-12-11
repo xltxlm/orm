@@ -8,7 +8,7 @@
 
 namespace PdoConfig;
 
-use Orm\Config\PdoConfig;
+use xltxlm\orm\Config\PdoConfig;
 use PHPUnit\Framework\TestCase;
 use setup\Doc;
 

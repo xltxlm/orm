@@ -68,4 +68,15 @@ class SelectAllTest extends TestCase
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
+
+    public function testMaybe()
+    {
+        $a=(new GoodsSelectAll())
+            ->whereNameMaybe('123')
+            ->whereIdMaybe(null)
+            ->setDebug(true)
+            ->__invoke();
+        echo "<pre>-->";print_r($a);echo "<--@in ".__FILE__." on line ".__LINE__."\n";
+    }
+
 }

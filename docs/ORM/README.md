@@ -23,6 +23,8 @@ Orm/Config/PdoConfig.php 给出配置模板。
 * 表字段模型 xxModel
 * 一维查询 xxSelectOne
 * 二维查询 xxSelectAll
+    + 查询支持 where 和 whereMaby 2种结构
+    + 比较符号默认是 = ,可以更改
 * 分页查询 xxPage
 * 写入 xxInsert
 * 更新 xxUpdate
@@ -33,7 +35,7 @@ Orm/Config/PdoConfig.php 给出配置模板。
 
 #特性
 
-+ 一进程内，单实例链接，开启事务。
++ 单进程内，单实例链接，开启事务。
 + 读写分离
 + 面向对象类库支持
 + 自动生成触发器记录数据日志

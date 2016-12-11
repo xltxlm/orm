@@ -20,7 +20,7 @@ class MakeTest extends TestCase
      */
     public function test1()
     {
-        (new \OrmTool\Maker())
+        (new \xltxlm\ormTool\Maker())
             ->setDbConfig(new Doc())
             ->__invoke();
     }

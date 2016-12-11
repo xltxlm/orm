@@ -12,7 +12,11 @@
 >
 
     <testsuites>
-        <!-- 先生成表结构-->
+        <!-- 先生成表数据-->
+        <testsuite name="makeOrm">
+            <directory suffix=".php">./tests/docker/</directory>
+        </testsuite>
+        <!-- 先生成表结构类-->
         <testsuite name="makeOrm">
             <directory suffix=".php">./tests/OrmMake/</directory>
         </testsuite>

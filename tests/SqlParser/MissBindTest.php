@@ -6,11 +6,11 @@
  * Time: 上午 10:16.
  */
 
-namespace SqlParser;
+namespace tests\SqlParser;
 
-use Orm\Exception\SqlParserException;
-use Orm\Exception\I18N\I18N;
-use Orm\Sql\SqlParser;
+use xltxlm\orm\Exception\SqlParserException;
+use xltxlm\orm\Exception\I18N\I18N;
+use xltxlm\orm\Sql\SqlParser;
 
 /**
  * out:当sql绑定参数缺少的时候

@@ -6,9 +6,9 @@
  * Time: 下午 8:45
  */
 
-namespace PageObject;
+namespace tests\PageObject;
 
-use Orm\PageObject;
+use xltxlm\orm\PageObject;
 use PHPUnit\Framework\TestCase;
 
 /**

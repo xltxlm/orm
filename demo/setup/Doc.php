@@ -7,7 +7,7 @@
  */
 namespace setup;
 
-use Orm\Config\PdoConfig;
+use xltxlm\orm\Config\PdoConfig;
 
 /**
  * 数据库的基础配置:账户密码等

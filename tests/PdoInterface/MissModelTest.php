@@ -5,10 +5,10 @@
  * Date: 2016-11-14
  * Time: 下午 1:11.
  */
-namespace PdoInterface;
+namespace tests\PdoInterface;
 
-use Orm\PdoInterface;
-use Orm\Sql\SqlParser;
+use xltxlm\orm\PdoInterface;
+use xltxlm\orm\Sql\SqlParser;
 use setup\Doc;
 
 /**
@@ -18,7 +18,7 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * 查询时候,不指定model类,不予返回结果.
-     * @expectedException  \Orm\Exception\PdoInterfaceException
+     * @expectedException  \xltxlm\orm\Exception\PdoInterfaceException
      */
     public function test1()
     {
@@ -36,13 +36,13 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
             ->selectVar();
         echo '<pre>-->';
         print_r($data);
-        echo '<--@in ' . __FILE__ . ' on line ' . __LINE__ . "\n";
+        echo '<--@in '.__FILE__.' on line '.__LINE__."\n";
     }
 
     // update 查询不带上 where 条件,抛异常
     public function test2()
     {
-        $this->expectException(\Orm\Exception\PdoInterfaceException::class);
+        $this->expectException(\xltxlm\orm\Exception\PdoInterfaceException::class);
         $sql = 'update goods set name=:name ';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
@@ -58,4 +58,26 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
             ->setSqlParserd($SqlParserd)
             ->update();
     }
+
+    /**
+     * @expectedException  \Exception
+     */
+    public function testsqlerrorlog()
+    {
+        $sql = 'update goodsxxx set name=:name ';
+        $SqlParserd = (new SqlParser())
+            ->setSql($sql)
+            ->setBind(
+                [
+                    'name' => 'abc',
+                ]
+            )
+            ->__invoke();
+
+        (new PdoInterface())
+            ->setPdoConfig((new Doc()))
+            ->setSqlParserd($SqlParserd)
+            ->execute();
+    }
+
 }

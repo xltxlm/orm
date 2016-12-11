@@ -7,9 +7,9 @@
  */
 namespace tests\PdoInterface;
 
-use Orm\PageObject;
-use Orm\PdoInterface;
-use Orm\Sql\SqlParser;
+use xltxlm\orm\PageObject;
+use xltxlm\orm\PdoInterface;
+use xltxlm\orm\Sql\SqlParser;
 use setup\doc;
 
 class DemoTest extends \PHPUnit_Framework_TestCase
@@ -58,7 +58,7 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             ->setSql('select * from goods where id=:id and name<>:name ')
             ->setBind(
                 [
-                    'id' => [1006, 1016],
+                    'id' => [1, 2],
                     'name' => 'noname',
                 ]
             )

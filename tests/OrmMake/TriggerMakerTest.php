@@ -6,10 +6,10 @@
  * Time: 下午 6:06.
  */
 
-namespace OrmMake;
+namespace tests\OrmMake;
 
 use demo\setup\Doclog;
-use OrmTool\TriggerMaker;
+use xltxlm\ormTool\TriggerMaker;
 use PHPUnit\Framework\TestCase;
 use setup\Doc;
 

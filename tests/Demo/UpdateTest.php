@@ -6,7 +6,7 @@
  * Time: 下午 8:15.
  */
 
-namespace Demo;
+namespace tests\Demo;
 
 use setup\Doc\GoodsSelectOne;
 use setup\Doc\GoodsUpdate;
@@ -23,11 +23,11 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
         $num  = (new GoodsUpdate())
             ->setName($name)
             ->setTotal(101)
-            ->whereId(1008)
+            ->whereId(2)
             ->__invoke();
         $this->assertEquals(1, $num);
         $goods = (new GoodsSelectOne())
-            ->whereId(1008)
+            ->whereId(2)
             ->__invoke();
         $this->assertEquals($name, $goods->getName());
     }
