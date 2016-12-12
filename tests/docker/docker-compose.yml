@@ -13,6 +13,14 @@ services:
       ports:
         - "3306:3306"
         - "22"
-
+    php:
+      image: php
+      volumes:
+              - ../../:/orm/
+      entrypoint: tail -f /root/.bashrc
+      networks:
+        comm:
+          aliases:
+            - php
 networks:
     comm:

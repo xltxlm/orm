@@ -47,13 +47,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
         //查询结果只有单条
         $goodsPage = new GoodsPage();
         $data = $goodsPage
-            ->setSQL('id>=:id', ['id' => 1])
+            ->setSQL('id=:id', ['id' => 10])
             ->whereNameMaybe('商品名称-10')
             ->setDebug(true)
             ->setPageID(2)
             ->setPrepage(3)
             ->__invoke();
-        echo "<pre>-->";print_r($data);echo "<--@in ".__FILE__." on line ".__LINE__."\n";
         $this->assertEquals(1, count($data));
 
         //查询结果又多条

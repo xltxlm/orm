@@ -69,7 +69,11 @@ final class TriggerMaker
                     $DEFAULT = '';
                 }
                 if ($tableField->getCOLUMNDEFAULT() !== null) {
-                    $DEFAULT = " DEFAULT '".$tableField->getCOLUMNDEFAULT()."' ";
+                    if ($tableField->getCOLUMNDEFAULT() == 'CURRENT_TIMESTAMP') {
+                        $DEFAULT = " DEFAULT CURRENT_TIMESTAMP ";
+                    } else {
+                        $DEFAULT = " DEFAULT '".$tableField->getCOLUMNDEFAULT()."' ";
+                    }
                 }
                 $sql .= $tableField->getCOLUMNNAME().' '.$tableField->getCOLUMNTYPE()." $nullable  $DEFAULT COMMENT '".
                     $tableField->getCOLUMNCOMMENT()."',\n";

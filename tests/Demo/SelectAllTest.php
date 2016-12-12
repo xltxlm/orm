@@ -71,12 +71,13 @@ class SelectAllTest extends TestCase
 
     public function testMaybe()
     {
-        $a=(new GoodsSelectAll())
+        $GoodsSelectAll = (new GoodsSelectAll())
             ->whereNameMaybe('123')
-            ->whereIdMaybe(null)
-            ->setDebug(true)
+            ->whereIdMaybe(null);
+        $a = $GoodsSelectAll
             ->__invoke();
-        echo "<pre>-->";print_r($a);echo "<--@in ".__FILE__." on line ".__LINE__."\n";
+        $sql = $GoodsSelectAll->getPdoInterface()->getSqlParserd()->getSql();
+        $this->assertEquals("SELECT goods.* FROM goods WHERE goods.name=:name ", $sql);
     }
 
 }

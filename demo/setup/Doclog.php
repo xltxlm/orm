@@ -6,9 +6,7 @@
  * Time: 下午 4:32.
  */
 
-namespace demo\setup;
-
-use setup\Doc;
+namespace setup;
 
 /**
  * 记录doc数据库的表变化日志

@@ -16,7 +16,7 @@ use xltxlm\orm\Config\PdoConfig;
 class Doc extends PdoConfig
 {
     protected $driver = self::MYSQL;
-    protected $TNS = '127.0.0.1';
+    protected $TNS = 'mysql';
     protected $username = 'root';
     protected $password = '';
 }

@@ -5,12 +5,13 @@
  * Date: 2016-11-13
  * Time: 下午 11:27.
  */
+
 namespace xltxlm\orm\tests\PdoInterface;
 
+use setup\Doc;
 use xltxlm\orm\PageObject;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
-use setup\doc;
 
 class DemoTest extends \PHPUnit_Framework_TestCase
 {

@@ -45,8 +45,6 @@ abstract class PdoAction
     /** @var  callable 执行完毕回调的数据,可以用来矫正数据 或者 记录日志 */
     protected $CallableFunction;
 
-    /** @var  \Monolog\Logger */
-    protected $logObject;
     /** @var bool 是否打印调试信息 */
     protected $debug = false;
 
@@ -88,24 +86,6 @@ abstract class PdoAction
     final public function setDebug(bool $debug)
     {
         $this->debug = $debug;
-        return $this;
-    }
-
-    /**
-     * @return \Monolog\Logger
-     */
-    final public function getLogObject(): \Monolog\Logger
-    {
-        return $this->logObject;
-    }
-
-    /**
-     * @param \Monolog\Logger $logObject
-     * @return static
-     */
-    final public function setLogObject(\Monolog\Logger $logObject)
-    {
-        $this->logObject = $logObject;
         return $this;
     }
 

@@ -8,7 +8,7 @@
 
 namespace xltxlm\orm\tests\OrmMake;
 
-use demo\setup\Doclog;
+use setup\Doclog;
 use xltxlm\ormTool\TriggerMaker;
 use PHPUnit\Framework\TestCase;
 use setup\Doc;
