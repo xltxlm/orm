@@ -18,5 +18,6 @@ class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMN
     ?>
     const <?=$key?>='<?=$value?>';
 <?php
+
 }?>
 }
