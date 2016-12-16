@@ -19,7 +19,11 @@ abstract class PdoConfig
 
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';
-    private $link;
+    /** @var  string tns链接字符串 */
+    private $link = "";
+
+    /** @var bool 开启或关闭日志,日志的路径,文件名不提供配置 */
+    protected $log = true;
 
     /** @var \PDO */
     protected $PDOObject;
@@ -37,6 +41,25 @@ abstract class PdoConfig
     protected $username;
     /** @var string 数据密码 */
     protected $password;
+
+    /**
+     * @return bool
+     */
+    public function isLog(): bool
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param bool $log
+     * @return PdoConfig
+     */
+    public function setLog(bool $log): PdoConfig
+    {
+        $this->log = $log;
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -219,7 +242,7 @@ abstract class PdoConfig
      *
      * @return string
      */
-    public function getPdoString():string
+    public function getPdoString(): string
     {
         $this->link = $this->getDriver().
             ':dbname='.$this->getDb().

@@ -222,36 +222,40 @@ final class PdoInterface
     private function pdoexecute(): \PDOStatement
     {
         //记录日志
-        $DefineLog = (new DefineLog())
-            ->setSql($this->sqlParserd->getSql())
-            ->setBinds($this->sqlParserd->getBindArray())
-            ->setTns($this->getPdoConfig()->getPdoString());
-        $start = microtime(true);
+        $start = $DefineLog = null;
+        if ($this->getPdoConfig()->isLog()) {
+            $DefineLog = (new DefineLog())
+                ->setSql($this->sqlParserd->getSql())
+                ->setBinds($this->sqlParserd->getBindArray())
+                ->setTns($this->getPdoConfig()->getPdoString());
+            $start = microtime(true);
+        }
         //执行sql
         $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
         foreach ($this->sqlParserd->getBind() as $bind) {
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
-        $end = microtime(true);
-        $DefineLog->setTime(sprintf('%.4f', $end - $start));
+        if ($DefineLog) {
+            $end = microtime(true);
+            $DefineLog->setTime(sprintf('%.4f', $end - $start));
+        }
         $error = $stmt->errorInfo();
-        $error[0] = (int)filter_var(
-            $error[0],
-            FILTER_SANITIZE_NUMBER_INT
-        );
+        $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
 
         if ($error[0] || $error[2]) {
-            ob_start();
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            $trace = ob_get_clean();
-            $DefineLog
-                ->setErrorInfo(json_encode($error, JSON_UNESCAPED_UNICODE))
-                ->setTrace($trace)
-                ->setType(LogLevel::ERROR);
-            (new Logger())
-                ->setDefine($DefineLog)
-                ->__invoke();
+            if ($DefineLog) {
+                ob_start();
+                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                $trace = ob_get_clean();
+                $DefineLog
+                    ->setErrorInfo(json_encode($error, JSON_UNESCAPED_UNICODE))
+                    ->setTrace($trace)
+                    ->setType(LogLevel::ERROR);
+                (new Logger())
+                    ->setDefine($DefineLog)
+                    ->__invoke();
+            }
             throw (new \xltxlm\orm\Exception\PdoSqlError(
                 json_encode(
                     [
@@ -266,10 +270,11 @@ final class PdoInterface
                 ->setBinds($this->sqlParserd->getBind())
                 ->setErrorinfo(json_encode($error));
         }
-        (new Logger())
-            ->setDefine($DefineLog)
-            ->__invoke();
-
+        if ($DefineLog) {
+            (new Logger())
+                ->setDefine($DefineLog)
+                ->__invoke();
+        }
         if ($this->debug) {
             echo "\n=========================\n";
             echo "SQL:\n";
@@ -285,7 +290,8 @@ final class PdoInterface
     }
 
     /**
-     * ORM返回的数据结构必须是类,检测类是不是有设置
+     * ORM返回的数据结构必须是类,检测类是不是有设置.
+     *
      * @throws Exception\PdoInterfaceException
      */
     private function checkClassName()
