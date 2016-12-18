@@ -24,10 +24,12 @@ use \xltxlm\ormTool\Template\PdoAction;
     ?>
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends \<?= \xltxlm\ormTool\Template\Page::class?>
 <?php
+
 } else {
     ?>
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?= \xltxlm\ormTool\Template\Select::class?>
 <?php
+
 }?>
 
 {
