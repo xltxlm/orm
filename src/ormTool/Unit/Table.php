@@ -27,9 +27,9 @@ class Table
 
     /** @var array */
     protected $joinTables = [];
-    /** @var \xltxlm\ormTool\Unit\FieldSchema[] */
+    /** @var FieldSchema[] */
     private $fieldSchema = [];
-    /** @var \xltxlm\ormTool\Unit\ForeignKey[] 外键对 */
+    /** @var ForeignKey[] 外键对 */
     private $foreignKey = [];
 
     /**
@@ -127,7 +127,7 @@ class Table
     /**
      * 获取表格的字段，以类集合形式返回.
      *
-     * @return \xltxlm\ormTool\Unit\FieldSchema[]
+     * @return FieldSchema[]
      */
     final public function getFieldSchemas(): array
     {
@@ -147,7 +147,7 @@ class Table
             $this->fieldSchema = (new PdoInterface())
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
-            ->setClassName(\xltxlm\ormTool\Unit\FieldSchema::class)
+            ->setClassName(FieldSchema::class)
             ->selectAll();
         }
 

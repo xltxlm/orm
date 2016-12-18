@@ -9,7 +9,6 @@ namespace xltxlm\ormTool\Template;
 
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
-use xltxlm\orm\Sql\SqlParserd;
 
 /**
  * Class SelectOne.

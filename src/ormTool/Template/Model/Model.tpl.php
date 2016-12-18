@@ -7,7 +7,7 @@ namespace <?=$this->getDbNameSpace()?>;
 
 /**
 * Class select
-* @package OrmTool\Template\Model
+* @package ormTool\Template\Model
 */
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Model
 {

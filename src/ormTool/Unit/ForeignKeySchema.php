@@ -11,7 +11,7 @@ namespace xltxlm\ormTool\Unit;
 /**
  * 外键结构类
  * Class ForeignKey
- * @package OrmTool\Unit
+ * @package ormTool\Unit
  */
 class ForeignKeySchema
 {

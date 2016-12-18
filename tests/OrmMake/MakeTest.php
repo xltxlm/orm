@@ -9,6 +9,7 @@ namespace xltxlm\orm\tests\OrmMake;
 
 use PHPUnit\Framework\TestCase;
 use setup\Doc;
+use xltxlm\ormTool\Maker;
 
 /**
  * Class Make.
@@ -20,7 +21,7 @@ class MakeTest extends TestCase
      */
     public function test1()
     {
-        (new \xltxlm\ormTool\Maker())
+        (new Maker())
             ->setDbConfig(new Doc())
             ->__invoke();
     }

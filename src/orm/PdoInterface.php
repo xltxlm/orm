@@ -11,6 +11,9 @@ namespace xltxlm\orm;
 use Psr\Log\LogLevel;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
+use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
+use xltxlm\orm\Exception\PdoInterfaceException;
+use xltxlm\orm\Exception\PdoSqlError;
 use xltxlm\orm\Log\DefineLog;
 use xltxlm\orm\Sql\SqlParserd;
 
@@ -171,8 +174,8 @@ final class PdoInterface
     public function update()
     {
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
-            throw new \xltxlm\orm\Exception\PdoInterfaceException(
-                (new \xltxlm\orm\Exception\I18N\PdoInterfaceI18N())
+            throw new PdoInterfaceException(
+                (new PdoInterfaceI18N())
                     ->getUpdateNoWhere()
             );
         }
@@ -186,7 +189,7 @@ final class PdoInterface
      *
      * @return array
      */
-    public function page(\xltxlm\orm\PageObject &$pageObject)
+    public function page(PageObject &$pageObject)
     {
         //查询当前条件下可以命中多少数据量
         $str = ' FROM ';
@@ -256,7 +259,7 @@ final class PdoInterface
                     ->setDefine($DefineLog)
                     ->__invoke();
             }
-            throw (new \xltxlm\orm\Exception\PdoSqlError(
+            throw (new PdoSqlError(
                 json_encode(
                     [
                         $this->sqlParserd->getSql(),
@@ -275,16 +278,7 @@ final class PdoInterface
                 ->setDefine($DefineLog)
                 ->__invoke();
         }
-        if ($this->debug) {
-            echo "\n=========================\n";
-            echo "SQL:\n";
-            print_r($this->sqlParserd);
-            echo "\nTNS:\n";
-            print_r($this->getPdoConfig()->getPdoString());
-            echo "\nDEBUG:\n";
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
-        }
+        $this->debug();
 
         return $stmt;
     }
@@ -297,10 +291,27 @@ final class PdoInterface
     private function checkClassName()
     {
         if (!$this->className) {
-            throw new \xltxlm\orm\Exception\PdoInterfaceException(
-                (new \xltxlm\orm\Exception\I18N\PdoInterfaceI18N())
+            throw new PdoInterfaceException(
+                (new PdoInterfaceI18N())
                     ->getMissModel()
             );
+        }
+    }
+
+    /**
+     * 输出调试信息
+     */
+    private function debug()
+    {
+        if ($this->debug) {
+            echo "\n=========================\n";
+            echo "SQL:\n";
+            print_r($this->sqlParserd);
+            echo "\nTNS:\n";
+            print_r($this->getPdoConfig()->getPdoString());
+            echo "\nDEBUG:\n";
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
         }
     }
 }

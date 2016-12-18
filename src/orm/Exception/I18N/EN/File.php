@@ -8,7 +8,9 @@
 
 namespace xltxlm\orm\Exception\I18N\EN;
 
-class File extends \xltxlm\orm\Exception\I18N\CH\FileI18N
+use xltxlm\orm\Exception\I18N\CH\FileI18N;
+
+class File extends FileI18N
 {
     public $makeDirError="Create folder failed";
 }

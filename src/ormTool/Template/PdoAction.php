@@ -8,6 +8,7 @@
 namespace xltxlm\ormTool\Template;
 
 use xltxlm\orm\PdoInterface;
+use xltxlm\ormTool\Unit\Table;
 
 /**
  * 数据库操作的基础类库
@@ -36,7 +37,7 @@ abstract class PdoAction
     /** @var array 绑定的变量 */
     protected $binds = [];
 
-    /** @var \xltxlm\ormTool\Unit\Table */
+    /** @var Table */
     protected $tableObject;
 
     /** @var PdoInterface */
@@ -123,9 +124,9 @@ abstract class PdoAction
     }
 
     /**
-     * @return \xltxlm\ormTool\Unit\Table
+     * @return Table
      */
-    final public function getTableObject(): \xltxlm\ormTool\Unit\Table
+    final public function getTableObject(): Table
     {
         return $this->tableObject;
     }

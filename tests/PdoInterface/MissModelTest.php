@@ -8,6 +8,7 @@
 
 namespace xltxlm\orm\tests\PdoInterface;
 
+use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
 use setup\Doc;
@@ -20,7 +21,7 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
     /**
      * 查询时候,不指定model类,不予返回结果.
      *
-     * @expectedException  \xltxlm\orm\Exception\PdoInterfaceException
+     * @expectedException  PdoInterfaceException
      */
     public function test1()
     {
@@ -44,7 +45,7 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
     // update 查询不带上 where 条件,抛异常
     public function test2()
     {
-        $this->expectException(\xltxlm\orm\Exception\PdoInterfaceException::class);
+        $this->expectException(PdoInterfaceException::class);
         $sql = 'update goods set name=:name ';
         $SqlParserd = (new SqlParser())
             ->setSql($sql)

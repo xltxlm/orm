@@ -7,6 +7,7 @@
  */
 namespace xltxlm\orm\Sql;
 
+use xltxlm\orm\Exception\I18N\SqlParserI18N;
 use xltxlm\orm\Exception\SqlParserException;
 use xltxlm\orm\Unit\BindPair;
 
@@ -107,7 +108,7 @@ final class SqlParser
         if ($sqlBinds != $binds) {
             throw new SqlParserException(
                 vsprintf(
-                    (new \xltxlm\orm\Exception\I18N\SqlParserI18N())
+                    (new SqlParserI18N())
                         ->getBindError(),
                     [
                         json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),

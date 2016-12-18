@@ -74,7 +74,7 @@ class SelectAllTest extends TestCase
         $GoodsSelectAll = (new GoodsSelectAll())
             ->whereNameMaybe('123')
             ->whereIdMaybe(null);
-        $a = $GoodsSelectAll
+        $GoodsSelectAll
             ->__invoke();
         $sql = $GoodsSelectAll->getPdoInterface()->getSqlParserd()->getSql();
         $this->assertEquals("SELECT goods.* FROM goods WHERE goods.name=:name ", $sql);

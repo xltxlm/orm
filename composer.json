@@ -16,6 +16,7 @@
     "xltxlm/logger": "*"
   },
   "require-dev": {
+    "xltxlm/scrutinizer": "*",
     "phpunit/phpunit": "*",
     "xltxlm/jmeter": "*",
     "squizlabs/php_codesniffer": "*",

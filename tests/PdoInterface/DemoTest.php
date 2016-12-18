@@ -21,14 +21,14 @@ class DemoTest extends \PHPUnit_Framework_TestCase
         $SqlParserd = (new SqlParser())
             ->setSql('select * from goods where id=1060  ')
             ->__invoke();
-        /** @var \xltxlm\orm\tests\PdoInterface\DataModel $data */
+        /** @var DataModel $data */
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
-            ->setClassName(\xltxlm\orm\tests\PdoInterface\DataModel::class)
+            ->setClassName(DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
 
-        $this->assertTrue(is_a($data, \xltxlm\orm\tests\PdoInterface\DataModel::class));
+        $this->assertTrue(is_a($data, DataModel::class));
     }
 
     //最普通的查询:带参数
@@ -42,13 +42,13 @@ class DemoTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /** @var \xltxlm\orm\tests\PdoInterface\DataModel $data */
+        /** @var DataModel $data */
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
-            ->setClassName(\xltxlm\orm\tests\PdoInterface\DataModel::class)
+            ->setClassName(DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectOne();
-        $this->assertEquals(\xltxlm\orm\tests\PdoInterface\DataModel::class, get_class($data));
+        $this->assertEquals(DataModel::class, get_class($data));
     }
 
     //最普通的查询 + 绑定多个参数 + 其中某个参数值是数组,改变原来的sql结构
@@ -65,14 +65,14 @@ class DemoTest extends \PHPUnit_Framework_TestCase
             )
             ->__invoke();
 
-        /** @var \xltxlm\orm\tests\PdoInterface\DataModel[] $data */
+        /** @var DataModel[] $data */
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
-            ->setClassName(\xltxlm\orm\tests\PdoInterface\DataModel::class)
+            ->setClassName(DataModel::class)
             ->setSqlParserd($SqlParserd)
             ->selectAll();
 
-        $this->assertEquals(\xltxlm\orm\tests\PdoInterface\DataModel::class, get_class($data[0]));
+        $this->assertEquals(DataModel::class, get_class($data[0]));
     }
 
     //普通查询: 带分页效果
@@ -87,14 +87,14 @@ class DemoTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->__invoke();
-        /* @var \xltxlm\orm\tests\PdoInterface\DataModel[] $data */
+        /* @var DataModel[] $data */
         $pageObject = (new PageObject())
             ->setPageID(4)
             ->setPrepage(3);
         $data = (new PdoInterface())
             ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
-            ->setClassName(\xltxlm\orm\tests\PdoInterface\DataModel::class)
+            ->setClassName(DataModel::class)
             ->page($pageObject);
 
         $this->assertTrue(is_array($data));

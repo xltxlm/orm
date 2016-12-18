@@ -38,7 +38,7 @@ final class DB
     }
 
     /**
-     * @return \xltxlm\ormTool\Unit\TableSchema[]
+     * @return TableSchema[]
      */
     public function __invoke()
     {
@@ -52,11 +52,11 @@ final class DB
                 ]
             )
             ->__invoke();
-        /* @var \xltxlm\ormTool\Unit\TableSchema[] $tableSchemas */
+        /* @var TableSchema[] $tableSchemas */
         return  (new PdoInterface())
             ->setPdoConfig($this->getDbConfig())
             ->setSqlParserd($SqlParserd)
-            ->setClassName(\xltxlm\ormTool\Unit\TableSchema::class)
+            ->setClassName(TableSchema::class)
             ->selectAll();
     }
 }

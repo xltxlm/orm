@@ -6,10 +6,13 @@
  * Time: 下午 8:39.
  */
 
-namespace xltxlm\OrmTool;
+namespace xltxlm\ormTool;
 
 use xltxlm\orm\Config\PdoConfig;
+use xltxlm\orm\Exception\FileException;
+use xltxlm\orm\Exception\I18N\FileI18N;
 use xltxlm\ormTool\Unit\DB;
+use xltxlm\ormTool\Unit\FieldSchema;
 use xltxlm\ormTool\Unit\Table;
 
 /**
@@ -60,15 +63,15 @@ final class Maker
         $this->dbNameSpace = $ReflectionClass->getNamespaceName().'\\'.$className;
         mkdir($path);
         if (!is_dir($path)) {
-            throw new \xltxlm\orm\Exception\FileException(
-                (new \xltxlm\orm\Exception\I18N\FileI18N())
+            throw new FileException(
+                (new FileI18N())
                     ->getMakeDirError()
             );
         }
         mkdir($path.'/enum/');
         if (!is_dir($path.'/enum/')) {
-            throw new \xltxlm\orm\Exception\FileException(
-                (new \xltxlm\orm\Exception\I18N\FileI18N())
+            throw new FileException(
+                (new FileI18N())
                     ->getMakeDirError()
             );
         }
@@ -126,7 +129,7 @@ final class Maker
 
             //枚举类型类
             foreach ($fieldSchema as $field) {
-                if ($field->getDATATYPE() == \xltxlm\ormTool\Unit\FieldSchema::ENUM) {
+                if ($field->getDATATYPE() == FieldSchema::ENUM) {
                     ob_start();
                     include __DIR__.'/Template/Model/Enum.tpl.php';
                     file_put_contents(

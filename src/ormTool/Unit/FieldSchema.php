@@ -5,7 +5,10 @@
  * Date: 2016-11-14
  * Time: 下午 6:11.
  */
+
 namespace xltxlm\ormTool\Unit;
+
+use Overtrue\Pinyin\Pinyin;
 
 /**
  * Class FieldSchema.
@@ -81,7 +84,7 @@ final class FieldSchema
         //准备拼音类
         static $pinyin;
         if (!$pinyin) {
-            $pinyin = new \Overtrue\Pinyin\Pinyin();
+            $pinyin = new Pinyin();
         }
         preg_match_all("#'([^']+)'#iUs", $this->getCOLUMNTYPE(), $out);
         foreach ($out[1] as $key => $item) {
@@ -93,7 +96,6 @@ final class FieldSchema
 
         return $this->ENUM_ARRAY = $out[1];
     }
-
 
     /**
      * @return string

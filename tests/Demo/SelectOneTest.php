@@ -7,6 +7,7 @@
  */
 namespace xltxlm\orm\tests\Demo;
 
+use setup\Doc\GoodsModel;
 use setup\Doc\GoodsSelectOne;
 
 /**
@@ -25,7 +26,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
             ->setSQL('id>1')
             ->__invoke();
         //返回的数据结构是 GoodsModel 类实体
-        $this->assertTrue(is_a($data, \setup\Doc\GoodsModel::class));
+        $this->assertTrue(is_a($data, GoodsModel::class));
 
         $this->assertEquals(
             'SELECT goods.* FROM goods WHERE id like :id AND id>1 ',
@@ -41,7 +42,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
         $data = $goodsSelectOne
             ->whereId(1061)
             ->__invoke();
-        $this->assertTrue(is_a($data, \setup\Doc\GoodsModel::class));
+        $this->assertTrue(is_a($data, GoodsModel::class));
 
         $this->assertEquals(
             'SELECT goods.* FROM goods WHERE goods.id=:id ',
@@ -58,7 +59,7 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
             ->whereId(1061)
             ->orderIdDesc()
             ->__invoke();
-        $this->assertTrue(is_a($data, \setup\Doc\GoodsModel::class));
+        $this->assertTrue(is_a($data, GoodsModel::class));
 
         $this->assertEquals(
             'SELECT goods.* FROM goods WHERE goods.id=:id Order By goods.id DESC ',
