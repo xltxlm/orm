@@ -196,7 +196,7 @@ final class PdoInterface
         $pos = stripos($this->sqlParserd->getSql(), $str);
         $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
         $SqlParserd = (new SqlParserd())
-            ->setSql('SELECT count(*) FROM '.$whereSql);
+            ->setSql('SELECT count(*) FROM ' . $whereSql);
         foreach ($this->getSqlParserd()->getBind() as $value) {
             $SqlParserd->setBind($value);
         }
@@ -212,7 +212,7 @@ final class PdoInterface
             ->__invoke();
 
         $this->getSqlParserd()
-            ->setSql($this->getSqlParserd()->getSql().$pageObject->getLimitSql());
+            ->setSql($this->getSqlParserd()->getSql() . $pageObject->getLimitSql());
 
         return $this->selectAll();
     }
@@ -233,8 +233,18 @@ final class PdoInterface
                 ->setTns($this->getPdoConfig()->getPdoString());
             $start = microtime(true);
         }
+        $stmt = "";
         //执行sql
-        $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
+        try {
+            $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
+        } catch (\Exception $e) {
+            $DefineLog
+                ->setErrorInfo($e->getMessage())
+                ->setType(LogLevel::ERROR);
+            (new Logger())
+                ->setDefine($DefineLog)
+                ->__invoke();
+        }
         foreach ($this->sqlParserd->getBind() as $bind) {
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
@@ -311,7 +321,7 @@ final class PdoInterface
             print_r($this->getPdoConfig()->getPdoString());
             echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
+            echo "\n=========================@in " . __FILE__ . ' on line ' . __LINE__ . "\n";
         }
     }
 }

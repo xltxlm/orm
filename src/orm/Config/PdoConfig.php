@@ -9,7 +9,7 @@
 namespace xltxlm\orm\Config;
 
 /**
- * PDO配置的参数清单
+ * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
  * Class pdoConfig.
  */
 abstract class PdoConfig
@@ -35,8 +35,6 @@ abstract class PdoConfig
     protected $port = 3306;
     /** @var string 数据的编码 */
     protected $encode = 'utf8';
-    /** @var string 数据库的名称 */
-    protected $db;
     /** @var string 数据库账户 */
     protected $username;
     /** @var string 数据密码 */
