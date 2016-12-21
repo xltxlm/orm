@@ -21,7 +21,7 @@ use xltxlm\orm\Sql\SqlParserd;
  *  out:最基础的数据库执行方式.
  * Interface sqlInterface.
  */
-final class PdoInterface
+class PdoInterface
 {
     /** @var PdoConfig 数据库配置 */
     protected $pdoConfig;
@@ -126,7 +126,7 @@ final class PdoInterface
     /**
      * @throws Exception\PdoInterfaceException
      *
-     * @return object
+     * @return mixed
      */
     public function selectOne()
     {
