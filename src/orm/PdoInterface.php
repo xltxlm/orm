@@ -251,9 +251,10 @@ class PdoInterface
         $stmt->execute();
         if ($DefineLog) {
             $end = microtime(true);
-            $DefineLog->setTime(sprintf('%.4f', $end - $start));
+            $time = sprintf('%.4f', $end - $start);
+            $DefineLog->setTime($time);
             //执行时间过长
-            if ($DefineLog > 0.3) {
+            if ($time > 0.3) {
                 $DefineLog->setType(LogLevel::EMERGENCY);
             }
         }
