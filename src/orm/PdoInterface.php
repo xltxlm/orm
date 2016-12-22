@@ -196,7 +196,7 @@ class PdoInterface
         $pos = stripos($this->sqlParserd->getSql(), $str);
         $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
         $SqlParserd = (new SqlParserd())
-            ->setSql('SELECT count(*) FROM ' . $whereSql);
+            ->setSql('SELECT count(*) FROM '.$whereSql);
         foreach ($this->getSqlParserd()->getBind() as $value) {
             $SqlParserd->setBind($value);
         }
@@ -212,7 +212,7 @@ class PdoInterface
             ->__invoke();
 
         $this->getSqlParserd()
-            ->setSql($this->getSqlParserd()->getSql() . $pageObject->getLimitSql());
+            ->setSql($this->getSqlParserd()->getSql().$pageObject->getLimitSql());
 
         return $this->selectAll();
     }
@@ -252,6 +252,10 @@ class PdoInterface
         if ($DefineLog) {
             $end = microtime(true);
             $DefineLog->setTime(sprintf('%.4f', $end - $start));
+            //执行时间过长
+            if ($DefineLog > 0.3) {
+                $DefineLog->setType(LogLevel::EMERGENCY);
+            }
         }
         $error = $stmt->errorInfo();
         $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
@@ -321,7 +325,7 @@ class PdoInterface
             print_r($this->getPdoConfig()->getPdoString());
             echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            echo "\n=========================@in " . __FILE__ . ' on line ' . __LINE__ . "\n";
+            echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
         }
     }
 }
