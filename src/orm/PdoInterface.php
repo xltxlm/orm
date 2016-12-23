@@ -28,9 +28,10 @@ class PdoInterface
 
     /** @var SqlParserd */
     protected $sqlParserd;
-
+    /** @var bool 是否再转换成数组,如果是的话, $className= \stdClass:class */
+    protected $convertToArray = false;
     /** @var string 数据对象 */
-    protected $className;
+    protected $className = \stdClass::class;
 
     /** @var bool 是否开启调试 */
     protected $debug = false;
@@ -41,6 +42,29 @@ class PdoInterface
     public function getPdoConfig(): PdoConfig
     {
         return $this->pdoConfig;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConvertToArray(): bool
+    {
+        return $this->convertToArray;
+    }
+
+    /**
+     * @param bool $convertToArray
+     *
+     * @return PdoInterface
+     */
+    public function setConvertToArray(bool $convertToArray): PdoInterface
+    {
+        $this->convertToArray = $convertToArray;
+        if ($convertToArray) {
+            $this->className = \stdClass::class;
+        }
+
+        return $this;
     }
 
     /**
@@ -137,6 +161,9 @@ class PdoInterface
         if (empty($return)) {
             $return = new $this->className();
         }
+        if ($this->isConvertToArray()) {
+            $return = get_object_vars($return);
+        }
 
         return $return;
     }
@@ -146,7 +173,12 @@ class PdoInterface
         $stmt = $this->pdoexecute();
         $this->checkClassName();
 
-        return $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
+        $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
+        if ($this->isConvertToArray()) {
+            foreach ($return as &$v)
+                $return = get_object_vars($v);
+        }
+        return $return;
     }
 
     public function insert()
@@ -233,7 +265,7 @@ class PdoInterface
                 ->setTns($this->getPdoConfig()->getPdoString());
             $start = microtime(true);
         }
-        $stmt = "";
+        $stmt = '';
         //执行sql
         try {
             $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
@@ -314,7 +346,7 @@ class PdoInterface
     }
 
     /**
-     * 输出调试信息
+     * 输出调试信息.
      */
     private function debug()
     {
