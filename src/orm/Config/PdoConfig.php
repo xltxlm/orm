@@ -151,7 +151,6 @@ abstract class PdoConfig
      */
     public function getDb(): string
     {
-
         if (empty($this->db)) {
             $this->db = strtolower(array_pop(explode('\\', static::class)));
         }
