@@ -35,7 +35,7 @@ final class PageObject
      */
     public function getFrom()
     {
-        return ($this->pageID - 1) * $this->prepage;
+        return $this->from = ($this->pageID - 1) * $this->prepage;
     }
 
     /**
