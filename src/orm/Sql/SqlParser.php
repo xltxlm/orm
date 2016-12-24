@@ -7,6 +7,9 @@
  */
 namespace xltxlm\orm\Sql;
 
+use Psr\Log\LogLevel;
+use xltxlm\logger\Log\BasicLog;
+use xltxlm\logger\Logger;
 use xltxlm\orm\Exception\I18N\SqlParserI18N;
 use xltxlm\orm\Exception\SqlParserException;
 use xltxlm\orm\Unit\BindPair;
@@ -100,21 +103,28 @@ final class SqlParser
             }
         }
         //计算sql的需要绑定的变量数目 和 准备绑定的数目之间的差别
-        preg_match_all('#:([a-z|0-9|_]+)[ ,)]#iUS', $this->getSql(), $out);
+        preg_match_all("#:([a-z|0-9|_]+)[ ,)\n]#iUS", $this->getSql(), $out);
         $sqlBinds = array_values($out[1]);
         sort($sqlBinds);
         $binds = array_keys($sqlParserd->getBind());
         sort($binds);
         if ($sqlBinds != $binds) {
+            //记录日志错误
+            $bindError = vsprintf(
+                (new SqlParserI18N())
+                    ->getBindError(),
+                [
+                    json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),
+                    json_encode($binds, JSON_UNESCAPED_UNICODE),
+                ]
+            );
+            (new Logger(
+                (new BasicLog($bindError))
+                    ->settype(LogLevel::ERROR)
+            ))
+                ->__invoke();
             throw new SqlParserException(
-                vsprintf(
-                    (new SqlParserI18N())
-                        ->getBindError(),
-                    [
-                        json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),
-                        json_encode($binds, JSON_UNESCAPED_UNICODE),
-                    ]
-                )
+                $bindError
             );
         }
 

@@ -85,4 +85,20 @@ class NormalTest extends \PHPUnit_Framework_TestCase
             $SqlParserd->getSql()
         );
     }
+
+    public function test5()
+    {
+        $sql="select 
+        VideoInfo.videoId,VideoInfo.title,VideoInfo.playNum,VideoInfo.addTime,VideoInfo.videoId
+        UserBasicInfo.nickName
+        from VideoInfo
+        left join UserBasicInfo on (VideoInfo=userId=UserBasicInfo.userId)
+        where source='upload' and nickName=:nickName
+        and cc=:cc";
+        $SqlParserd = (new SqlParser())
+            ->setSql($sql)
+            ->setBind(['cc'=>1,'nickName'=>2])
+            ->__invoke();
+    }
+
 }

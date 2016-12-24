@@ -8,19 +8,24 @@
 
 namespace xltxlm\orm\Config;
 
+use xltxlm\logger\Logger;
+use xltxlm\orm\Log\SqlLogsCounts;
+use xltxlm\orm\PdoInterface;
+
 /**
  * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
  * Class pdoConfig.
  */
 abstract class PdoConfig
 {
+    protected $db;
     /** @var array 确保一个进程相同配置只能链接一次 */
     private static $instance = [];
 
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';
-    /** @var  string tns链接字符串 */
-    private $link = "";
+    /** @var string tns链接字符串 */
+    private $link = '';
 
     /** @var bool 开启或关闭日志,日志的路径,文件名不提供配置 */
     protected $log = true;
@@ -50,14 +55,15 @@ abstract class PdoConfig
 
     /**
      * @param bool $log
+     *
      * @return PdoConfig
      */
     public function setLog(bool $log): PdoConfig
     {
         $this->log = $log;
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -140,11 +146,16 @@ abstract class PdoConfig
     }
 
     /**
+     * 数据如果没有设置,那么用类的名称
      * @return string
      */
     public function getDb(): string
     {
-        return strtolower(array_pop(explode('\\', static::class)));
+
+        if (empty($this->db)) {
+            $this->db = strtolower(array_pop(explode('\\', static::class)));
+        }
+        return $this->db;
     }
 
     /**
@@ -228,9 +239,22 @@ abstract class PdoConfig
         self::$instance = [];
     }
 
+    /**
+     * 注销的时候记录日志
+     */
     public function __destruct()
     {
         if ($this->PDOObject) {
+            //记录运行的sql条数
+            if (php_sapi_name() != 'cli') {
+                (new Logger(
+                    (new SqlLogsCounts())
+                        ->setTimes(PdoInterface::getSqlCount())
+                        ->setTns($this->getPdoString())
+                ))
+                    ->setSuffix('.sqlcount')
+                    ->__invoke();
+            }
             $this->PDOObject->commit();
         }
     }

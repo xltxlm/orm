@@ -32,9 +32,27 @@ class PdoInterface
     protected $convertToArray = false;
     /** @var string 数据对象 */
     protected $className = \stdClass::class;
-
     /** @var bool 是否开启调试 */
     protected $debug = false;
+
+    /** @var int 执行sql的条数 */
+    private static $sqlCount = 0;
+
+    /**
+     * @return int
+     */
+    public static function getSqlCount(): int
+    {
+        return self::$sqlCount;
+    }
+
+    /**
+     * @param int $sqlCount
+     */
+    public static function setSqlCount(int $sqlCount = 1)
+    {
+        self::$sqlCount += $sqlCount;
+    }
 
     /**
      * @return PdoConfig
@@ -179,6 +197,7 @@ class PdoInterface
                 $return = get_object_vars($v);
             }
         }
+
         return $return;
     }
 
@@ -327,6 +346,8 @@ class PdoInterface
                 ->__invoke();
         }
         $this->debug();
+        //sql计数
+        self::setSqlCount(1);
 
         return $stmt;
     }
