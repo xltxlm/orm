@@ -13,15 +13,18 @@ final class PageObject
     /** @var int 显示的最大分页条数目 */
     private $max = 1;
 
+    /** @var int 数据条目开始的偏移量 */
+    protected $from = 0;
+
     /** @var int 传递过来指明当前第几页 */
-    protected $pageID;
+    protected $pageID = 1;
     /** @var int 每页显示多少条 */
     protected $prepage = 10;
     /** @var int 一共可分多少页 */
-    private $pages;
+    private $pages = 1;
 
     /** @var int 一共有多少条数据 */
-    protected $total;
+    protected $total = 0;
     /** @var string 追加的SQL */
     private $limitSql = '';
 
@@ -30,7 +33,7 @@ final class PageObject
      *
      * @return int
      */
-    public function shiftNum()
+    public function getFrom()
     {
         return ($this->pageID - 1) * $this->prepage;
     }
@@ -130,7 +133,7 @@ final class PageObject
     /**
      * @return string
      */
-    public function getLimitSql(): string
+    public function getgetFrom(): string
     {
         return $this->limitSql;
     }
@@ -140,7 +143,7 @@ final class PageObject
      *
      * @return PageObject
      */
-    private function setSql(string $sql): PageObject
+    private function setLimitSql(string $sql): PageObject
     {
         $this->limitSql = $sql;
 
@@ -150,25 +153,21 @@ final class PageObject
     /**
      * @desc   分页计算
      *
-     * @author 夏琳泰 mailto:xialintai@qiyi.com
-     *
-     * @since  2012-04-02 09:58:12
      *
      * @return $this
      */
     public function __invoke()
     {
-        $total        = intval($this->total);
-        $this->pages  = (int) max(1, abs(ceil(($total / $this->prepage))));
-        $this->pageID = (int) min(max($this->pageID, 1), $this->pages); //2
-        $pageadd      = 5;
+        $total = intval($this->total);
+        $this->pages = (int)max(1, abs(ceil(($total / $this->prepage))));
+        $this->pageID = (int)min(max($this->pageID, 1), $this->pages); //2
+        $pageadd = 5;
         //每次最多显示多少页目
-        $num       = ceil($pageadd / 2);
+        $num = ceil($pageadd / 2);
         $this->max = min(max($this->pageID + $num, $pageadd), $this->pages);
         $this->min = max(min($this->pageID - $num, $this->pages - $pageadd), 1);
 
-        $num_1 = ($this->pageID - 1) * $this->prepage;
-        $this->setSql(" LIMIT $num_1, $this->prepage ");
+        $this->setLimitSql(' LIMIT '.$this->getFrom().", $this->prepage ");
 
         return $this;
     }
