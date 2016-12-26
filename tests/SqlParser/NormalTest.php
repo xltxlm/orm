@@ -27,7 +27,7 @@ class NormalTest extends \PHPUnit_Framework_TestCase
         (new SqlParser())
             ->setSql($sql)
             ->setBind([
-                'id'   => 1,
+                'id' => 1,
                 'name' => 'name',
             ])
             ->__invoke();
@@ -43,7 +43,7 @@ class NormalTest extends \PHPUnit_Framework_TestCase
             ->setSql($sql)
             ->setBind([
                 'name' => 'name',
-                'id'   => 1,
+                'id' => 1,
             ])
             ->__invoke();
     }
@@ -58,7 +58,7 @@ class NormalTest extends \PHPUnit_Framework_TestCase
             ->setSql($sql)
             ->setBind([
                 'name' => 'name',
-                'id'   => [1, 2, 3],
+                'id' => [1, 2, 3],
             ])
             ->__invoke();
         $this->assertEquals(
@@ -77,7 +77,7 @@ class NormalTest extends \PHPUnit_Framework_TestCase
             ->setSql($sql)
             ->setBind([
                 'name' => null,
-                'id'   => [1, 2, 3],
+                'id' => [1, 2, 3],
             ])
             ->__invoke();
         $this->assertEquals(
@@ -88,7 +88,7 @@ class NormalTest extends \PHPUnit_Framework_TestCase
 
     public function test5()
     {
-        $sql="select 
+        $sql = "select 
         VideoInfo.videoId,VideoInfo.title,VideoInfo.playNum,VideoInfo.addTime,VideoInfo.videoId
         UserBasicInfo.nickName
         from VideoInfo
@@ -97,8 +97,29 @@ class NormalTest extends \PHPUnit_Framework_TestCase
         and cc=:cc";
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
-            ->setBind(['cc'=>1,'nickName'=>2])
+            ->setBind(['cc' => 1, 'nickName' => 2])
             ->__invoke();
     }
+
+    /**
+     * 一个key重复2次
+     */
+    public function test6()
+    {
+        $sql = 'update audit set username=:username ,
+              audit_username_status=:audit_username_status where 
+               contentId =:contentId and audit_username_status=:audit_username_status2 and ( username=:username or username="")  ';
+        (new SqlParser())
+            ->setSql($sql)
+            ->setBind(
+                [
+                    'username' => __LINE__,
+                    'audit_username_status' => __LINE__,
+                    'audit_username_status2' => __LINE__,
+                    'contentId' => __LINE__,
+                ]
+            );
+    }
+
 
 }
