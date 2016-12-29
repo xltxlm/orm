@@ -257,6 +257,7 @@ class PdoInterface
         $num = (new self())
             ->setPdoConfig($this->getPdoConfig())
             ->setSqlParserd($SqlParserd)
+            ->setDebug($this->getDebug())
             ->setClassName(\stdClass::class)
             ->selectVar();
 
@@ -265,7 +266,7 @@ class PdoInterface
             ->__invoke();
 
         $this->getSqlParserd()
-            ->setSql($this->getSqlParserd()->getSql().$pageObject->getLimitSql());
+            ->setSql($this->getSqlParserd()->getSql().' limit '.$pageObject->getFrom().','.$pageObject->getPrepage());
 
         return $this->selectAll();
     }
