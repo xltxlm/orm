@@ -9,7 +9,7 @@
 namespace xltxlm\orm\tests\PdoInterface;
 
 use setup\Doc;
-use xltxlm\orm\PageObject;
+use xltxlm\page\PageObject;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
 

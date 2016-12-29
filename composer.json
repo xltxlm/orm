@@ -13,6 +13,7 @@
     "ext-pdo": "*",
     "overtrue/pinyin": "~3.0",
     "xltxlm/helper": "*",
+    "xltxlm/page": "*",
     "xltxlm/logger": "*"
   },
   "require-dev": {

@@ -8,7 +8,7 @@
 
 namespace xltxlm\orm\tests\PageObject;
 
-use xltxlm\orm\PageObject;
+use xltxlm\page\PageObject;
 use PHPUnit\Framework\TestCase;
 
 /**

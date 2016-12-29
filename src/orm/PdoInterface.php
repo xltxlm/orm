@@ -16,6 +16,7 @@ use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
 use xltxlm\orm\Log\DefineLog;
 use xltxlm\orm\Sql\SqlParserd;
+use xltxlm\page\PageObject;
 
 /**
  *  out:最基础的数据库执行方式.
