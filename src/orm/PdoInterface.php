@@ -298,6 +298,7 @@ class PdoInterface
             (new Logger())
                 ->setDefine($DefineLog)
                 ->__invoke();
+            throw $e;
         }
         foreach ($this->sqlParserd->getBind() as $bind) {
             $stmt->bindValue($bind->getKey(), $bind->getValue());

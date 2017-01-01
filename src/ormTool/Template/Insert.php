@@ -17,14 +17,36 @@ use xltxlm\orm\Sql\SqlParser;
  */
 class Insert extends PdoAction
 {
+    /** @var string 是否可以忽略写入错误 */
+    private $ignore = '';
+
+    /**
+     * @return string
+     */
+    public function getIgnore(): string
+    {
+        return $this->ignore;
+    }
+
+    /**
+     * @param bool $ignore
+     * @return $this
+     */
+    public function setIgnore(bool $ignore)
+    {
+        $this->ignore = $ignore ? 'IGNORE' : '';
+        return $this;
+    }
+
+
     /**
      * @return string
      */
     final public function __invoke()
     {
-        $sql = 'INSERT INTO '.$this->tableObject->getName().
-            ' ('.implode(',', array_keys($this->getSqls())).') VALUES ( '.
-            implode(',', $this->getSqls()).' ) ';
+        $sql = 'INSERT ' . $this->getIgnore() . ' INTO ' . $this->tableObject->getName() .
+            ' (' . implode(',', array_keys($this->getSqls())) . ') VALUES ( ' .
+            implode(',', $this->getSqls()) . ' ) ';
 
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
