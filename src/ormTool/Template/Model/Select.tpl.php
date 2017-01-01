@@ -1,4 +1,4 @@
-<?php /** @var \xltxlm\ormTool\Maker $this */?>
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
 <?php /** @var \xltxlm\ormTool\Unit\Table $tableObject */?>
 <?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
 <?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>

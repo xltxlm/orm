@@ -1,4 +1,4 @@
-<?php /** @var \xltxlm\ormTool\Maker $this */?>
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
 <?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
 <<?='?'?>php
 

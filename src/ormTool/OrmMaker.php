@@ -19,7 +19,7 @@ use xltxlm\ormTool\Unit\Table;
  * out:把setup目录下的配置生成批量的配置类
  * Class make.
  */
-final class Maker
+final class OrmMaker
 {
     /** @var PdoConfig */
     protected $dbConfig;
@@ -45,9 +45,9 @@ final class Maker
     /**
      * @param PdoConfig $dbConfig
      *
-     * @return Maker
+     * @return OrmMaker
      */
-    public function setDbConfig(PdoConfig $dbConfig): Maker
+    public function setDbConfig(PdoConfig $dbConfig): OrmMaker
     {
         $this->dbConfig = $dbConfig;
 
