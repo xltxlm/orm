@@ -41,7 +41,7 @@ class BindPair
     /**
      * @return string
      */
-    public function getValue(): string
+    public function getValue()
     {
         return $this->value;
     }
