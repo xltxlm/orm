@@ -90,7 +90,6 @@ final class TriggerMaker
             ->setDbConfig($this->getOriginalDB())
             ->__invoke();
         foreach ($originalDBTables as $originalDBTable) {
-
             $this->oldTriggerTableFields = [];
             $this->newTriggerTableFields=[];
 
