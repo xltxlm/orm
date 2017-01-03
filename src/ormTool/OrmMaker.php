@@ -82,6 +82,9 @@ final class OrmMaker
             ->__invoke();
 
         foreach ($tableSchemas as $tableSchema) {
+            if ($tableSchema->getTABLENAME()[0] == '_') {
+                continue;
+            }
             //表格定义
             ob_start();
             include __DIR__.'/Template/Model/Table.tpl.php';

@@ -17,7 +17,7 @@ services:
       image: php
       volumes:
               - ../../:/orm/
-      entrypoint: tail -f /root/.bashrc
+      entrypoint: tail -f /etc/issue
       networks:
         comm:
           aliases:
