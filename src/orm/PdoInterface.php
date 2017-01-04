@@ -287,7 +287,6 @@ class PdoInterface
                 ->setTns($this->getPdoConfig()->getPdoString());
             $start = microtime(true);
         }
-        $stmt = '';
         //执行sql
         try {
             $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
@@ -318,12 +317,8 @@ class PdoInterface
 
         if ($error[0] || $error[2]) {
             if ($DefineLog) {
-                ob_start();
-                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-                $trace = ob_get_clean();
                 $DefineLog
                     ->setErrorInfo(json_encode($error, JSON_UNESCAPED_UNICODE))
-                    ->setTrace($trace)
                     ->setType(LogLevel::ERROR);
                 (new Logger())
                     ->setDefine($DefineLog)

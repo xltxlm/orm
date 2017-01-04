@@ -22,28 +22,6 @@ final class DefineLog extends DefineLogOrigin
     protected $tns = '';
     /** @var string 错误信息 */
     protected $errorInfo = '';
-    /** @var string 代码执行的堆栈路径 */
-    protected $trace = '';
-
-    /**
-     * @return string
-     */
-    public function getTrace(): string
-    {
-        return $this->trace;
-    }
-
-    /**
-     * @param string $trace
-     *
-     * @return DefineLog
-     */
-    public function setTrace(string $trace): DefineLog
-    {
-        $this->trace = $trace;
-
-        return $this;
-    }
 
     /**
      * @return string
