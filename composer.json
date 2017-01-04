@@ -14,7 +14,8 @@
     "overtrue/pinyin": "~3.0",
     "xltxlm/helper": "*",
     "xltxlm/page": "*",
-    "xltxlm/logger": "*"
+    "xltxlm/logger": "*",
+    "xltxlm/config": "*"
   },
   "require-dev": {
     "xltxlm/scrutinizer": "*",

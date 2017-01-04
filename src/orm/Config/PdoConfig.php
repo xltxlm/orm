@@ -8,6 +8,7 @@
 
 namespace xltxlm\orm\Config;
 
+use xltxlm\config\TestConfig;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Log\SqlLogsCounts;
 use xltxlm\orm\PdoInterface;
@@ -16,7 +17,7 @@ use xltxlm\orm\PdoInterface;
  * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
  * Class pdoConfig.
  */
-abstract class PdoConfig
+abstract class PdoConfig implements TestConfig
 {
     protected $db;
     /** @var array 确保一个进程相同配置只能链接一次 */
@@ -223,6 +224,14 @@ abstract class PdoConfig
         }
 
         return self::$instance[$this->getPdoString()];
+    }
+
+    /**
+     * @return \PDO
+     */
+    public function test()
+    {
+        return $this::instanceSelf();
     }
 
     /**
