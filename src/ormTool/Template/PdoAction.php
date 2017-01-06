@@ -19,6 +19,7 @@ abstract class PdoAction
     const MORE = ">";
     const LESS = "<";
     const EQUAL = "=";
+    const NOTEQUAL = "!=";
     const MOREANDEQUAL = ">=";
     const LESSANDEQUAL = "<=";
     const LIKE = ">=";
