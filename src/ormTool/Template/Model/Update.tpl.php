@@ -59,9 +59,9 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends \<?= \xltxl
 
      * @return $this
      */
-    public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
-        $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>=:where<?=$field->getCOLUMNNAME()?>";
+        $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>$action:where<?=$field->getCOLUMNNAME()?>";
         $this->binds['where<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
