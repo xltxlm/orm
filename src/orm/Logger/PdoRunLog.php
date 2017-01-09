@@ -6,14 +6,12 @@
  * Time: 下午 6:42.
  */
 
-namespace xltxlm\orm\Log;
+namespace xltxlm\orm\Logger;
 
 use xltxlm\logger\Log\DefineLog as DefineLogOrigin;
 
-final class DefineLog extends DefineLogOrigin
+final class PdoRunLog extends DefineLogOrigin
 {
-    /** @var float SQL消耗的实际时间 */
-    protected $time = 0.0;
     /** @var string */
     protected $sql = '';
     /** @var array */
@@ -34,9 +32,9 @@ final class DefineLog extends DefineLogOrigin
     /**
      * @param string $errorInfo
      *
-     * @return DefineLog
+     * @return PdoRunLog
      */
-    public function setErrorInfo(string $errorInfo): DefineLog
+    public function setErrorInfo(string $errorInfo): PdoRunLog
     {
         $this->errorInfo = $errorInfo;
 
@@ -54,9 +52,9 @@ final class DefineLog extends DefineLogOrigin
     /**
      * @param string $sql
      *
-     * @return DefineLog
+     * @return PdoRunLog
      */
-    public function setSql(string $sql): DefineLog
+    public function setSql(string $sql): PdoRunLog
     {
         $this->sql = $sql;
 
@@ -74,9 +72,9 @@ final class DefineLog extends DefineLogOrigin
     /**
      * @param array $binds
      *
-     * @return DefineLog
+     * @return PdoRunLog
      */
-    public function setBinds(array $binds): DefineLog
+    public function setBinds(array $binds): PdoRunLog
     {
         $this->binds = $binds;
 
@@ -94,31 +92,11 @@ final class DefineLog extends DefineLogOrigin
     /**
      * @param string $tns
      *
-     * @return DefineLog
+     * @return PdoRunLog
      */
-    public function setTns(string $tns): DefineLog
+    public function setTns(string $tns): PdoRunLog
     {
         $this->tns = $tns;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTime(): float
-    {
-        return $this->time;
-    }
-
-    /**
-     * @param float $time
-     *
-     * @return DefineLog
-     */
-    public function setTime(float $time): DefineLog
-    {
-        $this->time = $time;
 
         return $this;
     }

@@ -10,7 +10,7 @@ namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
 use xltxlm\logger\Logger;
-use xltxlm\orm\Log\SqlLogsCounts;
+use xltxlm\orm\Logger\PdoSqlLogsCounts;
 use xltxlm\orm\PdoInterface;
 
 /**
@@ -256,7 +256,7 @@ abstract class PdoConfig implements TestConfig
             //记录运行的sql条数
             if (php_sapi_name() != 'cli') {
                 (new Logger(
-                    (new SqlLogsCounts())
+                    (new PdoSqlLogsCounts())
                         ->setTimes(PdoInterface::getSqlCount())
                         ->setTns($this->getPdoString())
                 ))

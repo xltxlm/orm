@@ -6,7 +6,7 @@
  * Time: 15:18.
  */
 
-namespace xltxlm\orm\Log;
+namespace xltxlm\orm\Logger;
 
 use xltxlm\logger\Log\DefineLog;
 
@@ -14,7 +14,7 @@ use xltxlm\logger\Log\DefineLog;
  * sql计数日志
  * Class SqlLogsCounts.
  */
-final class SqlLogsCounts extends DefineLog
+final class PdoSqlLogsCounts extends DefineLog
 {
     /** @var int 次数 */
     protected $times = 0;
@@ -32,9 +32,9 @@ final class SqlLogsCounts extends DefineLog
     /**
      * @param string $tns
      *
-     * @return SqlLogsCounts
+     * @return PdoSqlLogsCounts
      */
-    public function setTns(string $tns): SqlLogsCounts
+    public function setTns(string $tns): PdoSqlLogsCounts
     {
         $this->tns = $tns;
 
@@ -52,9 +52,9 @@ final class SqlLogsCounts extends DefineLog
     /**
      * @param int $times
      *
-     * @return SqlLogsCounts
+     * @return PdoSqlLogsCounts
      */
-    public function setTimes(int $times): SqlLogsCounts
+    public function setTimes(int $times): PdoSqlLogsCounts
     {
         $this->times = $times;
 

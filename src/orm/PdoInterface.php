@@ -14,7 +14,7 @@ use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
-use xltxlm\orm\Log\DefineLog;
+use xltxlm\orm\Logger\PdoRunLog;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
 
@@ -281,7 +281,7 @@ class PdoInterface
         //记录日志
         $start = $DefineLog = null;
         if ($this->getPdoConfig()->isLog()) {
-            $DefineLog = (new DefineLog())
+            $DefineLog = (new PdoRunLog())
                 ->setSql($this->sqlParserd->getSql())
                 ->setBinds($this->sqlParserd->getBindArray())
                 ->setTns($this->getPdoConfig()->getPdoString());
@@ -304,13 +304,8 @@ class PdoInterface
         }
         $stmt->execute();
         if ($DefineLog) {
-            $end = microtime(true);
-            $time = sprintf('%.4f', $end - $start);
-            $DefineLog->setTime($time);
-            //执行时间过长
-            if ($time > 0.3) {
-                $DefineLog->setType(LogLevel::EMERGENCY);
-            }
+            $time = sprintf('%.4f', microtime(true) - $start);
+            $DefineLog->setRunTime($time);
         }
         $error = $stmt->errorInfo();
         $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
