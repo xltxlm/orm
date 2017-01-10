@@ -60,6 +60,12 @@ test目录下有另外一份指引文档
 * mysql - 必须是 utf8 编码
 * postgresql (准备中)
 
-
++ 下面语句可以返回写入成功的条数
+```php
+ $sql = "insert  IGNORE into b select * from a where 1=1";
+        $num = (new PdoInterfaceEasy($sql))
+            ->setPdoConfig(new KuaigengAdmin())
+            ->update();
+```
 
 [手册：gitbook阅读地址](https://www.gitbook.com/book/xltxlm/orm)
