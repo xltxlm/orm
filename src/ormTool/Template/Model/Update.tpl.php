@@ -10,6 +10,7 @@
  */
 
 namespace <?=$this->getDbNameSpace()?>;
+use \xltxlm\ormTool\Template\PdoAction;
 
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends \<?= \xltxlm\ormTool\Template\Update::class?>
 
