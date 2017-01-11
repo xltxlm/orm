@@ -34,9 +34,9 @@ class Page extends PdoAction
     /**
      * @param PageObject $pageObject
      *
-     * @return Page
+     * @return static
      */
-    public function setPageObject(PageObject &$pageObject): Page
+    public function setPageObject(PageObject &$pageObject)
     {
         $this->pageObject = $pageObject;
 
