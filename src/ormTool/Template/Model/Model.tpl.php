@@ -36,7 +36,7 @@ use CopyObjectAttributeName;
 
     * @return string
     */
-    public function varname<?=ucfirst($field->getCOLUMNNAME())?>()
+    public static function varname<?=ucfirst($field->getCOLUMNNAME())?>()
     {
     return (self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>));
     }
