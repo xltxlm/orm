@@ -12,7 +12,7 @@
 * Class select
 * @package ormTool\Template\Model
 */
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Model
+class <?=ucfirst($tableSchema->getTABLENAME())?>Model
 {
 use ObjectToArray;
 use CopyObjectAttributeName;

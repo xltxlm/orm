@@ -56,8 +56,9 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
      */
     public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$action:<?=$field->getCOLUMNNAME()?>";
-        $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
+        $uniqid=uniqid();
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$action:<?=$field->getCOLUMNNAME()?>$uniqid";
+        $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
     /**
