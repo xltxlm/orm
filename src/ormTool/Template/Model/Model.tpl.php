@@ -3,10 +3,10 @@
 <?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 
-        namespace <?=$this->getDbNameSpace()?>;
+namespace <?=$this->getDbNameSpace()?>;
 
-        use xltxlm\helper\Hclass\ObjectToArray;
-        use xltxlm\helper\Hclass\CopyObjectAttributeName;
+use xltxlm\helper\Hclass\ObjectToArray;
+use xltxlm\helper\Hclass\CopyObjectAttributeName;
 
 /**
 * Class select
@@ -14,8 +14,8 @@
 */
 class <?=ucfirst($tableSchema->getTABLENAME())?>Model
 {
-use ObjectToArray;
-use CopyObjectAttributeName;
+    use ObjectToArray;
+    use CopyObjectAttributeName;
 
 <?php foreach ($fieldSchema as $field) {
     ?>
