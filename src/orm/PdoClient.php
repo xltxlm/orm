@@ -6,7 +6,7 @@
  * Time: 下午 4:01.
  */
 
-namespace orm;
+namespace xltxlm\orm;
 
 use xltxlm\orm\Config\PdoConfig;
 

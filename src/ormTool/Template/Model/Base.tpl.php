@@ -9,12 +9,11 @@ use xltxlm\helper\Hclass\ObjectToArray;
 use xltxlm\helper\Hclass\CopyObjectAttributeName;
 
 /**
-* Class select
-*/
-class <?=ucfirst($tableSchema->getTABLENAME())?>Model
+ * 可以被重复利用的数据模型
+ * Class select
+ */
+trait <?=ucfirst($tableSchema->getTABLENAME())?>Base
 {
-    use ObjectToArray;
-    use CopyObjectAttributeName;
 
 <?php foreach ($fieldSchema as $field) {
     ?>
