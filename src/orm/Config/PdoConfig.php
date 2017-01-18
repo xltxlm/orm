@@ -27,10 +27,6 @@ abstract class PdoConfig implements TestConfig
     const POSTGRESQL = 'postgresql';
     /** @var string tns链接字符串 */
     private $link = '';
-
-    /** @var bool 开启或关闭日志,日志的路径,文件名不提供配置 */
-    protected $log = true;
-
     /** @var \PDO */
     protected $PDOObject;
     /** @var string 数据库的驱动 */
@@ -45,14 +41,6 @@ abstract class PdoConfig implements TestConfig
     protected $username;
     /** @var string 数据密码 */
     protected $password;
-
-    /**
-     * @return bool
-     */
-    public function isLog(): bool
-    {
-        return $this->log;
-    }
 
     /**
      * @param bool $log

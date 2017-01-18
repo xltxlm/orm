@@ -173,7 +173,7 @@ class PdoInterface
      */
     public function selectOne()
     {
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
         $return = $stmt->fetchObject($this->className);
@@ -189,7 +189,7 @@ class PdoInterface
 
     public function selectAll()
     {
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
@@ -204,7 +204,7 @@ class PdoInterface
 
     public function insert()
     {
-        $this->pdoexecute();
+        $this->pdoexecute(__FUNCTION__);
 
         return $this->pdoConfig->instanceSelf()->lastInsertId();
     }
@@ -216,7 +216,7 @@ class PdoInterface
      */
     public function execute()
     {
-        return $this->pdoexecute();
+        return $this->pdoexecute(__FUNCTION__);
     }
 
     /**
@@ -232,7 +232,7 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
 
         return $stmt->rowCount();
     }
@@ -272,21 +272,20 @@ class PdoInterface
     }
 
     /**
-     * @throws \Exception
-     *
+     * @param string $function
      * @return \PDOStatement
+     * @throws PdoSqlError
+     * @throws \Exception
      */
-    private function pdoexecute(): \PDOStatement
+    private function pdoexecute(string $function): \PDOStatement
     {
         //记录日志
-        $start = $DefineLog = null;
-        if ($this->getPdoConfig()->isLog()) {
-            $DefineLog = (new PdoRunLog())
-                ->setSql($this->sqlParserd->getSql())
-                ->setBinds($this->sqlParserd->getBindArray())
-                ->setTns($this->getPdoConfig()->getPdoString());
-            $start = microtime(true);
-        }
+        $DefineLog = (new PdoRunLog())
+            ->setSql($this->sqlParserd->getSql())
+            ->setBinds($this->sqlParserd->getBindArray())
+            ->setFunction($function)
+            ->setTns($this->getPdoConfig()->getPdoString());
+        $start = microtime(true);
         //执行sql
         try {
             $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());

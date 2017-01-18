@@ -15,6 +15,8 @@ final class PdoRunLog extends DefineLogOrigin
 {
     /** @var string */
     protected $sql = '';
+    /** @var string 运行的查询SQL类型 */
+    protected $function = "";
     /** @var array */
     protected $binds = [];
     /** @var string */
@@ -38,6 +40,24 @@ final class PdoRunLog extends DefineLogOrigin
                 break;
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFunction(): string
+    {
+        return $this->function;
+    }
+
+    /**
+     * @param string $function
+     * @return PdoRunLog
+     */
+    public function setFunction(string $function): PdoRunLog
+    {
+        $this->function = $function;
+        return $this;
     }
 
 
