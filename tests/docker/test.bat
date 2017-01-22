@@ -9,3 +9,4 @@ docker exec   docker_mysql_1 mysql -e "show databases;"
 docker exec   docker_php_1 bash -c "/usr/local/bin/docker-php-ext-install  pdo_mysql"
 docker exec   docker_php_1 bash -c "cd /orm && php tests/docker/LoadDataTest"
 docker exec   docker_php_1 bash -c "cd /orm && vendor/bin/phpunit"
+docker-compose down
