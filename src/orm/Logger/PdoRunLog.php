@@ -11,7 +11,7 @@ namespace xltxlm\orm\Logger;
 use xltxlm\orm\PdoClient;
 use xltxlm\logger\Log\DefineLog as DefineLogOrigin;
 
-final class PdoRunLog extends DefineLogOrigin
+class PdoRunLog extends DefineLogOrigin
 {
     /** @var string */
     protected $sql = '';
@@ -25,6 +25,7 @@ final class PdoRunLog extends DefineLogOrigin
     protected $errorInfo = '';
 
     /**
+     * 当前记录的类算在运行类身上,不是orm
      * PdoRunLog constructor.
      */
     public function __construct()

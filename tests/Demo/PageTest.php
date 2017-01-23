@@ -10,9 +10,19 @@ namespace xltxlm\orm\tests\Demo;
 
 use setup\Doc\GoodsModel;
 use setup\Doc\GoodsPage;
+use xltxlm\page\PageObject;
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
+    private $pageObject;
+
+    protected function setUp()
+    {
+        $this->pageObject = (new PageObject())
+            ->setPageID(2)
+            ->setPrepage(3);
+    }
+
     /**
      * 带 where 条件,非赋值查询.
      */
@@ -22,15 +32,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $data = $goodsPage
             ->setSQL('id>=:id', ['id' => 1])
-            ->setPageID(2)
-            ->setPrepage(3)
+            ->setPageObject($this->pageObject)
             ->__invoke();
 
         $this->assertTrue(is_array($data));
         $this->assertEquals(GoodsModel::class, get_class(current($data)));
 
         $this->assertEquals(
-            'SELECT * FROM goods WHERE id>=:id  LIMIT 3, 3 ',
+            'SELECT * FROM goods WHERE id>=:id  limit 3,3',
             $goodsPage->getPdoInterface()->getSqlParserd()->getSql()
         );
 
@@ -50,16 +59,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
             ->setSQL('id=:id', ['id' => 10])
             ->whereNameMaybe('商品名称-10')
             ->setDebug(true)
-            ->setPageID(2)
-            ->setPrepage(3)
+            ->setPageObject($this->pageObject)
             ->__invoke();
         $this->assertEquals(1, count($data));
 
         //查询结果又多条
         $data = (new GoodsPage())
             ->whereNameMaybe(null)
-            ->setPageID(2)
-            ->setPrepage(3)
+            ->setPageObject($this->pageObject)
             ->__invoke();
         $this->assertGreaterThan(1, count($data));
     }

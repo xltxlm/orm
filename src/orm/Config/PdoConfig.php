@@ -10,6 +10,7 @@ namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
 use xltxlm\logger\Logger;
+use xltxlm\orm\Logger\PdoConnectLogger;
 use xltxlm\orm\Logger\PdoSqlLogsCounts;
 use xltxlm\orm\PdoInterface;
 
@@ -196,6 +197,8 @@ abstract class PdoConfig implements TestConfig
         $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
         //所有数据库,默认都必须开启事务
         $this->PDOObject->beginTransaction();
+        (new PdoConnectLogger($this))
+            ->__invoke();
 
         return $this->PDOObject;
     }

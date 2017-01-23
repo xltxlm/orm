@@ -19,9 +19,8 @@ use setup\Doc;
 class MissModelTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * 查询时候,不指定model类,不予返回结果.
+     * 返回单个值的时候,不需要指定类
      *
-     * @expectedException  PdoInterfaceException
      */
     public function test1()
     {
@@ -29,13 +28,13 @@ class MissModelTest extends \PHPUnit_Framework_TestCase
             ->setSql('select * from goods where id=:id ')
             ->setBind(
                 [
-                    'id' => 1006,
+                    'id' => 100,
                 ]
             )
             ->__invoke();
         $data = (new PdoInterface())
-            ->setPdoConfig((new Doc()))
             ->setSqlParserd($SqlParserd)
+            ->setPdoConfig((new Doc()))
             ->selectVar();
         echo '<pre>-->';
         print_r($data);

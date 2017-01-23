@@ -105,6 +105,18 @@ final class OrmMaker
             include __DIR__.'/Template/Model/Model.tpl.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Model.php', ob_get_clean());
 
+            ob_start();
+            include __DIR__.'/Template/Model/Base.tpl.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Base.php', ob_get_clean());
+
+            ob_start();
+            include __DIR__.'/Template/Model/Getset.tpl.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', ob_get_clean());
+
+            ob_start();
+            include __DIR__.'/Template/Model/Copy.tpl.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Copy.php', ob_get_clean());
+
             //操作 - 一维查询
             $moreData = false;
             ob_start();
