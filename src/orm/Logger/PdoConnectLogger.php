@@ -8,7 +8,6 @@
 
 namespace xltxlm\orm\Logger;
 
-
 use xltxlm\logger\Log\DefineLog;
 
 final class PdoConnectLogger extends DefineLog
