@@ -24,16 +24,6 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
     }
 
     /**
-    * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
-
-    * @return string
-    */
-    public static function varname<?=ucfirst($field->getCOLUMNNAME())?>()
-    {
-        return (self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>));
-    }
-
-    /**
     * out:<?=$field->getCOLUMNCOMMENT()?>
 
     * @param mixed $<?=$field->getCOLUMNNAME()?>

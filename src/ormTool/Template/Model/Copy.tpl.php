@@ -31,4 +31,17 @@ class <?=ucfirst($tableSchema->getTABLENAME())?>Copy
     <?php
 
 }?>
+
+    /**
+    * @return array
+    */
+    final public function __invoke()
+    {
+        $fieldSchema=[];
+        <?php foreach ($fieldSchema as $field) {
+        ?>
+            $fieldSchema[]='<?=$field->getCOLUMNNAME()?>';
+        <?php }?>
+        return $fieldSchema;
+    }
 }
