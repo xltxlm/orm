@@ -38,10 +38,10 @@ class <?=ucfirst($tableSchema->getTABLENAME())?>Copy
     final public function __invoke()
     {
         $fieldSchema=[];
-        <?php foreach ($fieldSchema as $field) {
-        ?>
-            $fieldSchema[]='<?=$field->getCOLUMNNAME()?>';
-        <?php }?>
+<?php foreach ($fieldSchema as $field) {
+?>
+        $fieldSchema['<?=$field->getCOLUMNNAME()?>']='<?=$field->getCOLUMNCOMMENT()?:$field->getCOLUMNNAME()?>';
+<?php }?>
         return $fieldSchema;
     }
 }
