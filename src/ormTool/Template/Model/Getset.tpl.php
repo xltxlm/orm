@@ -38,4 +38,14 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
     <?php
 
 }?>
+
+    /**
+     * 魔术函数直接取内容 getxx
+     */
+    public function __call($name,$arguments)
+    {
+        $function = lcfirst(substr($name, 3));
+        return $this->$function;
+    }
+
 }

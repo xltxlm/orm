@@ -39,10 +39,9 @@ class <?=ucfirst($tableSchema->getTABLENAME())?>Copy
     {
         $fieldSchema=[];
 <?php foreach ($fieldSchema as $field) {
-    ?>
+?>
         $fieldSchema['<?=$field->getCOLUMNNAME()?>']='<?=$field->getCOLUMNCOMMENT()?:$field->getCOLUMNNAME()?>';
-<?php 
-}?>
+<?php }?>
         return $fieldSchema;
     }
 }
