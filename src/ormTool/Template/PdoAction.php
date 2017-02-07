@@ -22,7 +22,7 @@ abstract class PdoAction
     const NOTEQUAL = "!=";
     const MOREANDEQUAL = ">=";
     const LESSANDEQUAL = "<=";
-    const LIKE = ">=";
+    const LIKE = " like ";
 
     /** @var array 连表查询的SQl */
     protected $joinSql = [];

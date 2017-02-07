@@ -1,4 +1,5 @@
 cd %~dp0
+chcp 65001
 docker build -t phplog ./php/
 docker-compose  up -d
 rem 等待mysql服务完全启动

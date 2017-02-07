@@ -9,6 +9,7 @@ namespace xltxlm\orm\tests\Demo;
 
 use setup\Doc\GoodsModel;
 use setup\Doc\GoodsSelectOne;
+use xltxlm\ormTool\Template\PdoAction;
 
 /**
  * out:验证普通的sql查询
@@ -45,9 +46,8 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
             ->__invoke();
         $this->assertTrue(is_a($data, GoodsModel::class));
 
-        $id = md5(serialize([$id]));
         $this->assertEquals(
-            "SELECT goods.* FROM goods WHERE goods.id=:id$id ",
+            "SELECT goods.* FROM goods WHERE goods.id=:id ",
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -62,11 +62,29 @@ class SelectOneTest extends \PHPUnit_Framework_TestCase
             ->whereId($id)
             ->orderIdDesc()
             ->__invoke();
-        $id = md5(serialize([$id]));
         $this->assertTrue(is_a($data, GoodsModel::class));
 
         $this->assertEquals(
-            "SELECT goods.* FROM goods WHERE goods.id=:id$id Order By goods.id DESC ",
+            "SELECT goods.* FROM goods WHERE goods.id=:id Order By goods.id DESC ",
+            $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
+        );
+    }
+
+    //带where + 排序 2次
+    public function test3()
+    {
+        $goodsSelectOne = new GoodsSelectOne();
+
+        $id = 1061;
+        $data = $goodsSelectOne
+            ->whereId($id, PdoAction::MOREANDEQUAL)
+            ->whereId($id, PdoAction::LESSANDEQUAL)
+            ->orderIdDesc()
+            ->__invoke();
+        $this->assertTrue(is_a($data, GoodsModel::class));
+
+        $this->assertEquals(
+            "SELECT goods.* FROM goods WHERE goods.id>=:id AND goods.id<=:id1 Order By goods.id DESC ",
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }

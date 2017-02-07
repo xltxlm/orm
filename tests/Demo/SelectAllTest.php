@@ -47,9 +47,8 @@ class SelectAllTest extends TestCase
             ->__invoke();
         $this->assertTrue(is_array($data));
 
-        $id = md5(serialize([$id]));
         $this->assertEquals(
-            "SELECT goods.* FROM goods WHERE goods.id=:id$id ",
+            "SELECT goods.* FROM goods WHERE goods.id=:id ",
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -65,11 +64,10 @@ class SelectAllTest extends TestCase
             ->orderIdDesc()
             ->__invoke();
 
-        $id = md5(serialize([$id]));
         $this->assertTrue(is_array($data));
 
         $this->assertEquals(
-            "SELECT goods.* FROM goods WHERE goods.id=:id$id Order By goods.id DESC ",
+            "SELECT goods.* FROM goods WHERE goods.id=:id Order By goods.id DESC ",
             $goodsSelectOne->getPdoInterface()->getSqlParserd()->getSql()
         );
     }
@@ -81,11 +79,10 @@ class SelectAllTest extends TestCase
             ->whereNameMaybe($name)
             ->whereStatusMaybe('')
             ->whereIdMaybe(null);
-        $name = md5(serialize([$name]));
         $GoodsSelectAll
             ->__invoke();
         $sql = $GoodsSelectAll->getPdoInterface()->getSqlParserd()->getSql();
-        $this->assertEquals("SELECT goods.* FROM goods WHERE goods.name=:name$name ", $sql);
+        $this->assertEquals("SELECT goods.* FROM goods WHERE goods.name=:name ", $sql);
     }
 
 }
