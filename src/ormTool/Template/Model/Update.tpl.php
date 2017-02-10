@@ -10,9 +10,11 @@
  */
 
 namespace <?=$this->getDbNameSpace()?>;
+/** 日*/
 use \xltxlm\ormTool\Template\PdoAction;
+use \xltxlm\ormTool\Template\Update;
 
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends \<?= \xltxlm\ormTool\Template\Update::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
 
 {
     final public function __construct()

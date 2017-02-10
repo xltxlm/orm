@@ -10,8 +10,9 @@
  */
 
 namespace <?=$this->getDbNameSpace()?>;
+use \xltxlm\ormTool\Template\Insert;
 
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends \<?= \xltxlm\ormTool\Template\Insert::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends Insert
 
 {
 

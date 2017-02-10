@@ -16,13 +16,14 @@
 namespace <?=$this->getDbNameSpace()?>;
 
 use \xltxlm\ormTool\Template\PdoAction;
+use \xltxlm\ormTool\Template\Select;
 
 /**
  * Class select
  */
 <?php if ($pageClass) {
     ?>
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends \<?= \xltxlm\ormTool\Template\Page::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends Select
 <?php
 
 } else {
