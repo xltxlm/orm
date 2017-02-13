@@ -291,7 +291,7 @@ class PdoInterface
             $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
         } catch (\Exception $e) {
             $DefineLog
-                ->setErrorInfo(mb_convert_encoding($e->getMessage(),'UTF-8'))
+                ->setErrorInfo(mb_convert_encoding($e->getMessage(), 'UTF-8'))
                 ->setType(LogLevel::ERROR);
             (new Logger())
                 ->setDefine($DefineLog)
