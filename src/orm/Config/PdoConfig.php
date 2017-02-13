@@ -193,13 +193,16 @@ abstract class PdoConfig implements TestConfig
     private function instance()
     {
         $tns = $this->getPdoString();
-        $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
-        $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
-        //所有数据库,默认都必须开启事务
-        $this->PDOObject->beginTransaction();
-        (new PdoConnectLogger($this))
-            ->__invoke();
-
+        try {
+            $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
+            $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
+            //所有数据库,默认都必须开启事务
+            $this->PDOObject->beginTransaction();
+            (new PdoConnectLogger($this))
+                ->__invoke();
+        } catch (\PDOException $e) {
+            throw new \PDOException(trim($e->getMessage())."[$tns]");
+        }
         return $this->PDOObject;
     }
 

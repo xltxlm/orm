@@ -29,11 +29,10 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends Page
 
 } else {
     ?>
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends \<?= \xltxlm\ormTool\Template\Select::class?>
+final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends Select
 <?php
 
 }?>
-
 {
     /** @var bool  一维查询 还是 二维查询 */
     protected $moreData = <?=$moreData ? 'true' : 'false'?>;
