@@ -9,8 +9,9 @@
 namespace xltxlm\orm\Logger;
 
 use xltxlm\logger\Log\DefineLog;
+use xltxlm\orm\PdoClient;
 
-final class PdoConnectLogger extends DefineLog
+class PdoConnectLogger extends DefineLog
 {
 
     /**
@@ -19,8 +20,6 @@ final class PdoConnectLogger extends DefineLog
     public function __construct()
     {
         parent::__construct();
-        ob_start();
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $this->trace = ob_get_clean();
+        $this->setReource(PdoClient::class);
     }
 }

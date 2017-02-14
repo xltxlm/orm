@@ -8,13 +8,11 @@
 
 namespace xltxlm\orm\Logger;
 
-use xltxlm\logger\Log\DefineLog;
-
 /**
  * sql计数日志
  * Class SqlLogsCounts.
  */
-final class PdoSqlLogsCounts extends DefineLog
+final class PdoSqlLogsCounts extends PdoConnectLogger
 {
     /** @var int 次数 */
     protected $times = 0;

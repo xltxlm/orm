@@ -8,10 +8,7 @@
 
 namespace xltxlm\orm\Logger;
 
-use xltxlm\orm\PdoClient;
-use xltxlm\logger\Log\DefineLog as DefineLogOrigin;
-
-class PdoRunLog extends DefineLogOrigin
+class PdoRunLog extends PdoConnectLogger
 {
     /** @var string */
     protected $sql = '';
@@ -23,25 +20,6 @@ class PdoRunLog extends DefineLogOrigin
     protected $tns = '';
     /** @var string 错误信息 */
     protected $errorInfo = '';
-
-    /**
-     * 当前记录的类算在运行类身上,不是orm
-     * PdoRunLog constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setReource(PdoClient::class);
-        $getNamespaceName = (new \ReflectionClass(PdoClient::class))->getNamespaceName();
-
-        $debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        foreach ($debug_backtrace as $item) {
-            if ($item['class'] && strpos($item['class'], $getNamespaceName) === false) {
-                $this->setLogClassName($item['class']);
-                break;
-            }
-        }
-    }
 
     /**
      * @return string

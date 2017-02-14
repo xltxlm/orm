@@ -294,7 +294,7 @@ class PdoInterface
                 ->setErrorInfo(mb_convert_encoding($e->getMessage(),'UTF-8'))
                 ->setType(LogLevel::ERROR);
             (new Logger())
-                ->setDefine($DefineLog)
+                ->setLogDefine($DefineLog)
                 ->__invoke();
             throw $e;
         }
@@ -315,7 +315,7 @@ class PdoInterface
                     ->setErrorInfo(json_encode($error, JSON_UNESCAPED_UNICODE))
                     ->setType(LogLevel::ERROR);
                 (new Logger())
-                    ->setDefine($DefineLog)
+                    ->setLogDefine($DefineLog)
                     ->__invoke();
             }
             throw (new PdoSqlError(
@@ -334,7 +334,7 @@ class PdoInterface
         }
         if ($DefineLog) {
             (new Logger())
-                ->setDefine($DefineLog)
+                ->setLogDefine($DefineLog)
                 ->__invoke();
         }
         $this->debug();

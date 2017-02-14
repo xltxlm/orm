@@ -43,17 +43,6 @@ abstract class PdoConfig implements TestConfig
     /** @var string 数据密码 */
     protected $password;
 
-    /**
-     * @param bool $log
-     *
-     * @return PdoConfig
-     */
-    public function setLog(bool $log): PdoConfig
-    {
-        $this->log = $log;
-
-        return $this;
-    }
 
     /**
      * @return string
