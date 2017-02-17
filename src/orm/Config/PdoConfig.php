@@ -9,10 +9,7 @@
 namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
-use xltxlm\logger\Logger;
 use xltxlm\orm\Logger\PdoConnectLogger;
-use xltxlm\orm\Logger\PdoSqlLogsCounts;
-use xltxlm\orm\PdoInterface;
 
 /**
  * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
@@ -236,16 +233,6 @@ abstract class PdoConfig implements TestConfig
     public function __destruct()
     {
         if ($this->PDOObject) {
-            //记录运行的sql条数
-            if (php_sapi_name() != 'cli') {
-                (new Logger(
-                    (new PdoSqlLogsCounts())
-                        ->setTimes(PdoInterface::getSqlCount())
-                        ->setTns($this->getPdoString())
-                ))
-                    ->setSuffix('.sqlcount')
-                    ->__invoke();
-            }
             $this->PDOObject->commit();
         }
     }
