@@ -5,9 +5,9 @@
     namespace <?=$this->getDbNameSpace()?>;
 
     use <?= xltxlm\orm\Config\PdoConfig::class?>;
+    use <?= \xltxlm\ormTool\Unit\Table::class?>;
 
-    final class <?=ucfirst($tableSchema->getTABLENAME())?> extends \<?= \xltxlm\ormTool\Unit\Table::class?>
-
+    final class <?=ucfirst($tableSchema->getTABLENAME())?> extends Table
     {
 
     /** @var string 表格的名称 */

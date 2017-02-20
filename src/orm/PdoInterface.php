@@ -195,7 +195,7 @@ class PdoInterface
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
         if ($this->isConvertToArray()) {
             foreach ($return as &$v) {
-                $return = get_object_vars($v);
+                $v = get_object_vars($v);
             }
         }
 
