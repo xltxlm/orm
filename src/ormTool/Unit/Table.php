@@ -45,7 +45,7 @@ class Table
      *
      * @return Table
      */
-    final public function setName(string $name): Table
+    final public function setName(string $name)
     {
         $this->name = $name;
 
@@ -65,7 +65,7 @@ class Table
      *
      * @return Table
      */
-    final public function setDbConfig(PdoConfig $DbConfig): Table
+    final public function setDbConfig(PdoConfig $DbConfig)
     {
         $this->DbConfig = $DbConfig;
 

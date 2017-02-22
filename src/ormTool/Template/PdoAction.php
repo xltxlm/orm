@@ -5,8 +5,10 @@
  * Date: 2016-11-14
  * Time: 下午 2:50.
  */
+
 namespace xltxlm\ormTool\Template;
 
+use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\PdoInterface;
 use xltxlm\ormTool\Unit\Table;
 
@@ -41,6 +43,9 @@ abstract class PdoAction
     /** @var Table */
     protected $tableObject;
 
+    /** @var  PdoConfig 服务器配置更新 */
+    protected $dbConfig;
+
     /** @var PdoInterface */
     protected $pdoInterface;
 
@@ -52,6 +57,26 @@ abstract class PdoAction
 
     /** @var \stdClass 本次查询的结果 */
     protected $result;
+
+    /**
+     * @return PdoConfig
+     */
+    public function getDbConfig(): PdoConfig
+    {
+        return $this->dbConfig;
+    }
+
+    /**
+     * @param PdoConfig $dbConfig
+     * @return static
+     */
+    public function setDbConfig(PdoConfig $dbConfig)
+    {
+        $this->dbConfig = $dbConfig;
+        $this->getTableObject()->setDbConfig($dbConfig);
+        return $this;
+    }
+
 
     /**
      * @param string $joinTable

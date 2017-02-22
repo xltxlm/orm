@@ -21,6 +21,6 @@
     */
     public function getDbConfig(): PdoConfig
     {
-        return new \<?=(new \ReflectionClass($this->getDbConfig()))->name?>;
+        return $this->DbConfig?:(new \<?=(new \ReflectionClass($this->getDbConfig()))->name?>);
     }
 }
