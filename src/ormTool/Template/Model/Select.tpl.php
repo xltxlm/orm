@@ -16,9 +16,11 @@
 namespace <?=$this->getDbNameSpace()?>;
 
 use \xltxlm\ormTool\Template\PdoAction;
-use \xltxlm\ormTool\Template\Select;
+<?php if ($pageClass) {?>
 use \xltxlm\ormTool\Template\Page;
-
+<?php }else{ ?>
+use \xltxlm\ormTool\Template\Select;
+<?php }?>
 /**
  * Class select
  */
