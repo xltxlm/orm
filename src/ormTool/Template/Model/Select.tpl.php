@@ -62,8 +62,32 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
     public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$action:<?=$field->getCOLUMNNAME()?>$uniqid";
+        if($action == PdoAction::NOTLIKE) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$action:(<?=$field->getCOLUMNNAME()?>$uniqid)=0";
+        }else{
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$action:<?=$field->getCOLUMNNAME()?>$uniqid";
+        }
         $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
+        $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
+        return $this;
+    }
+    /**
+     * out:<?=$field->getCOLUMNCOMMENT()?>
+
+     * @param mixed $<?=$field->getCOLUMNNAME()?>
+
+     * @return $this
+     */
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>NULL($<?=$field->getCOLUMNNAME()?>=true)
+    {
+        $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
+        if($<?=$field->getCOLUMNNAME()?> == true)
+        {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NULL";
+        }else
+        {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NOT NULL";
+        }
         $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
         return $this;
     }

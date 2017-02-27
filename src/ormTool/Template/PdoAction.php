@@ -25,6 +25,7 @@ abstract class PdoAction
     const MOREANDEQUAL = ">=";
     const LESSANDEQUAL = "<=";
     const LIKE = " like ";
+    const NOTLIKE = " instr ";
 
     /** @var array 连表查询的SQl */
     protected $joinSql = [];
