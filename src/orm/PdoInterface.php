@@ -14,7 +14,7 @@ use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
-use xltxlm\orm\Logger\PdoRunLog;
+use xltxlm\orm\Logger\PdoRunLogger;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
 
@@ -280,18 +280,16 @@ class PdoInterface
     private function pdoexecute(string $function): \PDOStatement
     {
         //记录日志
-        $DefineLog = (new PdoRunLog())
-            ->setSql($this->sqlParserd->getSql())
-            ->setBinds($this->sqlParserd->getBindArray())
-            ->setFunction($function)
-            ->setTns($this->getPdoConfig()->getPdoString());
+        $DefineLog = (new PdoRunLogger($this->getPdoConfig()))
+            ->setPdoSql($this->sqlParserd);
         $start = microtime(true);
         //执行sql
         try {
             $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
         } catch (\Exception $e) {
             $DefineLog
-                ->setErrorInfo(mb_convert_encoding($e->getMessage(), 'UTF-8'))
+                ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
+                ->setMessageDescribe("SQL解析错误")
                 ->setType(LogLevel::ERROR);
             (new Logger())
                 ->setLogDefine($DefineLog)
@@ -312,7 +310,8 @@ class PdoInterface
         if ($error[0] || $error[2]) {
             if ($DefineLog) {
                 $DefineLog
-                    ->setErrorInfo(json_encode($error, JSON_UNESCAPED_UNICODE))
+                    ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
+                    ->setMessageDescribe("SQL运行错误")
                     ->setType(LogLevel::ERROR);
                 (new Logger())
                     ->setLogDefine($DefineLog)

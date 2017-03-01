@@ -17,13 +17,6 @@
     "xltxlm/logger": "*",
     "xltxlm/config": "*"
   },
-  "require-dev": {
-    "xltxlm/scrutinizer": "*",
-    "phpunit/phpunit": "*",
-    "xltxlm/jmeter": "*",
-    "squizlabs/php_codesniffer": "*",
-    "friendsofphp/php-cs-fixer": "~v2."
-  },
   "autoload": {
     "psr-4": {
       "xltxlm\\": [
