@@ -35,7 +35,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>=:<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -48,7 +48,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>SQL($sql, $value = "")
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = '<?=$field->getCOLUMNNAME()?>=' . $sql;
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = '`<?=$field->getCOLUMNNAME()?>`=' . $sql;
         if ($value) {
             $this->binds['<?=$field->getCOLUMNNAME()?>'] = $value;
         }
@@ -64,7 +64,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
      */
     public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
-        $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "<?=$field->getCOLUMNNAME()?>$action:where<?=$field->getCOLUMNNAME()?>";
+        $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`$action:where<?=$field->getCOLUMNNAME()?>";
         $this->binds['where<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -77,7 +77,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
      */
     public function where<?=ucfirst($field->getCOLUMNNAME())?>SQL($sql, $value = "")
     {
-        $this->sqls['where<?=$field->getCOLUMNNAME()?>'] = '<?=$field->getCOLUMNNAME()?>=' . $sql;
+        $this->sqls['where<?=$field->getCOLUMNNAME()?>'] = '`<?=$field->getCOLUMNNAME()?>`=' . $sql;
         if ($value) {
             $this->binds['where<?=$field->getCOLUMNNAME()?>'] = $value;
         }

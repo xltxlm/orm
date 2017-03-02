@@ -33,7 +33,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends Insert
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = ":<?=$field->getCOLUMNNAME()?>";
+        $this->sqls['`<?=$field->getCOLUMNNAME()?>`'] = ":<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
     }
@@ -46,7 +46,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends Insert
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>SQL($sql, $value = "")
     {
-        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = '<?=$field->getCOLUMNNAME()?>=' . $sql;
+        $this->sqls['`<?=$field->getCOLUMNNAME()?>`'] = '<?=$field->getCOLUMNNAME()?>=' . $sql;
         if ($value) {
             $this->binds['<?=$field->getCOLUMNNAME()?>'] = $value;
         }
