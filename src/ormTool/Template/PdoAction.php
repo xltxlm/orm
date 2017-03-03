@@ -26,6 +26,8 @@ abstract class PdoAction
     const LESSANDEQUAL = "<=";
     const LIKE = " like ";
     const NOTLIKE = " instr ";
+    //日期专用的区间判断
+    const INDATE = " in ";
 
     /** @var array 连表查询的SQl */
     protected $joinSql = [];
