@@ -10,7 +10,8 @@ use \xltxlm\ormTool\Unit\FieldSchema;
 
 final class <?=ucfirst($tableSchema->getTABLENAME())?>Type
 {
-<?php foreach ($fieldSchema as $item){?>
+<?php foreach ($fieldSchema as $item) {
+    ?>
     /**
      * @return bool
     */
@@ -52,5 +53,6 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Type
     }
 
 
-<?php }?>
+<?php 
+}?>
 }
