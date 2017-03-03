@@ -20,4 +20,14 @@ class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMN
 <?php
 
 }?>
+
+    public static function ALL():array
+    {
+        return [<?php foreach ($field->getENUMARRAY() as $key=>$value) {
+            ?>
+            '<?=$value?>'=>'<?=$value?>',
+            <?php
+        }?>
+            ];
+    }
 }

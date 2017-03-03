@@ -142,6 +142,11 @@ final class OrmMaker
             include __DIR__.'/Template/Model/Update.tpl.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Update.php', ob_get_clean());
 
+            //字段类型
+            ob_start();
+            include __DIR__.'/Template/Model/Type.tpl.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', ob_get_clean());
+
             //枚举类型类
             foreach ($fieldSchema as $field) {
                 if ($field->getDATATYPE() == FieldSchema::ENUM) {
