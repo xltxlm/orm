@@ -14,6 +14,7 @@ use xltxlm\orm\Exception\I18N\FileI18N;
 use xltxlm\ormTool\Unit\DB;
 use xltxlm\ormTool\Unit\FieldSchema;
 use xltxlm\ormTool\Unit\Table;
+use xltxlm\ormTool\Unit\TableSchema;
 
 /**
  * out:把setup目录下的配置生成批量的配置类
@@ -77,6 +78,7 @@ final class OrmMaker
         }
 
         //获取数据库的全部表列表
+        /** @var TableSchema[] $tableSchemas */
         $tableSchemas = (new DB())
             ->setDbConfig($this->dbConfig)
             ->__invoke();
@@ -94,6 +96,7 @@ final class OrmMaker
             $tableObject = (new Table())
                 ->setDbConfig($this->dbConfig)
                 ->setName($tableSchema->getTABLENAME());
+            /** @var FieldSchema[] $fieldSchema */
             $fieldSchema = $tableObject
                 ->getFieldSchemas();
             //外键列表
@@ -131,7 +134,7 @@ final class OrmMaker
             ob_start();
             $pageClass = true;
             include __DIR__.'/Template/Model/Select.tpl.php';
-            $pageClass=false;
+            $pageClass = false;
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Page.php', ob_get_clean());
             //写入数据 模型
             ob_start();
@@ -159,6 +162,18 @@ final class OrmMaker
                     );
                 }
             }
+        }
+        //生成deploy配置的 k=>v 格式
+        $deploy = dirname($ReflectionClass->getFileName())."/Deploy/";
+        mkdir($deploy);
+        foreach (['dev', 'online'] as $item) {
+            $_SERVER['HOST_TYPE'] = $item;
+            $PdoConfig = (new \ReflectionClass($this->getDbConfig()))->newInstance();
+            $deploy = dirname($ReflectionClass->getFileName())."/Deploy/$item/";
+            mkdir($deploy);
+            ob_start();
+            include __DIR__.'/Template/Model/Deploy.php';
+            file_put_contents($deploy.$ReflectionClass->getShortName().'.env', ob_get_clean());
         }
     }
 }
