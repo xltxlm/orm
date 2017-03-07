@@ -164,16 +164,18 @@ final class OrmMaker
             }
         }
         //生成deploy配置的 k=>v 格式
-        $deploy = dirname($ReflectionClass->getFileName())."/Deploy/";
+        $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
+        mkdir($deploy);
+        $deploy = $deploy."/db";
         mkdir($deploy);
         foreach (['dev', 'online'] as $item) {
             $_SERVER['HOST_TYPE'] = $item;
             $PdoConfig = (new \ReflectionClass($this->getDbConfig()))->newInstance();
-            $deploy = dirname($ReflectionClass->getFileName())."/Deploy/$item/";
-            mkdir($deploy);
+            $deploytype = $deploy."/$item/";
+            mkdir($deploytype);
             ob_start();
             include __DIR__.'/Template/Model/Deploy.php';
-            file_put_contents($deploy.$ReflectionClass->getShortName().'.env', ob_get_clean());
+            file_put_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
         }
     }
 }
