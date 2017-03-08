@@ -168,6 +168,7 @@ final class OrmMaker
         mkdir($deploy);
         $deploy = $deploy."/db";
         mkdir($deploy);
+        $HOST_TYPE = $_SERVER['HOST_TYPE'];
         foreach (['dev', 'online'] as $item) {
             $_SERVER['HOST_TYPE'] = $item;
             $PdoConfig = (new \ReflectionClass($this->getDbConfig()))->newInstance();
@@ -177,5 +178,6 @@ final class OrmMaker
             include __DIR__.'/Template/Model/Deploy.php';
             file_put_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
         }
+        $_SERVER['HOST_TYPE'] = $HOST_TYPE;
     }
 }
