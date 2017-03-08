@@ -28,6 +28,22 @@ class <?=ucfirst($tableSchema->getTABLENAME())?>Copy
         return (self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>));
     }
 
+    /**
+    * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
+
+    * @return string
+    */
+    public static function <?=$field->getCOLUMNNAME()?>Vue($add = true)
+    {
+        if($add)
+        {
+            return '{{ item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).' }}';
+        }else
+        {
+            return 'item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>));
+        }
+    }
+
     <?php
 
 }?>
