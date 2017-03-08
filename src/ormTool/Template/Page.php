@@ -22,6 +22,30 @@ class Page extends PdoAction
     protected $pageObject;
     /** @var string 模型类 */
     protected $modelClass = '';
+    /** @var bool 是否把结果转换成数组格式 */
+    protected $convertToArray = false;
+
+    /**
+     * @return bool
+     */
+    public function isConvertToArray(): bool
+    {
+        return $this->convertToArray;
+    }
+
+    /**
+     * @param bool $convertToArray
+     * @return Page
+     */
+    public function setConvertToArray(bool $convertToArray)
+    {
+        $this->convertToArray = $convertToArray;
+        if ($convertToArray) {
+            $this->modelClass = \stdClass::class;
+        }
+        return $this;
+    }
+
 
     /**
      * @return PageObject
@@ -68,6 +92,7 @@ class Page extends PdoAction
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)
+            ->setConvertToArray($this->isConvertToArray())
             ->setClassName($this->modelClass);
 
         return $this->pdoInterface
