@@ -1,3 +1,4 @@
+* 2017-03-10 Elasticsearch 配置map的生成,以及自动写入类的方法
 * 2017-03-10 deployer生成db配置文件的目录再往下一层生成
 * 2017-03-08 copy类 消失.加强 base 和 model类
 * 2017-03-08 copy加一个vue输出

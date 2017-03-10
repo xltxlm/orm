@@ -8,7 +8,7 @@
 
 namespace xltxlm\ormTool;
 
-use Composer\Autoload\ClassLoader;
+use xltxlm\elasticsearch\MakeTool\ElasticsearchMakeTool;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\FileException;
 use xltxlm\orm\Exception\I18N\FileI18N;
@@ -27,6 +27,28 @@ final class OrmMaker
     protected $dbConfig;
 
     private $dbNameSpace = '';
+
+    /** @var array 只检出需要的表格来生成 */
+    protected $needTableNames = [];
+
+    /**
+     * @return array
+     */
+    public function getNeedTableNames(): array
+    {
+        return $this->needTableNames;
+    }
+
+    /**
+     * @param array $needTableNames
+     * @return OrmMaker
+     */
+    public function setNeedTableNames(array $needTableNames): OrmMaker
+    {
+        $this->needTableNames = $needTableNames;
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -88,6 +110,9 @@ final class OrmMaker
             if ($tableSchema->getTABLENAME()[0] == '_') {
                 continue;
             }
+            if ($this->getNeedTableNames() && !in_array($tableSchema->getTABLENAME(), $this->getNeedTableNames())) {
+                continue;
+            }
             //表格定义
             ob_start();
             include __DIR__.'/Template/Model/Table.tpl.php';
@@ -116,10 +141,6 @@ final class OrmMaker
             ob_start();
             include __DIR__.'/Template/Model/Getset.tpl.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', ob_get_clean());
-
-            ob_start();
-            include __DIR__.'/Template/Model/Copy.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Copy.php', ob_get_clean());
 
             //操作 - 一维查询
             $moreData = false;
@@ -151,6 +172,16 @@ final class OrmMaker
             include __DIR__.'/Template/Model/Type.tpl.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', ob_get_clean());
 
+            //elasticsearch.map
+            ob_start();
+            include __DIR__.'/Template/Model/elasticsearch.map.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', ob_get_clean());
+
+            //生成 Elasticsearch 查询操作类
+            (new ElasticsearchMakeTool())
+                ->setClassNames($this->getDbNameSpace().'\\'.ucfirst($tableSchema->getTABLENAME()).'Model')
+                ->__invoke();
+
             //枚举类型类
             foreach ($fieldSchema as $field) {
                 if ($field->getDATATYPE() == FieldSchema::ENUM) {
@@ -167,9 +198,9 @@ final class OrmMaker
         //生成deploy配置的 k=>v 格式
         $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
         mkdir($deploy);
-        $nameSpaceArray=explode('\\',$this->getDbNameSpace());
+        $nameSpaceArray = explode('\\', $this->getDbNameSpace());
         array_shift($nameSpaceArray);
-        $projectName=array_shift($nameSpaceArray);
+        $projectName = array_shift($nameSpaceArray);
         $deploy = $deploy."/$projectName-deployer";
         mkdir($deploy);
 

@@ -15,7 +15,8 @@
     "xltxlm/helper": "*",
     "xltxlm/page": "*",
     "xltxlm/logger": "*",
-    "xltxlm/config": "*"
+    "xltxlm/config": "*",
+    "xltxlm/elasticsearch": "*"
   },
   "autoload": {
     "psr-4": {
