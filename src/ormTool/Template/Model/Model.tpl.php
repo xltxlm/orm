@@ -15,4 +15,18 @@ class <?=ucfirst($tableSchema->getTABLENAME())?>Model
     use ObjectToArray;
     use <?=ucfirst($tableSchema->getTABLENAME())?>Base;
     use <?=ucfirst($tableSchema->getTABLENAME())?>Getset;
+
+    /**
+    * @return array
+    */
+    final public function __invoke()
+    {
+        $fieldSchema=[];
+<?php foreach ($fieldSchema as $field) {
+    ?>
+        $fieldSchema['<?=$field->getCOLUMNNAME()?>']='<?=$field->getCOLUMNCOMMENT()?:$field->getCOLUMNNAME()?>';
+<?php
+}?>
+        return $fieldSchema;
+    }
 }
