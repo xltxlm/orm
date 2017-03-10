@@ -8,6 +8,7 @@
 
 namespace xltxlm\ormTool;
 
+use Composer\Autoload\ClassLoader;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\FileException;
 use xltxlm\orm\Exception\I18N\FileI18N;
@@ -116,6 +117,10 @@ final class OrmMaker
             include __DIR__.'/Template/Model/Getset.tpl.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', ob_get_clean());
 
+            ob_start();
+            include __DIR__.'/Template/Model/Copy.tpl.php';
+            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Copy.php', ob_get_clean());
+
             //操作 - 一维查询
             $moreData = false;
             ob_start();
@@ -162,6 +167,12 @@ final class OrmMaker
         //生成deploy配置的 k=>v 格式
         $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
         mkdir($deploy);
+        $nameSpaceArray=explode('\\',$this->getDbNameSpace());
+        array_shift($nameSpaceArray);
+        $projectName=array_shift($nameSpaceArray);
+        $deploy = $deploy."/$projectName-deployer";
+        mkdir($deploy);
+
         $deploy = $deploy."/db";
         mkdir($deploy);
         $HOST_TYPE = $_SERVER['HOST_TYPE'];
