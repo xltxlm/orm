@@ -80,7 +80,7 @@ final class OrmMaker
 
     public function __invoke()
     {
-        $backupTables = [];
+        $allTable = $backupTables = [];
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
         $className = array_pop(explode('\\', get_class($this->dbConfig)));
@@ -111,6 +111,7 @@ final class OrmMaker
             if ($tableSchema->getTABLENAME()[0] == '_') {
                 continue;
             }
+            $allTable[] = $tableSchema->getTABLENAME();
             if ($this->getNeedTableNames() && !in_array($tableSchema->getTABLENAME(), $this->getNeedTableNames())) {
                 continue;
             }
@@ -218,18 +219,26 @@ final class OrmMaker
 
         //备份出测试环境的数据结构
         $cmd = 'nohup mysqldump -d -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >$DDL/".$this->getDbConfig()->getDb().'.sql &';
-        pclose(popen($cmd,'r'));
+        pclose(popen($cmd, 'r'));
 
 
         $HOST_TYPE = $_SERVER['HOST_TYPE'];
-        foreach (['dev', 'online'] as $item) {
-            $_SERVER['HOST_TYPE'] = $item;
+        foreach (['dev', 'online'] as $hostflag) {
+            $_SERVER['HOST_TYPE'] = $hostflag;
+            //模板里面使用的变量
             $PdoConfig = (new \ReflectionClass($this->getDbConfig()))->newInstance();
-            $deploytype = $deploy."/$item/";
+            $deploytype = $deploy."/$hostflag/";
             mkdir($deploytype);
             ob_start();
             include __DIR__.'/Template/Model/Deploy.php';
             file_put_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
+            mkdir($deploytype.$ReflectionClass->getShortName());
+
+            foreach ($allTable as $backupTable) {
+                ob_start();
+                include __DIR__.'/Template/Model/MysqlCopy.php';
+                file_put_contents($deploytype.$ReflectionClass->getShortName()."/$backupTable.cmd", ob_get_clean());
+            }
         }
         $_SERVER['HOST_TYPE'] = $HOST_TYPE;
     }

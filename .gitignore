@@ -20,6 +20,7 @@ bin-release/
 
 vendor
 .idea
+demo
 coverage
 coverage.xml
 coverage.json

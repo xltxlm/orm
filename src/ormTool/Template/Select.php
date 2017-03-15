@@ -113,7 +113,7 @@ class Select extends PdoAction
                 ->selectOne();
 
             //如果指定查询单条的数据,一半返回空就是有问题
-            if ($this->result == $empty && $this->isExistTest()) {
+            if ($this->result == $empty && !$this->isExistTest()) {
                 (new BasicLog($this->pdoInterface->getSqlParserd()))
                     ->setMessageDescribe('查询结果为空')
                     ->setType(LogLevel::ERROR)

@@ -6,3 +6,5 @@ mysql_user=<?= $PdoConfig->getUsername() ?>
 mysql_password=<?= $PdoConfig->getPassword() ?>
 
 mysql_db=<?= $PdoConfig->getDb() ?>
+
+mysql_port=<?= $PdoConfig->getPort() ?>
