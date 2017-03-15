@@ -187,6 +187,18 @@ class PdoInterface
         return $return;
     }
 
+    /**
+     * 查询一列数据
+     * @return array
+     */
+    public function selectColumn($ColumnName = 0): array
+    {
+        $stmt = $this->pdoexecute(__FUNCTION__);
+        $this->checkClassName();
+
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
+    }
+
     public function selectAll()
     {
         $stmt = $this->pdoexecute(__FUNCTION__);
@@ -289,7 +301,7 @@ class PdoInterface
         } catch (\Exception $e) {
             $DefineLog
                 ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
-                ->setMessageDescribe("SQL解析错误")
+                ->setMessageDescribe('SQL解析错误')
                 ->setType(LogLevel::ERROR);
             (new Logger())
                 ->setLogDefine($DefineLog)
@@ -311,7 +323,7 @@ class PdoInterface
             if ($DefineLog) {
                 $DefineLog
                     ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
-                    ->setMessageDescribe("SQL运行错误")
+                    ->setMessageDescribe('SQL运行错误')
                     ->setType(LogLevel::ERROR);
                 (new Logger())
                     ->setLogDefine($DefineLog)

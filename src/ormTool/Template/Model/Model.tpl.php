@@ -6,6 +6,7 @@
 namespace <?=$this->getDbNameSpace()?>;
 
 use xltxlm\helper\Hclass\ObjectToArray;
+use xltxlm\helper\Hclass\ObjectToJson;
 
 /**
 * Class select
@@ -13,6 +14,7 @@ use xltxlm\helper\Hclass\ObjectToArray;
 class <?=ucfirst($tableSchema->getTABLENAME())?>Model
 {
     use ObjectToArray;
+    use ObjectToJson;
     use <?=ucfirst($tableSchema->getTABLENAME())?>Base;
     use <?=ucfirst($tableSchema->getTABLENAME())?>Getset;
 

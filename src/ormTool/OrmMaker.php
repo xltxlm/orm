@@ -80,6 +80,7 @@ final class OrmMaker
 
     public function __invoke()
     {
+        $backupTables = [];
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
         $className = array_pop(explode('\\', get_class($this->dbConfig)));
@@ -113,6 +114,10 @@ final class OrmMaker
             if ($this->getNeedTableNames() && !in_array($tableSchema->getTABLENAME(), $this->getNeedTableNames())) {
                 continue;
             }
+
+            //记录下处理到的表名称,等下备份有用
+            $backupTables[] = $tableSchema->getTABLENAME();
+
             //表格定义
             ob_start();
             include __DIR__.'/Template/Model/Table.tpl.php';
@@ -195,6 +200,7 @@ final class OrmMaker
                 }
             }
         }
+
         //生成deploy配置的 k=>v 格式
         $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
         mkdir($deploy);
@@ -204,8 +210,17 @@ final class OrmMaker
         $deploy = $deploy."/$projectName-deployer";
         mkdir($deploy);
 
+        $DDL = $deploy."/DDL";
+        mkdir($DDL);
+
         $deploy = $deploy."/db";
         mkdir($deploy);
+
+        //备份出测试环境的数据结构
+        $cmd = 'nohup mysqldump -d -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >$DDL/".$this->getDbConfig()->getDb().'.sql &';
+        pclose(popen($cmd,'r'));
+
+
         $HOST_TYPE = $_SERVER['HOST_TYPE'];
         foreach (['dev', 'online'] as $item) {
             $_SERVER['HOST_TYPE'] = $item;
