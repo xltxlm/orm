@@ -188,7 +188,7 @@ final class FieldSchema
     /**
      * @return string
      */
-    public function getNUMERICSCALE(): string
+    public function getNUMERICSCALE()
     {
         return $this->NUMERIC_SCALE;
     }
@@ -263,5 +263,31 @@ final class FieldSchema
     public function getGENERATIONEXPRESSION(): string
     {
         return $this->GENERATION_EXPRESSION;
+    }
+
+    /**
+     * 获取一个字段的创建方式
+     * @param string $prevfix 字段前缀
+     */
+    public function __invoke($prevfix = ''): string
+    {
+        $string = "";
+        $string .= '`'.$prevfix.$this->getCOLUMNNAME().'` ';
+        $string .= $this->getCOLUMNTYPE();
+        if ($this->getISNULLABLE() == 'YES') {
+            $string .= " ";
+        } else {
+            $string .= " NOT NULL ";
+        }
+        if ($this->getCOLUMNDEFAULT() !== null) {
+            if (in_array($this->getDATATYPE(), ['varchar', 'enum'])) {
+                $string .= " DEFAULT '".$this->getCOLUMNDEFAULT()."'";
+            } else {
+                $string .= " DEFAULT ".$this->getCOLUMNDEFAULT();
+            }
+        }
+
+        $string .= " COMMENT '".$this->getCOLUMNCOMMENT()."'";
+        return $string;
     }
 }

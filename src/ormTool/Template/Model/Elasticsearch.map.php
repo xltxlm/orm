@@ -10,7 +10,7 @@ use xltxlm\ormTool\Unit\FieldSchema; ?>
                     case  FieldSchema::DATE :
                     case  FieldSchema::DATETIME:
                     case FieldSchema::TIMESTAMP:
-                        echo '"date","format":"strict_date_optional_time"';
+                        echo '"date","format":"strict_date_optional_time||epoch_millis"';
                         break;
                     case FieldSchema::INT:
                     case FieldSchema::TINYINT:

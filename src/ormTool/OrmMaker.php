@@ -180,7 +180,7 @@ final class OrmMaker
 
             //elasticsearch.map
             ob_start();
-            include __DIR__.'/Template/Model/elasticsearch.map.php';
+            include __DIR__.'/Template/Model/Elasticsearch.map.php';
             file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', ob_get_clean());
 
             //生成 Elasticsearch 查询操作类
@@ -205,11 +205,6 @@ final class OrmMaker
         //生成deploy配置的 k=>v 格式
         $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
         mkdir($deploy);
-        $nameSpaceArray = explode('\\', $this->getDbNameSpace());
-        array_shift($nameSpaceArray);
-        $projectName = array_shift($nameSpaceArray);
-        $deploy = $deploy."/$projectName-deployer";
-        mkdir($deploy);
 
         $DDL = $deploy."/DDL";
         mkdir($DDL);
@@ -220,6 +215,8 @@ final class OrmMaker
         //备份出测试环境的数据结构
         $cmd = 'nohup mysqldump -d -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >$DDL/".$this->getDbConfig()->getDb().'.sql &';
         pclose(popen($cmd, 'r'));
+        //线上线下数据结构对比
+        file_put_contents("$DDL/sysnc.".$ReflectionClass->getShortName().".table", 'export table="'.join(" ", $backupTables).'"');
 
 
         $HOST_TYPE = $_SERVER['HOST_TYPE'];
