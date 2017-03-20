@@ -118,10 +118,9 @@ final class SqlParser
                     json_encode($binds, JSON_UNESCAPED_UNICODE),
                 ]
             );
-            (new Logger(
-                (new BasicLog($bindError))
-                    ->settype(LogLevel::ERROR)
-            ))
+            (new BasicLog($this))
+                ->setMessageDescribe($bindError)
+                ->settype(LogLevel::ERROR)
                 ->__invoke();
             throw new SqlParserException(
                 $bindError
