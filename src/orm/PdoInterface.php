@@ -320,6 +320,7 @@ class PdoInterface
         $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
 
         if ($error[0] || $error[2]) {
+            $this->rollBack();
             if ($DefineLog) {
                 $DefineLog
                     ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
@@ -355,6 +356,17 @@ class PdoInterface
         return $stmt;
     }
 
+    /**
+     * @desc   回滚事务
+     * @since  2015-04-27 17:09:19
+     * @return bool
+     */
+    public function rollBack()
+    {
+        $this->pdoConfig->instanceSelf()->rollBack();
+
+        return $this->pdoConfig->instanceSelf()->beginTransaction();
+    }
     /**
      * ORM返回的数据结构必须是类,检测类是不是有设置.
      *

@@ -121,6 +121,6 @@ final class SqlMaker
 
         ob_start();
         include __DIR__.'/../ormTool/Template/Model/SqlMaker.php';
-        file_put_contents($sqldir.'/'.$this->className.'.php', ob_get_clean());
+        file_put_contents($sqldir.'/'.$this->className.'Sync.php', ob_get_clean());
     }
 }

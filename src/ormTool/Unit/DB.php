@@ -38,6 +38,7 @@ final class DB
     }
 
     /**
+     * 返回数据表格列表对象
      * @return TableSchema[]
      */
     public function __invoke()

@@ -19,7 +19,7 @@ eval('include "/var/www/html/vendor/autoload.php";');
 /**
  * 更新到Elasticsearch检索的定时任务
  */
-final class <?=$this->getClassName()?>
+final class <?=$this->getClassName()?>Sync
 
 {
     use CrontabLock;
@@ -32,7 +32,7 @@ final class <?=$this->getClassName()?>
     protected function whileRun()
     {
 <?php foreach ($this->getSqls() as $sql) {?>
-        $sql="<?=trim($sql," ;")?>";
+        $sql="<?=trim($sql," ;\r\n")?>";
         $PdoInterfaceEasy=(new PdoInterfaceEasy($sql));
         $num = $PdoInterfaceEasy
             ->setPdoConfig(new <?=(new \ReflectionClass($this->getDbconfig()))->getShortName()?>())
@@ -48,4 +48,4 @@ final class <?=$this->getClassName()?>
 
 }
 
-(new <?=$this->getClassName()?>)();
+(new <?=$this->getClassName()?>Sync)();

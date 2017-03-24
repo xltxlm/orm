@@ -10,6 +10,7 @@ namespace xltxlm\ormTool\Unit;
 
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\PdoInterface;
+use xltxlm\orm\PdoInterfaceEasy;
 use xltxlm\orm\Sql\SqlParser;
 
 /**
@@ -31,6 +32,18 @@ class Table
     private $fieldSchema = [];
     /** @var ForeignKey[] 外键对 */
     private $foreignKey = [];
+
+    /**
+     * 直接执行sql语句
+     *
+     * @param string $sql
+     * @param array $bind
+     */
+    public function PdoInterfaceEasy(string $sql, array $bind = [])
+    {
+        return (new PdoInterfaceEasy($sql, $bind))
+            ->setPdoConfig($this->getDbConfig());
+    }
 
     /**
      * @return string
@@ -119,7 +132,7 @@ class Table
      *
      * @return array
      */
-    public function getJoinTables():array
+    public function getJoinTables(): array
     {
         return $this->joinTables;
     }
@@ -133,22 +146,22 @@ class Table
     {
         if (!$this->fieldSchema) {
             $sql = 'select * from information_schema.COLUMNS '.
-            'WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
+                'WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
             $SqlParserd = (new SqlParser())
-            ->setSql($sql)
-            ->setBind(
-                [
-                    'table_name' => $this->getName(),
-                    'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
-                ]
-            )
-            ->__invoke();
+                ->setSql($sql)
+                ->setBind(
+                    [
+                        'table_name' => $this->getName(),
+                        'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
+                    ]
+                )
+                ->__invoke();
 
             $this->fieldSchema = (new PdoInterface())
-            ->setPdoConfig($this->getDbConfig())
-            ->setSqlParserd($SqlParserd)
-            ->setClassName(FieldSchema::class)
-            ->selectAll();
+                ->setPdoConfig($this->getDbConfig())
+                ->setSqlParserd($SqlParserd)
+                ->setClassName(FieldSchema::class)
+                ->selectAll();
         }
 
         return $this->fieldSchema;
@@ -159,7 +172,7 @@ class Table
      */
     public function getFields()
     {
-        $fields       = [];
+        $fields = [];
         $fieldSchemas = $this->getFieldSchemas();
         foreach ($fieldSchemas as $fieldSchema) {
             $fields[] = '`'.$fieldSchema->getCOLUMNNAME().'`';
@@ -167,6 +180,7 @@ class Table
 
         return $fields;
     }
+
     /**
      * 返回表的全部字段别名.
      *
@@ -174,7 +188,7 @@ class Table
      */
     public function getFieldsAs()
     {
-        $array        = [];
+        $array = [];
         $FieldSchemas = $this->getFieldSchemas();
         foreach ($FieldSchemas as $fieldSchema) {
             $array[] = $this->getName().'.'.$fieldSchema->getCOLUMNNAME().' AS AS'.
@@ -183,4 +197,39 @@ class Table
 
         return implode(',', $array);
     }
+
+    /**
+     * 获取自增 id
+     */
+    public function getAutoIncrement(): string
+    {
+        $sql = "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE   
+              TABLE_SCHEMA=:TABLE_SCHEMA AND TABLE_NAME=:TABLE_NAME
+              AND EXTRA='auto_increment' ";
+        $Column = (new PdoInterfaceEasy($sql, [
+            'TABLE_NAME' => $this->getName(),
+            'TABLE_SCHEMA' => $this->getDbConfig()->getDb()
+        ]))
+            ->setPdoConfig($this->getDbConfig())
+            ->selectVar();
+        return $Column;
+    }
+
+    /**
+     *
+     * 主键id
+     */
+    public function getPrimaryKey(): array
+    {
+        $sql = "SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE   
+              TABLE_SCHEMA=:TABLE_SCHEMA AND TABLE_NAME=:TABLE_NAME AND CONSTRAINT_NAME='PRIMARY'";
+        $Column = (new PdoInterfaceEasy($sql, [
+            'TABLE_NAME' => $this->getName(),
+            'TABLE_SCHEMA' => $this->getDbConfig()->getDb()
+        ]))
+            ->setPdoConfig($this->getDbConfig())
+            ->selectColumn();
+        return $Column;
+    }
+
 }
