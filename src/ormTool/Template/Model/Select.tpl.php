@@ -63,7 +63,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
 
      * @return $this
      */
-    public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>(string $<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
         if($action == PdoAction::NOTLIKE) {
@@ -105,7 +105,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
 
      * @return $this
      */
-    public function where<?=ucfirst($field->getCOLUMNNAME())?>Maybe($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL,$explode =' - ')
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>Maybe(string$<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL,$explode =' - ')
     {
         if(!empty($<?=$field->getCOLUMNNAME()?>) || strlen($<?=$field->getCOLUMNNAME()?>)>0){
             $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;

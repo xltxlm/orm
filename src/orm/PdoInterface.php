@@ -9,6 +9,7 @@
 namespace xltxlm\orm;
 
 use Psr\Log\LogLevel;
+use xltxlm\helper\Util;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
@@ -173,7 +174,7 @@ class PdoInterface
      */
     public function selectOne()
     {
-        $stmt = $this->pdoexecute(__FUNCTION__);
+        $stmt = $this->pdoexecute();
         $this->checkClassName();
 
         $return = $stmt->fetchObject($this->className);
@@ -193,7 +194,7 @@ class PdoInterface
      */
     public function selectColumn($ColumnName = 0): array
     {
-        $stmt = $this->pdoexecute(__FUNCTION__);
+        $stmt = $this->pdoexecute();
         $this->checkClassName();
 
         return $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
@@ -201,7 +202,7 @@ class PdoInterface
 
     public function selectAll()
     {
-        $stmt = $this->pdoexecute(__FUNCTION__);
+        $stmt = $this->pdoexecute();
         $this->checkClassName();
 
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
@@ -216,7 +217,7 @@ class PdoInterface
 
     public function insert()
     {
-        $this->pdoexecute(__FUNCTION__);
+        $this->pdoexecute();
 
         return $this->pdoConfig->instanceSelf()->lastInsertId();
     }
@@ -228,7 +229,7 @@ class PdoInterface
      */
     public function execute()
     {
-        return $this->pdoexecute(__FUNCTION__);
+        return $this->pdoexecute();
     }
 
     /**
@@ -244,7 +245,7 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
-        $stmt = $this->pdoexecute(__FUNCTION__);
+        $stmt = $this->pdoexecute();
 
         return $stmt->rowCount();
     }
@@ -284,12 +285,11 @@ class PdoInterface
     }
 
     /**
-     * @param string $function
      * @return \PDOStatement
      * @throws PdoSqlError
      * @throws \Exception
      */
-    private function pdoexecute(string $function): \PDOStatement
+    private function pdoexecute(): \PDOStatement
     {
         //记录日志
         $DefineLog = (new PdoRunLogger($this->getPdoConfig()))
@@ -367,6 +367,7 @@ class PdoInterface
 
         return $this->pdoConfig->instanceSelf()->beginTransaction();
     }
+
     /**
      * ORM返回的数据结构必须是类,检测类是不是有设置.
      *
@@ -388,6 +389,7 @@ class PdoInterface
     private function debug()
     {
         if ($this->debug) {
+            ob_start();
             echo "\n=========================\n";
             echo "SQL:\n";
             print_r($this->sqlParserd);
@@ -396,6 +398,7 @@ class PdoInterface
             echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
+            Util::d(ob_get_clean());
         }
     }
 }

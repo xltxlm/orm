@@ -5,22 +5,46 @@
 
 namespace <?=$this->getDbNameSpace()?>;
 
+use xltxlm\helper\BasicType;
+
 /**
  * 可以被重复利用的数据模型
  * Class select
  */
 trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
 {
+
+    /**
+    * 从数据库设置默认值
+    */
+    public function default()
+    {
+<?php foreach ($fieldSchema as $field) {
+    if(!$field->getCOLUMNDEFAULT())
+    {
+        continue;
+    }
+    if($field->getCOLUMNDEFAULT()=='CURRENT_TIMESTAMP'){
+    ?>
+        $value = date('Y-m-d H:i:s');
+    <?php }else{?>
+        $value='<?=$field->getCOLUMNDEFAULT()?>';
+    <?php }?>
+        $this->set<?=ucfirst($field->getCOLUMNNAME())?>($value);
+<?php }?>
+        return $this;
+    }
+
 <?php foreach ($fieldSchema as $field) {
     ?>
     /**
     * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
 
-    * @return string
+    * @return BasicType
     */
     public function get<?=ucfirst($field->getCOLUMNNAME())?>()
     {
-        return $this-><?=$field->getCOLUMNNAME()?>;
+        return new BasicType($this-><?=$field->getCOLUMNNAME()?>);
     }
 
     /**
@@ -32,7 +56,7 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
     */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this-><?=$field->getCOLUMNNAME()?>=$<?=$field->getCOLUMNNAME()?>;
+        $this-><?=$field->getCOLUMNNAME()?> = new BasicType($<?=$field->getCOLUMNNAME()?>);
         return $this;
     }
     <?php

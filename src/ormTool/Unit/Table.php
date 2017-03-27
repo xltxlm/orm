@@ -232,4 +232,36 @@ class Table
         return $Column;
     }
 
+    /**
+     *
+     * 主键id
+     */
+    public function getUniqueKey(): array
+    {
+        $sql = "SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS WHERE   
+              TABLE_SCHEMA=:TABLE_SCHEMA AND TABLE_NAME=:TABLE_NAME AND CONSTRAINT_TYPE='UNIQUE' ";
+        $Column = (new PdoInterfaceEasy($sql, [
+            'TABLE_NAME' => $this->getName(),
+            'TABLE_SCHEMA' => $this->getDbConfig()->getDb()
+        ]))
+            ->setPdoConfig($this->getDbConfig())
+            ->selectColumn();
+
+        foreach ($Column as $item) {
+            $sql="SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
+            WHERE     TABLE_SCHEMA=:TABLE_SCHEMA 
+                AND TABLE_NAME=:TABLE_NAME and CONSTRAINT_NAME=:CONSTRAINT_NAME ";
+            $Column = (new PdoInterfaceEasy($sql, [
+                'TABLE_NAME' => $this->getName(),
+                'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
+                'CONSTRAINT_NAME' => $item
+            ]))
+                ->setPdoConfig($this->getDbConfig())
+                ->selectColumn();
+        }
+
+        
+        return $Column;
+    }
+
 }
