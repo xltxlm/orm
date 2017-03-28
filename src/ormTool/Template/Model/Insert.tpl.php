@@ -31,7 +31,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Insert extends Insert
 
      * @return $this
      */
-    public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
+    public function set<?=ucfirst($field->getCOLUMNNAME())?>(string $<?=$field->getCOLUMNNAME()?>)
     {
         $this->sqls['`<?=$field->getCOLUMNNAME()?>`'] = ":<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;

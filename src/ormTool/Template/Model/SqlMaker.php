@@ -1,5 +1,6 @@
 <?php /** @var \xltxlm\ormTool\SqlMaker $this */?>
 <<?='?'?>php
+declare(ticks = 1);
 /**
  * Created by PhpStorm.
  * User: xialintai
