@@ -26,6 +26,8 @@ class ShakealertMaker
 
     /** @var  Table 表格实体 */
     protected $table;
+    /** @var array 字段名=>注释 */
+    protected $fieldKV = [];
     /** @var string 日期字段 */
     protected $dtField = "";
     /** @var [] group by 的约束条件 */
@@ -42,6 +44,7 @@ class ShakealertMaker
     {
         return $this->fields;
     }
+
     /**
      * @return array
      */
@@ -132,6 +135,9 @@ class ShakealertMaker
     public function setTable(Table $table): ShakealertMaker
     {
         $this->table = $table;
+        //拿到表格的全部字段注释
+        $Model = (new \ReflectionClass($table))->getName().'Model';
+        $this->fieldKV = (new $Model)();
         return $this;
     }
 

@@ -66,9 +66,27 @@ class Table
     }
 
     /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment = (new PdoInterfaceEasy(
+            "select TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA=:TABLE_SCHEMA 
+                and TABLE_NAME=:TABLE_NAME ",
+            [
+                'TABLE_NAME' => $this->getName(),
+                'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
+            ]
+        ))
+            ->setPdoConfig($this->getDbConfig())
+            ->selectVar();
+    }
+
+
+    /**
      * @return PdoConfig
      */
-    public function getDbConfig(): PdoConfig
+    public function getDbConfig()
     {
         return $this->DbConfig;
     }

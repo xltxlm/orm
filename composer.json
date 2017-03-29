@@ -15,6 +15,7 @@
     "xltxlm/helper": "*",
     "xltxlm/page": "*",
     "xltxlm/logger": "*",
+    "xltxlm/h5skin": "*",
     "xltxlm/config": "*",
     "xltxlm/elasticsearch": "*"
   },

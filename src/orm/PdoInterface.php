@@ -9,6 +9,7 @@
 namespace xltxlm\orm;
 
 use Psr\Log\LogLevel;
+use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\helper\Util;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
@@ -16,6 +17,7 @@ use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
 use xltxlm\orm\Logger\PdoRunLogger;
+use xltxlm\orm\Sql\SqlParser;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
 
@@ -39,6 +41,7 @@ class PdoInterface
 
     /** @var int 执行sql的条数 */
     private static $sqlCount = 0;
+
 
     /**
      * @return int
@@ -217,6 +220,8 @@ class PdoInterface
 
     public function insert()
     {
+        //保证会话参数存在
+        $this->setSession();
         $this->pdoexecute();
 
         return $this->pdoConfig->instanceSelf()->lastInsertId();
@@ -229,7 +234,34 @@ class PdoInterface
      */
     public function execute()
     {
+        //保证会话参数存在
+        $this->setSession();
         return $this->pdoexecute();
+    }
+
+    /**
+     * 设置当前账户的会话参数,在触发器中可以用来记录账户信息
+     */
+    final protected function setSession()
+    {
+        static $session = [];
+
+        if (!$session[spl_object_hash($this->pdoConfig->instanceSelf())]) {
+            $userCookieModel = new UserCookieModel();
+            (clone $this)
+                ->setSqlParserd(
+                    (new SqlParser())
+                        ->setSql("set  @userflag=:userflag ,@username=:username ,@ip=:ip ")
+                        ->setBind([
+                            'userflag' => $userCookieModel->__toString(),
+                            'username' => $userCookieModel->getUsername(),
+                            'ip' => $userCookieModel->getIp()
+                        ])
+                        ->__invoke()
+                )
+                ->pdoexecute();
+            $session[spl_object_hash($this->pdoConfig->instanceSelf())] = true;
+        }
     }
 
     /**
@@ -245,6 +277,8 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
+        //保证会话参数存在
+        $this->setSession();
         $stmt = $this->pdoexecute();
 
         return $stmt->rowCount();

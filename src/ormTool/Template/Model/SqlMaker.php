@@ -37,7 +37,6 @@ final class <?=$this->getClassName()?>Sync
         $PdoInterfaceEasy=(new PdoInterfaceEasy($sql));
         $num = $PdoInterfaceEasy
             ->setPdoConfig(new <?=(new \ReflectionClass($this->getDbconfig()))->getShortName()?>())
-            ->setDebug(true)
             ->update();
 
         //记录操作日志
