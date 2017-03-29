@@ -12,6 +12,7 @@ use Psr\Log\LogLevel;
 use xltxlm\logger\Log\BasicLog;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
+use xltxlm\page\PageObject;
 
 /**
  * Class SelectOne.
@@ -30,6 +31,26 @@ class Select extends PdoAction
 
     /** @var string 设置查询的列名称 */
     protected $columnName = "";
+    /** @var bool 是否是大量数据查询 */
+    protected $yield = false;
+
+    /**
+     * @return bool
+     */
+    public function isYield(): bool
+    {
+        return $this->yield;
+    }
+
+    /**
+     * @param bool $yield
+     * @return static
+     */
+    public function setYield(bool $yield)
+    {
+        $this->yield = $yield;
+        return $this;
+    }
 
     /**
      * @return string
@@ -82,17 +103,27 @@ class Select extends PdoAction
             $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
         }
 
-        $SqlParserd = (new SqlParser())
-            ->setSql($sql)
-            ->setBind($this->getBinds())
-            ->__invoke();
-        //执行sql
-        $this->pdoInterface = (new PdoInterface())
-            ->setPdoConfig($this->tableObject->getDbConfig())
-            ->setSqlParserd($SqlParserd)
-            ->setDebug($this->debug)
-            ->setConvertToArray($this->isConvertToArray())
-            ->setClassName($this->modelClass);
+        if ($this->isYield()) {
+            $i = 0;
+            while (true) {
+                $i++;
+                $pageObject = (new PageObject())
+                    ->setPageID($i)
+                    ->setPrepage(30);
+                $this->makePdoInterface($sql." LIMIT ".$pageObject->getFrom().','.$pageObject->getPrepage());
+                $result = $this->pdoInterface
+                    ->selectAll();
+                if ($result) {
+                    foreach ($result as $item) {
+                        yield $item;
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        $this->makePdoInterface($sql);
 
         if ($this->moreData) {
             //如果是列查询
@@ -121,6 +152,21 @@ class Select extends PdoAction
             }
             return $this->result;
         }
+    }
+
+    protected function makePdoInterface($sql)
+    {
+        $SqlParserd = (new SqlParser())
+            ->setSql($sql)
+            ->setBind($this->getBinds())
+            ->__invoke();
+        //执行sql
+        $this->pdoInterface = (new PdoInterface())
+            ->setPdoConfig($this->tableObject->getDbConfig())
+            ->setSqlParserd($SqlParserd)
+            ->setDebug($this->debug)
+            ->setConvertToArray($this->isConvertToArray())
+            ->setClassName($this->modelClass);
     }
 
     /**
