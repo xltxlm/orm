@@ -29,6 +29,27 @@ final class SqlMaker
 
     /** @var PdoConfig 数据库配置文件 */
     protected $dbconfig;
+    /** @var int 刷新频率 */
+    protected $sleeptime = 60;
+
+    /**
+     * @return int
+     */
+    public function getSleeptime(): int
+    {
+        return $this->sleeptime;
+    }
+
+    /**
+     * @param int $sleeptime
+     * @return SqlMaker
+     */
+    public function setSleeptime(int $sleeptime): SqlMaker
+    {
+        $this->sleeptime = $sleeptime;
+        return $this;
+    }
+
 
     /**
      * @return array
@@ -115,12 +136,13 @@ final class SqlMaker
         mkdir($sqldir);
         $this->className = ucfirst(basename($this->getSqlFile(), '.sql'));
 
-        preg_match_all('#--\s?SQLBEGIN--(.*)--\s?SQLEND--#iUs', file_get_contents($this->getSqlFile()), $out);
+        preg_match_all('#--\s{0,}SQLBEGIN\s{0,}--(.*)--\s{0,}SQLEND\s{0,}--#iUs', file_get_contents($this->getSqlFile()), $out);
 
         $this->sqls = $out[1];
-
-        ob_start();
-        include __DIR__.'/../ormTool/Template/Model/SqlMaker.php';
-        file_put_contents($sqldir.'/'.$this->className.'Sync.php', ob_get_clean());
+        if (!empty($this->sqls)) {
+            ob_start();
+            include __DIR__.'/../ormTool/Template/Model/SqlMaker.php';
+            file_put_contents($sqldir.'/'.$this->className.'Sync.php', ob_get_clean());
+        }
     }
 }

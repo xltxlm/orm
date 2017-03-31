@@ -1,0 +1,20 @@
+{
+  "mappings": {
+    "data": {
+      "properties": {
+        "id": { "type": "integer"                },
+        "dtvalue": { "type": "date","format":"strict_date_optional_time||epoch_millis"                },
+        "dtfieldname": { "type": "keyword"                },
+        "tablename": { "type": "keyword"                },
+        "condition": { "type": "keyword"                },
+        "fieldname": { "type": "keyword"                },
+        "fieldname1day": { "type": "keyword"                },
+        "fieldname1dayratio": { "type": "keyword"                },
+        "fieldname1week": { "type": "keyword"                },
+        "fieldname1weekratio": { "type": "keyword"                },
+        "fieldnamenew": { "type": "keyword"                },
+        "add_time": { "type": "date","format":"strict_date_optional_time||epoch_millis"                }
+      }
+    }
+  }
+}

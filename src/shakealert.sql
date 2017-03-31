@@ -1,5 +1,5 @@
 DROP TABLE IF  EXISTS shakealert;
-
+-- 监控表的数据抖动
 CREATE TABLE IF NOT EXISTS `shakealert` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
    dtvalue DATE   NOT NULL COMMENT '日期',
@@ -17,3 +17,16 @@ CREATE TABLE IF NOT EXISTS `shakealert` (
   UNIQUE KEY (`dtvalue`,`tablename`,`fieldname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据抖动统计';
 
+-- 储存每日服务的数据量
+
+DROP TABLE IF  EXISTS service_data;
+CREATE TABLE IF NOT EXISTS `service_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `dt` DATE   NOT NULL COMMENT '日期',
+  `servicename` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '服务名称',
+  `process` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '进程名字',
+  `num` INT(11) unsigned NOT NULL DEFAULT 0 COMMENT '数值',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`dt`,`servicename`,`process`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='服务每日数据';
+)

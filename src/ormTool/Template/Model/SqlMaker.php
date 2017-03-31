@@ -27,7 +27,7 @@ final class <?=$this->getClassName()?>Sync
 
     protected function getSleepSecond(): int
     {
-        return 60;
+        return <?=$this->getSleeptime()?>;
     }
 
     protected function whileRun()
