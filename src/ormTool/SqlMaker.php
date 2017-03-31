@@ -115,7 +115,7 @@ final class SqlMaker
         mkdir($sqldir);
         $this->className = ucfirst(basename($this->getSqlFile(), '.sql'));
 
-        preg_match_all('#--SQLBEGIN--(.*)--SQLEND--#iUs', file_get_contents($this->getSqlFile()), $out);
+        preg_match_all('#--\s?SQLBEGIN--(.*)--\s?SQLEND--#iUs', file_get_contents($this->getSqlFile()), $out);
 
         $this->sqls = $out[1];
 

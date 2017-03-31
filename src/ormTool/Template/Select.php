@@ -31,26 +31,6 @@ class Select extends PdoAction
 
     /** @var string 设置查询的列名称 */
     protected $columnName = "";
-    /** @var bool 是否是大量数据查询 */
-    protected $yield = false;
-
-    /**
-     * @return bool
-     */
-    public function isYield(): bool
-    {
-        return $this->yield;
-    }
-
-    /**
-     * @param bool $yield
-     * @return static
-     */
-    public function setYield(bool $yield)
-    {
-        $this->yield = $yield;
-        return $this;
-    }
 
     /**
      * @return string
@@ -88,43 +68,34 @@ class Select extends PdoAction
         return $this;
     }
 
+    public function yield()
+    {
+        $i = 0;
+        while (true) {
+            $i++;
+            $pageObject = (new PageObject())
+                ->setPageID($i)
+                ->setPrepage(30);
+            $this->makePdoInterface(" LIMIT ".$pageObject->getFrom().','.$pageObject->getPrepage());
+            $result = $this->pdoInterface
+                ->selectAll();
+            if ($result) {
+                foreach ($result as $item) {
+                    yield $item;
+                }
+            } else {
+                break;
+            }
+        }
+    }
 
     /**
      * @return mixed
      */
     public function __invoke()
     {
-        $sql = 'SELECT '.$this->getJoinTable().' FROM '.$this->tableObject->getName().
-            join(" ", $this->joinSql).
-            ' WHERE '.implode(' AND ', $this->getSqls());
 
-        //有排序要求
-        if ($this->getSqlsOrder()) {
-            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
-        }
-
-        if ($this->isYield()) {
-            $i = 0;
-            while (true) {
-                $i++;
-                $pageObject = (new PageObject())
-                    ->setPageID($i)
-                    ->setPrepage(30);
-                $this->makePdoInterface($sql." LIMIT ".$pageObject->getFrom().','.$pageObject->getPrepage());
-                $result = $this->pdoInterface
-                    ->selectAll();
-                if ($result) {
-                    foreach ($result as $item) {
-                        yield $item;
-                    }
-                } else {
-                    return null;
-                }
-            }
-        }
-
-        $this->makePdoInterface($sql);
-
+        $this->makePdoInterface();
         if ($this->moreData) {
             //如果是列查询
             if ($this->getColumnName()) {
@@ -154,10 +125,19 @@ class Select extends PdoAction
         }
     }
 
-    protected function makePdoInterface($sql)
+    protected function makePdoInterface($addsql = "")
     {
+        $sql = 'SELECT '.$this->getJoinTable().' FROM '.$this->tableObject->getName().
+            join(" ", $this->joinSql).
+            ' WHERE '.implode(' AND ', $this->getSqls());
+
+        //有排序要求
+        if ($this->getSqlsOrder()) {
+            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
+        }
+
         $SqlParserd = (new SqlParser())
-            ->setSql($sql)
+            ->setSql($sql.$addsql)
             ->setBind($this->getBinds())
             ->__invoke();
         //执行sql

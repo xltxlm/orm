@@ -62,4 +62,12 @@ $tableObject= (new Table)
     {
         return array_unique(array_merge([$this->getAutoIncrement()],$this->getUniqueKey(),$this->getPrimaryKey()));
     }
+
+    /**
+     * 所有的特别字段
+     */
+    public function getComment():string
+    {
+        return "<?=$tableObject->getComment()?>";
+    }
 }

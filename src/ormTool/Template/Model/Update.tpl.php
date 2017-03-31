@@ -62,7 +62,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
 
      * @return $this
      */
-    public function where<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>(string $<?=$field->getCOLUMNNAME()?>,$action=PdoAction::EQUAL)
     {
         $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`$action:where<?=$field->getCOLUMNNAME()?>";
         $this->binds['where<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;

@@ -65,7 +65,7 @@ foreach ($this->getGroupby() as $field){
             (new ShakealertInsert())
                 ->setIgnore(true)
                 ->setDbConfig(new <?=(new \ReflectionClass($this->getTable()->getDbConfig()))->getShortName()?>)
-                ->setTablename('<?=$this->getTable()->getName()?>')
+                ->setTablename('{"<?=$this->getTable()->getName()?>":"<?=$this->getTable()->getComment()?>"}')
                 ->setDtvalue($item->get<?=ucfirst($this->getDtField())?>())
                 ->setDtfieldname('<?=$this->getDtField()?>')
                 ->setCondition(json_encode($Condition,JSON_UNESCAPED_UNICODE))
