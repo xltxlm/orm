@@ -42,6 +42,54 @@ class PdoInterface
     /** @var int 执行sql的条数 */
     private static $sqlCount = 0;
 
+    /** @var bool 是否正常数据量查询. false:准备查询超级大数据 */
+    protected $buff = true;
+
+    /** @var bool 是否修改了数据库 */
+    protected $changeData = false;
+
+    /**
+     * @return bool
+     */
+    public function isChangeData(): bool
+    {
+        return $this->changeData;
+    }
+
+    /**
+     * 只要有一次是修改了数据,整个都连接过程记录修改数据
+     * @param bool $changeData
+     *
+     * @return PdoInterface
+     */
+    public function setChangeData(bool $changeData): PdoInterface
+    {
+        if ($changeData) {
+            $this->changeData = $changeData;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBuff(): bool
+    {
+        return $this->buff;
+    }
+
+    /**
+     * @param bool $buff
+     *
+     * @return PdoInterface
+     */
+    public function setBuff(bool $buff): PdoInterface
+    {
+        $this->buff = $buff;
+
+        return $this;
+    }
 
     /**
      * @return int
@@ -192,7 +240,8 @@ class PdoInterface
     }
 
     /**
-     * 查询一列数据
+     * 查询一列数据.
+     *
      * @return array
      */
     public function selectColumn($ColumnName = 0): array
@@ -236,11 +285,12 @@ class PdoInterface
     {
         //保证会话参数存在
         $this->setSession();
+
         return $this->pdoexecute();
     }
 
     /**
-     * 设置当前账户的会话参数,在触发器中可以用来记录账户信息
+     * 设置当前账户的会话参数,在触发器中可以用来记录账户信息.
      */
     final protected function setSession()
     {
@@ -251,11 +301,11 @@ class PdoInterface
             (clone $this)
                 ->setSqlParserd(
                     (new SqlParser())
-                        ->setSql("set  @userflag=:userflag ,@username=:username ,@ip=:ip ")
+                        ->setSql('set  @userflag=:userflag ,@username=:username ,@ip=:ip ')
                         ->setBind([
                             'userflag' => $userCookieModel->__toString(),
                             'username' => $userCookieModel->getUsername(),
-                            'ip' => $userCookieModel->getIp()
+                            'ip' => $userCookieModel->getIp(),
                         ])
                         ->__invoke()
                 )
@@ -319,19 +369,21 @@ class PdoInterface
     }
 
     /**
-     * @return \PDOStatement
      * @throws PdoSqlError
      * @throws \Exception
+     *
+     * @return \PDOStatement
      */
     private function pdoexecute(): \PDOStatement
     {
         //记录日志
         $DefineLog = (new PdoRunLogger($this->getPdoConfig()))
-            ->setPdoSql($this->sqlParserd);
+            ->setPdoSql($this->getSqlParserd());
         $start = microtime(true);
         //执行sql
         try {
-            $stmt = $this->pdoConfig->instanceSelf()->prepare($this->sqlParserd->getSql());
+            $this->setChangeData($this->getSqlParserd()->isChangeData());
+            $stmt = $this->pdoConfig->instanceSelf($this->isBuff())->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
             $DefineLog
                 ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
@@ -342,7 +394,7 @@ class PdoInterface
                 ->__invoke();
             throw $e;
         }
-        foreach ($this->sqlParserd->getBind() as $bind) {
+        foreach ($this->getSqlParserd()->getBind() as $bind) {
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
@@ -367,15 +419,15 @@ class PdoInterface
             throw (new PdoSqlError(
                 json_encode(
                     [
-                        $this->sqlParserd->getSql(),
-                        $this->sqlParserd->getBindArray(),
+                        $this->getSqlParserd()->getSql(),
+                        $this->getSqlParserd()->getBindArray(),
                         $error,
                     ]
                 )
             )
             )
-                ->setSql($this->sqlParserd->getSql())
-                ->setBinds($this->sqlParserd->getBind())
+                ->setSql($this->getSqlParserd()->getSql())
+                ->setBinds($this->getSqlParserd()->getBind())
                 ->setErrorinfo(json_encode($error));
         }
         if ($DefineLog) {
@@ -392,14 +444,37 @@ class PdoInterface
 
     /**
      * @desc   回滚事务
+     *
      * @since  2015-04-27 17:09:19
+     *
      * @return bool
      */
     public function rollBack()
     {
-        $this->pdoConfig->instanceSelf()->rollBack();
+        if ($this->getSqlParserd()->isChangeData()) {
+            $this->pdoConfig->instanceSelf()->rollBack();
+            $this->changeData = false;
+            return $this->pdoConfig->instanceSelf()->beginTransaction();
+        }
 
-        return $this->pdoConfig->instanceSelf()->beginTransaction();
+        return false;
+    }
+    /**
+     * @desc   提交事务
+     *
+     * @since  2015-04-27 17:09:19
+     *
+     * @return bool
+     */
+    public function commit()
+    {
+        if ($this->getSqlParserd()->isChangeData()) {
+            $this->pdoConfig->instanceSelf()->commit();
+            $this->changeData = false;
+            return $this->pdoConfig->instanceSelf()->beginTransaction();
+        }
+
+        return false;
     }
 
     /**

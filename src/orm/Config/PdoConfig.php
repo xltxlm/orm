@@ -176,12 +176,13 @@ abstract class PdoConfig implements TestConfig
     /**
      * 返回链接,重新链接.
      */
-    private function instance()
+    private function instance($buff = true)
     {
         $tns = $this->getPdoString();
         try {
-            $this->PDOObject = new  \PDO($tns, $this->getUsername(), $this->getPassword());
+            $this->PDOObject = new  PDO($tns, $this->getUsername(), $this->getPassword());
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
+            $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
             //所有数据库,默认都必须开启事务
             $this->PDOObject->beginTransaction();
             (new PdoConnectLogger($this))
@@ -194,13 +195,15 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 返回链接,单例.
-     *
+     * @param bool $buff 是否正常数据量查询. false:准备查询超级大数据
      * @return \PDO
      */
-    final public function instanceSelf()
+    final public function instanceSelf($buff = true)
     {
-        if (!self::$instance[$this->getPdoString()]) {
-            self::$instance[$this->getPdoString()] = $this->instance();
+        if (!$buff) {
+            return $this->instance($buff);
+        } elseif (!self::$instance[$this->getPdoString()]) {
+            self::$instance[$this->getPdoString()] = $this->instance($buff);
         }
 
         return self::$instance[$this->getPdoString()];
@@ -227,15 +230,6 @@ abstract class PdoConfig implements TestConfig
         self::$instance = [];
     }
 
-    /**
-     * 注销的时候记录日志
-     */
-    public function __destruct()
-    {
-        if ($this->PDOObject) {
-            $this->PDOObject->commit();
-        }
-    }
 
     /**
      * 获取PDO链接的字符串.

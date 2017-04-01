@@ -5,6 +5,7 @@
  * Date: 2016-11-13
  * Time: 下午 9:53.
  */
+
 namespace xltxlm\orm\Sql;
 
 use xltxlm\orm\Unit\BindPair;
@@ -19,8 +20,28 @@ final class SqlParserd
     protected $sql = '';
     /** @var \xltxlm\orm\Unit\BindPair[] 返回绑定的 字段=>值 */
     protected $bind = [];
-    /** @var array  返回绑定的 字段=>值*/
+    /** @var bool 是否修改了数据库 */
+    protected $changeData = false;
+    /** @var array  返回绑定的 字段=>值 */
     private $bindArray = [];
+
+    /**
+     * @return bool
+     */
+    public function isChangeData(): bool
+    {
+        return $this->changeData;
+    }
+
+    /**
+     * @param bool $changeData
+     * @return SqlParserd
+     */
+    public function setChangeData(bool $changeData): SqlParserd
+    {
+        $this->changeData = $changeData;
+        return $this;
+    }
 
     /**
      * @return array
@@ -46,6 +67,9 @@ final class SqlParserd
     public function setSql(string $sql): SqlParserd
     {
         $this->sql = $sql;
+        if (strpos(trim($sql), 'select') !== 0) {
+            $this->setChangeData(true);
+        }
 
         return $this;
     }

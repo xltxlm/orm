@@ -39,9 +39,9 @@ class <?=ucfirst($this->getTable()->getName())?>ShakealertSync
         foreach ($selectAll as $item) {
             $Condition = [];
 <?php
-$where=$this->getGroupby()?' and ':'';
+$where = '';
 foreach ($this->getGroupby() as $field){
-    $where .= " $field=:$field ";
+    $where .= " AND $field=:$field ";
 ?>
             $Condition['<?=$field?>'] = $item->get<?=ucfirst($field)?>();
 <?php }?>

@@ -1,0 +1,13 @@
+{
+    "mappings": {
+        "data": {
+            "properties": {
+                            "id": { "type": "integer"                },
+                            "dt": { "type": "date","format":"strict_date_optional_time||epoch_millis"                },
+                            "servicename": { "type": "keyword"                },
+                            "process": { "type": "keyword"                },
+                            "num": { "type": "integer"                }
+                        }
+        }
+    }
+}

@@ -70,22 +70,11 @@ class Select extends PdoAction
 
     public function yield()
     {
-        $i = 0;
-        while (true) {
-            $i++;
-            $pageObject = (new PageObject())
-                ->setPageID($i)
-                ->setPrepage(30);
-            $this->makePdoInterface(" LIMIT ".$pageObject->getFrom().','.$pageObject->getPrepage());
-            $result = $this->pdoInterface
-                ->selectAll();
-            if ($result) {
-                foreach ($result as $item) {
-                    yield $item;
-                }
-            } else {
-                break;
-            }
+        $this->makePdoInterface();
+        $this->getPdoInterface()->setBuff(false);
+        $stmt = $this->getPdoInterface()->execute();
+        while ($row = $stmt->fetchObject($this->getPdoInterface()->getClassName())) {
+            yield $row;
         }
     }
 
