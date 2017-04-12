@@ -67,7 +67,7 @@ final class SqlParserd
     public function setSql(string $sql): SqlParserd
     {
         $this->sql = $sql;
-        if (strpos(trim($sql), 'select') !== 0) {
+        if (strpos(trim(strtolower($sql)), 'select') !== 0) {
             $this->setChangeData(true);
         }
 

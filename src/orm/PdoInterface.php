@@ -252,6 +252,10 @@ class PdoInterface
         return $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
     }
 
+    /**
+     * 查询多条数据,一次性全部返回
+     * @return array
+     */
     public function selectAll()
     {
         $stmt = $this->pdoexecute();
@@ -265,6 +269,23 @@ class PdoInterface
         }
 
         return $return;
+    }
+
+    /**
+     * 查询多条数据,延迟返回
+     * @return \Generator
+     */
+    public function yied()
+    {
+        $this->setBuff(false);
+        $stmt = $this->pdoexecute();
+        $this->checkClassName();
+        while ($return = $stmt->fetchObject($this->className)) {
+            if ($this->isConvertToArray()) {
+                $return = get_object_vars($return);
+            }
+            yield $return;
+        }
     }
 
     public function insert()
@@ -459,6 +480,7 @@ class PdoInterface
 
         return false;
     }
+
     /**
      * @desc   提交事务
      *
@@ -468,13 +490,9 @@ class PdoInterface
      */
     public function commit()
     {
-        if ($this->getSqlParserd()->isChangeData()) {
-            $this->pdoConfig->instanceSelf()->commit();
-            $this->changeData = false;
-            return $this->pdoConfig->instanceSelf()->beginTransaction();
-        }
-
-        return false;
+        $this->pdoConfig->instanceSelf()->commit();
+        $this->changeData = false;
+        return $this->pdoConfig->instanceSelf()->beginTransaction();
     }
 
     /**

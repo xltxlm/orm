@@ -35,7 +35,7 @@ class Page extends PdoAction
 
     /**
      * @param bool $convertToArray
-     * @return Page
+     * @return static
      */
     public function setConvertToArray(bool $convertToArray)
     {
