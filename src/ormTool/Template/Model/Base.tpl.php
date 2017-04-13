@@ -16,7 +16,7 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Base
 <?php foreach ($fieldSchema as $field) {
     ?>
     /** @var string <?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?> */
-    protected $<?=$field->getCOLUMNNAME()?>;
+    protected $<?=$field->getCOLUMNNAME()?>='';
 
         /**
     * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
@@ -33,14 +33,31 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Base
 
     * @return string
     */
-    public static function <?=$field->getCOLUMNNAME()?>Vue($add = true)
+    public static function <?=$field->getCOLUMNNAME()?>Vue($add = true,$function='')
     {
         if($add)
         {
-            return '{{ item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).' }}';
+            return '{{ '.$function.'(item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).') }}';
         }else
         {
-            return 'item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>));
+            return $function.'(item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).')';
+        }
+    }
+
+
+    /**
+    * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>
+
+    * @return string
+    */
+    public static function <?=$field->getCOLUMNNAME()?>VueFunction($add = true,$function = '')
+    {
+        if($add)
+        {
+            return '{{ '.$function.'(item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).',item) }}';
+        }else
+        {
+            return $function.'(item.'.(self::selfInstance()->varName(self::selfInstance()-><?=$field->getCOLUMNNAME()?>)).',item)';
         }
     }
 
