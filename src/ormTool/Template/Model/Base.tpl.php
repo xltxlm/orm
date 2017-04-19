@@ -1,6 +1,4 @@
 <?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 
 namespace <?=$this->getDbNameSpace()?>;
@@ -10,10 +8,10 @@ use xltxlm\helper\Hclass\CopyObjectAttributeName;
  * 可以被重复利用的数据模型
  * Class select
  */
-trait <?=ucfirst($tableSchema->getTABLENAME())?>Base
+trait <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Base
 {
     use CopyObjectAttributeName;
-<?php foreach ($fieldSchema as $field) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
     ?>
     /** @var string <?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?> */
     protected $<?=$field->getCOLUMNNAME()?>='';

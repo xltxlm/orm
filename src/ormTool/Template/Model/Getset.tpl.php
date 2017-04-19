@@ -1,6 +1,4 @@
 <?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
 <<?='?'?>php
 
 namespace <?=$this->getDbNameSpace()?>;
@@ -11,7 +9,7 @@ use xltxlm\helper\BasicType;
  * 可以被重复利用的数据模型
  * Class select
  */
-trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
+trait <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Getset
 {
 
     /**
@@ -19,7 +17,7 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
     */
     public function default()
     {
-<?php foreach ($fieldSchema as $field) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
     if(!$field->getCOLUMNDEFAULT())
     {
         continue;
@@ -35,7 +33,7 @@ trait <?=ucfirst($tableSchema->getTABLENAME())?>Getset
         return $this;
     }
 
-<?php foreach ($fieldSchema as $field) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
     ?>
     /**
     * out:<?=$field->getCOLUMNCOMMENT()?> <?=$field->getCOLUMNTYPE()?>

@@ -1,6 +1,4 @@
-<?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */ ?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -14,15 +12,15 @@ namespace <?=$this->getDbNameSpace()?>;
 use \xltxlm\ormTool\Template\PdoAction;
 use \xltxlm\ormTool\Template\Update;
 
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Update extends Update
+final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Update extends Update
 
 {
     final public function __construct()
     {
-        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
+        $this->tableObject=(new <?=ucfirst($this->getTableSchema()->getTABLENAME())?>);
     }
 
-<?php foreach ($fieldSchema as $field) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
     ?>
     protected $<?=$field->getCOLUMNNAME()?>;
 

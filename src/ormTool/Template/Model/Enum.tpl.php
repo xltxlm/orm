@@ -1,6 +1,4 @@
 <?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema $field */?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -11,10 +9,10 @@
 
 namespace <?=$this->getDbNameSpace()?>\enum;
 
-class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMNNAME())?>
+class Enum<?=ucfirst($this->getTableSchema()->getTABLENAME())?><?=ucfirst($this->getField()->getCOLUMNNAME())?>
 
 {
-<?php foreach ($field->getENUMARRAY() as $key=>$value) {
+<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {
     ?>
     const <?=$key?>='<?=$value?>';
 <?php
@@ -23,7 +21,7 @@ class Enum<?=ucfirst($tableSchema->getTABLENAME())?><?=ucfirst($field->getCOLUMN
 
     public static function ALL():array
     {
-        return [<?php foreach ($field->getENUMARRAY() as $key=>$value) {
+        return [<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {
     ?>
             '<?=$value?>'=>'<?=$value?>',
             <?php

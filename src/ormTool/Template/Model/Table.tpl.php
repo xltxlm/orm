@@ -1,8 +1,7 @@
 <?php /** @var \xltxlm\ormTool\OrmMaker $this */
-/** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */
 use xltxlm\ormTool\Unit\Table;
 $tableObject= (new Table)
-    ->setName($tableSchema->getTABLENAME())
+    ->setName($this->getTableSchema()->getTABLENAME())
     ->setDbConfig($this->getDbConfig());
 ?>
 <<?='?'?>php
@@ -13,14 +12,22 @@ $tableObject= (new Table)
     use <?= Table::class?>;
     use <?=(new \ReflectionClass($this->getDbConfig()))->name?>;
 
-    final class <?=ucfirst($tableSchema->getTABLENAME())?> extends Table
+    final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?> extends Table
     {
 
     /** @var string 表格的名称 */
-    protected $name = "<?=$tableSchema->getTABLENAME()?>";
+    protected $name = "<?=$this->getTableSchema()->getTABLENAME()?>";
 
     /** @var string 表格的描述 */
-    protected $comment = "<?=$tableSchema->getTABLECOMMENT()?>";
+    protected $comment = "<?=$this->getTableSchema()->getTABLECOMMENT()?>";
+
+    /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
 
     /**
     * @return PdoConfig
@@ -63,11 +70,4 @@ $tableObject= (new Table)
         return array_unique(array_merge([$this->getAutoIncrement()],$this->getUniqueKey(),$this->getPrimaryKey()));
     }
 
-    /**
-     * 所有的特别字段
-     */
-    public function getComment():string
-    {
-        return "<?=$tableObject->getComment()?>";
-    }
 }

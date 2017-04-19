@@ -1,10 +1,10 @@
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */
 use xltxlm\ormTool\Unit\FieldSchema; ?>
 {
     "mappings": {
         "data": {
             "properties": {
-            <?php $i=0;foreach ($fieldSchema as $item) { $i++; ?>
+            <?php $i=0;foreach ($this->getTableObject()->getFieldSchemas() as $item) { $i++; ?>
                 "<?= $item->getCOLUMNNAME() ?>": { "type": <?php
                 switch ($item->getDATATYPE()) {
                     case  FieldSchema::DATE :
@@ -30,7 +30,7 @@ use xltxlm\ormTool\Unit\FieldSchema; ?>
                         break;
                 }
                 ?>
-                }<?php if(count($fieldSchema)>$i){?>,<?php }?>
+                }<?php if(count($this->getTableObject()->getFieldSchemas())>$i){?>,<?php }?>
 
             <?php } ?>
             }

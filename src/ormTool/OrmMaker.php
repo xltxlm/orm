@@ -31,6 +31,70 @@ final class OrmMaker
     /** @var array 只检出需要的表格来生成 */
     protected $needTableNames = [];
 
+    /** @var  TableSchema */
+    protected $tableSchema;
+    /** @var  Table */
+    protected $tableObject;
+    /** @var  FieldSchema */
+    protected $field;
+
+    /**
+     * @return FieldSchema
+     */
+    public function getField(): FieldSchema
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param FieldSchema $field
+     * @return OrmMaker
+     */
+    public function setField(FieldSchema $field): OrmMaker
+    {
+        $this->field = $field;
+        return $this;
+    }
+
+
+    /**
+     * @return Table
+     */
+    public function getTableObject()
+    {
+        return $this->tableObject;
+    }
+
+    /**
+     * @param Table $tableObject
+     * @return OrmMaker
+     */
+    public function setTableObject($tableObject)
+    {
+        $this->tableObject = $tableObject;
+        return $this;
+    }
+
+
+    /**
+     * @return TableSchema
+     */
+    public function getTableSchema(): TableSchema
+    {
+        return $this->tableSchema;
+    }
+
+    /**
+     * @param TableSchema $tableSchema
+     * @return OrmMaker
+     */
+    public function setTableSchema(TableSchema $tableSchema): OrmMaker
+    {
+        $this->tableSchema = $tableSchema;
+        return $this;
+    }
+
+
     /**
      * @return array
      */
@@ -115,73 +179,43 @@ final class OrmMaker
             if ($this->getNeedTableNames() && !in_array($tableSchema->getTABLENAME(), $this->getNeedTableNames())) {
                 continue;
             }
-
+            $this->setTableSchema($tableSchema);
             //记录下处理到的表名称,等下备份有用
             $backupTables[] = $tableSchema->getTABLENAME();
 
             //表格定义
-            ob_start();
-            include __DIR__.'/Template/Model/Table.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'.php', __DIR__.'/Template/Model/Table.tpl.php');
 
             //字段列表
-            $tableObject = (new Table())
+            $this->tableObject = (new Table())
                 ->setDbConfig($this->dbConfig)
                 ->setName($tableSchema->getTABLENAME());
-            /** @var FieldSchema[] $fieldSchema */
-            $fieldSchema = $tableObject
-                ->getFieldSchemas();
-            //外键列表
-            $foreignKeys = $tableObject
-                ->getForeignKey();
 
             //基本表字段模型
-            ob_start();
-            include __DIR__.'/Template/Model/Model.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Model.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Model.php', __DIR__.'/Template/Model/Model.tpl.php');
 
-            ob_start();
-            include __DIR__.'/Template/Model/Base.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Base.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Base.php', __DIR__.'/Template/Model/Base.tpl.php');
 
-            ob_start();
-            include __DIR__.'/Template/Model/Getset.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', __DIR__.'/Template/Model/Getset.tpl.php');
 
             //操作 - 一维查询
-            $moreData = false;
-            ob_start();
-            include __DIR__.'/Template/Model/Select.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectOne.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectOne.php', __DIR__.'/Template/Model/Select.tpl.php');
+
             //操作 - 二维查询
-            ob_start();
-            $moreData = true;
-            include __DIR__.'/Template/Model/Select.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectAll.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectAll.php', __DIR__.'/Template/Model/Select.tpl.php', true);
             //操作 - 二维查询 - 带分页条
-            ob_start();
-            $pageClass = true;
-            include __DIR__.'/Template/Model/Select.tpl.php';
-            $pageClass = false;
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Page.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Page.php', __DIR__.'/Template/Model/Select.tpl.php', true, true);
+
             //写入数据 模型
-            ob_start();
-            include __DIR__.'/Template/Model/Insert.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Insert.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Insert.php', __DIR__.'/Template/Model/Insert.tpl.php');
             // 更新数据库操作
-            ob_start();
-            include __DIR__.'/Template/Model/Update.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Update.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Update.php', __DIR__.'/Template/Model/Update.tpl.php');
 
             //字段类型
-            ob_start();
-            include __DIR__.'/Template/Model/Type.tpl.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', __DIR__.'/Template/Model/Type.tpl.php');
 
             //elasticsearch.map
-            ob_start();
-            include __DIR__.'/Template/Model/Elasticsearch.map.php';
-            file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', ob_get_clean());
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', __DIR__.'/Template/Model/Elasticsearch.map.php');
 
             //生成 Elasticsearch 查询操作类
             (new ElasticsearchMakeTool())
@@ -189,15 +223,10 @@ final class OrmMaker
                 ->__invoke();
 
             //枚举类型类
-            foreach ($fieldSchema as $field) {
+            foreach ($this->getTableObject()->getFieldSchemas() as $field) {
+                $this->setField($field);
                 if ($field->getDATATYPE() == FieldSchema::ENUM) {
-                    ob_start();
-                    include __DIR__.'/Template/Model/Enum.tpl.php';
-                    file_put_contents(
-                        $path.'/enum/Enum'.ucfirst($tableSchema->getTABLENAME()).
-                        ucfirst($field->getCOLUMNNAME()).'.php',
-                        ob_get_clean()
-                    );
+                    $this->file_put_contents($path.'/enum/Enum'.ucfirst($tableSchema->getTABLENAME()).ucfirst($field->getCOLUMNNAME()).'.php', __DIR__.'/Template/Model/Enum.tpl.php');
                 }
             }
         }
@@ -213,10 +242,10 @@ final class OrmMaker
         mkdir($deploy);
 
         //备份出测试环境的数据结构
-        $cmd = 'nohup mysqldump -d -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >$DDL/".$this->getDbConfig()->getDb().'.sql &';
+        $cmd = 'nohup mysqldump -d --skip-triggers -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >/tmp/dump.sql && rsync -a /tmp/dump.sql $DDL/".$this->getDbConfig()->getDb().'.sql &';
         pclose(popen($cmd, 'r'));
         //线上线下数据结构对比
-        file_put_contents("$DDL/sysnc.".$ReflectionClass->getShortName().".table", 'export table="'.join(" ", $backupTables).'"');
+        $this->file_write_contents("$DDL/sysnc.".$ReflectionClass->getShortName().".table", 'export table="'.join(" ", $backupTables).'"');
 
 
         $HOST_TYPE = $_SERVER['HOST_TYPE'];
@@ -228,15 +257,40 @@ final class OrmMaker
             mkdir($deploytype);
             ob_start();
             include __DIR__.'/Template/Model/Deploy.php';
-            file_put_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
+            $this->file_write_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
             mkdir($deploytype.$ReflectionClass->getShortName());
 
             foreach ($allTable as $backupTable) {
-                ob_start();
-                include __DIR__.'/Template/Model/MysqlCopy.php';
-                file_put_contents($deploytype.$ReflectionClass->getShortName()."/$backupTable.cmd", ob_get_clean());
+                $this->file_put_contents($deploytype.$ReflectionClass->getShortName()."/$backupTable.cmd", __DIR__.'/Template/Model/MysqlCopy.php');
             }
         }
         $_SERVER['HOST_TYPE'] = $HOST_TYPE;
+    }
+
+    /**
+     * @param $classRealFile
+     * @param $templatePath
+     */
+    private function file_put_contents($classRealFile, $templatePath, $moreData = false, $pageClass = false)
+    {
+        ob_start();
+        eval('include $templatePath;');
+        $ob_get_clean = ob_get_clean();
+        //1:先保证控制层的基准类一定存在
+        if (!is_file($classRealFile) || file_get_contents($classRealFile) !== $ob_get_clean) {
+            file_put_contents($classRealFile, $ob_get_clean);
+        }
+    }
+
+    /**
+     * @param $classRealFile
+     * @param $templatePath
+     */
+    private function file_write_contents($classRealFile, $ob_get_clean)
+    {
+        //1:先保证控制层的基准类一定存在
+        if (!is_file($classRealFile) || file_get_contents($classRealFile) !== $ob_get_clean) {
+            file_put_contents($classRealFile, $ob_get_clean);
+        }
     }
 }

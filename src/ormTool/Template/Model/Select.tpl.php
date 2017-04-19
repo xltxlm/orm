@@ -1,8 +1,4 @@
 <?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\Table $tableObject */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\ForeignKey[] $foreignKeys */?>
 <?php /** @var bool $moreData */?>
 <?php /** @var bool $pageClass */?>
 <<?='?'?>php
@@ -30,12 +26,12 @@ use \xltxlm\ormTool\Template\Select;
  */
 <?php if ($pageClass) {
     ?>
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Page extends Page
+final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Page extends Page
 <?php
 
 } else {
     ?>
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends Select
+final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreData ? 'All' : 'One'?> extends Select
 <?php
 
 }?>
@@ -46,14 +42,14 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
     protected $execCount=[];
 
     /** @var string  模型类 */
-    protected $modelClass = <?=ucfirst($tableSchema->getTABLENAME())?>Model::class;
+    protected $modelClass = <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model::class;
 
     final public function __construct()
     {
-        $this->tableObject=(new <?=ucfirst($tableSchema->getTABLENAME())?>);
+        $this->tableObject=(new <?=ucfirst($this->getTableSchema()->getTABLENAME())?>);
     }
 
-<?php foreach ($fieldSchema as $field) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
     ?>
 
     /**
@@ -67,12 +63,12 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
     {
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
         if($PdoAction == PdoAction::NOTLIKE) {
-            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
         }elseif($PdoAction == PdoAction::LIKE) {
-            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
             $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "%$<?=$field->getCOLUMNNAME()?>%";
         }else{
-            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
         }
         $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
         $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
@@ -90,10 +86,10 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
         if($<?=$field->getCOLUMNNAME()?> == true)
         {
-            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NULL";
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NULL";
         }else
         {
-            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NOT NULL";
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NOT NULL";
         }
         $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
         return $this;
@@ -112,23 +108,23 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
             if($PdoAction == PdoAction::INDATE)
             {
                 list($start,$end) = explode($explode,$<?=$field->getCOLUMNNAME()?>,2);
-                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> >= :<?=$field->getCOLUMNNAME()?>$uniqid";
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> >= :<?=$field->getCOLUMNNAME()?>$uniqid";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $start;
                 $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
 
                 $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
-                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> <= :<?=$field->getCOLUMNNAME()?>$uniqid";
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> <= :<?=$field->getCOLUMNNAME()?>$uniqid";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $end;
                 $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
             }elseif($PdoAction == PdoAction::NOTLIKE) {
-                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
             }elseif($PdoAction == PdoAction::LIKE) {
-                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "%$<?=$field->getCOLUMNNAME()?>%";
             }else
             {
-                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
                 $this->execCount['<?=$field->getCOLUMNNAME()?>']++;
             }
@@ -142,7 +138,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Asc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> ASC";
         return $this;
     }
 
@@ -152,7 +148,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
      */
     public function order<?=ucfirst($field->getCOLUMNNAME())?>Desc()
     {
-        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$tableSchema->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
+        $this->sqlsOrder['<?=$field->getCOLUMNNAME()?>'] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> DESC";
         return $this;
     }
 <?php
@@ -160,7 +156,7 @@ final class <?=ucfirst($tableSchema->getTABLENAME())?>Select<?=$moreData ? 'All'
 }?>
 
 <?php
-foreach ($foreignKeys as $foreignKey) {
+foreach ($this->getTableObject()->getForeignKey() as $foreignKey) {
     ?>
     /**
     * @return $this
@@ -176,7 +172,7 @@ foreach ($foreignKeys as $foreignKey) {
 
 }?>
 
-<?php foreach ($tableObject->getJoinTables() as $table) {
+<?php foreach ($this->getTableObject()->getJoinTables() as $table) {
     ?>
     /**
     * 获取关联表的结果对象 关联查询的时候可用
@@ -214,7 +210,7 @@ foreach ($foreignKeys as $foreignKey) {
     }
 
     /**
-     * @return <?=ucfirst($tableSchema->getTABLENAME())?>Model<?=$moreData ? '[]' : ''?>
+     * @return <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model<?=$moreData ? '[]' : ''?>
 
      */
     final public function __invoke()

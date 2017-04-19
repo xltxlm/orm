@@ -1,16 +1,13 @@
-<?php /** @var \xltxlm\ormTool\OrmMaker $this */?>
-<?php /** @var \xltxlm\ormTool\Unit\Table $tableObject */?>
-<?php /** @var \xltxlm\ormTool\Unit\TableSchema $tableSchema */?>
-<?php /** @var \xltxlm\ormTool\Unit\FieldSchema[] $fieldSchema */?>
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */ ?>
 <<?='?'?>php
 
 namespace <?=$this->getDbNameSpace()?>;
 
 use \xltxlm\ormTool\Unit\FieldSchema;
 
-final class <?=ucfirst($tableSchema->getTABLENAME())?>Type
+final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Type
 {
-<?php foreach ($fieldSchema as $item) {
+<?php foreach ($this->getTableObject()->getFieldSchemas() as $item) {
     ?>
     /**
      * @return bool
