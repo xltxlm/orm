@@ -214,6 +214,12 @@ final class OrmMaker
             //字段类型
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', __DIR__.'/Template/Model/Type.tpl.php');
 
+            //生成触发器
+            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Trigger.sql', __DIR__.'/Template/Model/Trigger.php');
+
+            //生成表语法结构
+            $this->file_write_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ddl.sql', $this->getTableObject()->getDdl());
+
             //elasticsearch.map
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', __DIR__.'/Template/Model/Elasticsearch.map.php');
 
@@ -241,9 +247,6 @@ final class OrmMaker
         $deploy = $deploy."/db";
         mkdir($deploy);
 
-        //备份出测试环境的数据结构
-        $cmd = 'nohup mysqldump -d --skip-triggers -h'.$this->getDbConfig()->getTNS().' -p'.$this->getDbConfig()->getPort().'  -u'.$this->getDbConfig()->getUsername().'  -p'.$this->getDbConfig()->getPassword().' -B '.$this->getDbConfig()->getDb().' --tables '.join(' ', $backupTables)." >/tmp/dump.sql && rsync -a /tmp/dump.sql $DDL/".$this->getDbConfig()->getDb().'.sql &';
-        pclose(popen($cmd, 'r'));
         //线上线下数据结构对比
         $this->file_write_contents("$DDL/sysnc.".$ReflectionClass->getShortName().".table", 'export table="'.join(" ", $backupTables).'"');
 

@@ -32,6 +32,19 @@ class Table
     private $fieldSchema = [];
     /** @var ForeignKey[] 外键对 */
     private $foreignKey = [];
+    /** @var string 表格的结构 */
+    protected $ddl = "";
+
+    /**
+     * @return string
+     */
+    public function getDdl(): string
+    {
+        return current((new PdoInterfaceEasy("SHOW CREATE TABLE ".$this->getName()))
+            ->setPdoConfig($this->getDbConfig())
+            ->selectColumn(1));
+    }
+
 
     /**
      * 直接执行sql语句
@@ -71,8 +84,8 @@ class Table
     public function getComment(): string
     {
         return $this->comment = (new PdoInterfaceEasy(
-            "select TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA=:TABLE_SCHEMA 
-                and TABLE_NAME=:TABLE_NAME ",
+            "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=:TABLE_SCHEMA 
+                AND TABLE_NAME=:TABLE_NAME ",
             [
                 'TABLE_NAME' => $this->getName(),
                 'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
@@ -163,7 +176,7 @@ class Table
     final public function getFieldSchemas(): array
     {
         if (!$this->fieldSchema) {
-            $sql = 'select * from information_schema.COLUMNS '.
+            $sql = 'SELECT * FROM information_schema.COLUMNS '.
                 'WHERE table_name=:table_name  AND TABLE_SCHEMA=:TABLE_SCHEMA ';
             $SqlParserd = (new SqlParser())
                 ->setSql($sql)
@@ -266,9 +279,9 @@ class Table
             ->selectColumn();
 
         foreach ($Column as $item) {
-            $sql="SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
+            $sql = "SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
             WHERE     TABLE_SCHEMA=:TABLE_SCHEMA 
-                AND TABLE_NAME=:TABLE_NAME and CONSTRAINT_NAME=:CONSTRAINT_NAME ";
+                AND TABLE_NAME=:TABLE_NAME AND CONSTRAINT_NAME=:CONSTRAINT_NAME ";
             $Column = (new PdoInterfaceEasy($sql, [
                 'TABLE_NAME' => $this->getName(),
                 'TABLE_SCHEMA' => $this->getDbConfig()->getDb(),
@@ -278,7 +291,7 @@ class Table
                 ->selectColumn();
         }
 
-        
+
         return $Column;
     }
 
