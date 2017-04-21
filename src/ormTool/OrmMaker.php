@@ -218,7 +218,9 @@ final class OrmMaker
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Trigger.sql', __DIR__.'/Template/Model/Trigger.php');
 
             //生成表语法结构
-            $this->file_write_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ddl.sql', $this->getTableObject()->getDdl());
+            $ddl = $this->getTableObject()->getDdl();
+            $ddl = preg_replace("#AUTO_INCREMENT=\d+ #", " ", $ddl);
+            $this->file_write_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ddl.sql', $ddl);
 
             //elasticsearch.map
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', __DIR__.'/Template/Model/Elasticsearch.map.php');

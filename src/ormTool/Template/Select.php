@@ -31,6 +31,27 @@ class Select extends PdoAction
 
     /** @var string 设置查询的列名称 */
     protected $columnName = "";
+    /** @var int 限制返回条数 */
+    protected $limit = 0;
+
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     * @return $this
+     */
+    public function setLimit(int $limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -124,6 +145,10 @@ class Select extends PdoAction
         if ($this->getSqlsOrder()) {
             $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
         }
+        //限制查询条数
+        if ($this->getLimit()) {
+            $sql .= ' Limit '.$this->getLimit();
+        }
 
         $SqlParserd = (new SqlParser())
             ->setSql($sql.$addsql)
@@ -148,7 +173,7 @@ class Select extends PdoAction
 
     /**
      * @param bool $convertToArray
-     * @return Select
+     * @return $this
      */
     public function setConvertToArray(bool $convertToArray)
     {
