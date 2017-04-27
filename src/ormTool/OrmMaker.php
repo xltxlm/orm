@@ -225,10 +225,6 @@ final class OrmMaker
             //elasticsearch.map
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', __DIR__.'/Template/Model/Elasticsearch.map.php');
 
-            //生成 Elasticsearch 查询操作类
-            (new ElasticsearchMakeTool())
-                ->setClassNames($this->getDbNameSpace().'\\'.ucfirst($tableSchema->getTABLENAME()).'Model')
-                ->__invoke();
 
             //枚举类型类
             foreach ($this->getTableObject()->getFieldSchemas() as $field) {
@@ -237,39 +233,12 @@ final class OrmMaker
                     $this->file_put_contents($path.'/enum/Enum'.ucfirst($tableSchema->getTABLENAME()).ucfirst($field->getCOLUMNNAME()).'.php', __DIR__.'/Template/Model/Enum.tpl.php');
                 }
             }
+
+            //生成 Elasticsearch 查询操作类
+            (new ElasticsearchMakeTool())
+                ->setClassNames($this->getDbNameSpace().'\\'.ucfirst($tableSchema->getTABLENAME()).'Model')
+                ->__invoke();
         }
-
-        //生成deploy配置的 k=>v 格式
-        $deploy = dirname(dirname($ReflectionClass->getFileName()))."/deployer/";
-        mkdir($deploy);
-
-        $DDL = $deploy."/DDL";
-        mkdir($DDL);
-
-        $deploy = $deploy."/db";
-        mkdir($deploy);
-
-        //线上线下数据结构对比
-        $this->file_write_contents("$DDL/sysnc.".$ReflectionClass->getShortName().".table", 'export table="'.join(" ", $backupTables).'"');
-
-
-        $HOST_TYPE = $_SERVER['HOST_TYPE'];
-        foreach (['dev', 'online'] as $hostflag) {
-            $_SERVER['HOST_TYPE'] = $hostflag;
-            //模板里面使用的变量
-            $PdoConfig = (new \ReflectionClass($this->getDbConfig()))->newInstance();
-            $deploytype = $deploy."/$hostflag/";
-            mkdir($deploytype);
-            ob_start();
-            include __DIR__.'/Template/Model/Deploy.php';
-            $this->file_write_contents($deploytype.$ReflectionClass->getShortName().'.env', ob_get_clean());
-            mkdir($deploytype.$ReflectionClass->getShortName());
-
-            foreach ($allTable as $backupTable) {
-                $this->file_put_contents($deploytype.$ReflectionClass->getShortName()."/$backupTable.cmd", __DIR__.'/Template/Model/MysqlCopy.php');
-            }
-        }
-        $_SERVER['HOST_TYPE'] = $HOST_TYPE;
     }
 
     /**

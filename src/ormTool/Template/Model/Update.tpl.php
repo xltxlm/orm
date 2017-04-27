@@ -25,6 +25,23 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Update extends 
     protected $<?=$field->getCOLUMNNAME()?>;
 
     /**
+     * 对字段采用乐观锁
+     * out:<?=$field->getCOLUMNCOMMENT()?>
+
+     * @param mixed $<?=$field->getCOLUMNNAME()?>
+
+     * @return $this
+     */
+    public function Optimistic<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
+    {
+        $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`=:<?=$field->getCOLUMNNAME()?>";
+        $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
+
+        $this->whereSqls['where<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>` != :where<?=$field->getCOLUMNNAME()?>";
+        $this->binds['where<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
+        return $this;
+    }
+    /**
      * out:<?=$field->getCOLUMNCOMMENT()?>
 
      * @param mixed $<?=$field->getCOLUMNNAME()?>

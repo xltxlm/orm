@@ -10,6 +10,7 @@ namespace xltxlm\orm;
 
 use Psr\Log\LogLevel;
 use xltxlm\h5skin\Request\UserCookieModel;
+use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Util;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
@@ -319,10 +320,12 @@ class PdoInterface
 
         if (!$session[spl_object_hash($this->pdoConfig->instanceSelf())]) {
             $userCookieModel = new UserCookieModel();
+            $userCookieModel->url=$_SERVER['REQUEST_URI'];
+            $userCookieModel->hostname=$_SERVER['HOSTNAME'];
             (clone $this)
                 ->setSqlParserd(
                     (new SqlParser())
-                        ->setSql('set  @userflag=:userflag ,@username=:username ,@ip=:ip ')
+                        ->setSql('set  @userflag=:userflag ,@username=:username ,@ip=:ip  ')
                         ->setBind([
                             'userflag' => $userCookieModel->__toString(),
                             'username' => $userCookieModel->getUsername(),

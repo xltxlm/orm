@@ -210,7 +210,7 @@ foreach ($this->getTableObject()->getForeignKey() as $foreignKey) {
     }
 
     /**
-     * @return <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model<?=$moreData ? '[]' : ''?>
+     * @return <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model<?=$moreData ? '[]' : ''?> | array
 
      */
     final public function __invoke()
