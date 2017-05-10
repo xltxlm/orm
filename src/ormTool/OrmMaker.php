@@ -38,6 +38,29 @@ final class OrmMaker
     /** @var  FieldSchema */
     protected $field;
 
+    /** @var string 当前项目所在的磁盘路径 */
+    protected $ProjectPath="";
+
+    /**
+     * @return string
+     */
+    public function getProjectPath(): string
+    {
+        return $this->ProjectPath;
+    }
+
+    /**
+     * @param string $ProjectPath
+     * @return OrmMaker
+     */
+    public function setProjectPath(string $ProjectPath): OrmMaker
+    {
+        $this->ProjectPath = $ProjectPath;
+        return $this;
+    }
+
+
+
     /**
      * @return FieldSchema
      */
@@ -238,6 +261,10 @@ final class OrmMaker
             (new ElasticsearchMakeTool())
                 ->setClassNames($this->getDbNameSpace().'\\'.ucfirst($tableSchema->getTABLENAME()).'Model')
                 ->__invoke();
+
+            //生成Thrift模型
+            $this->file_put_contents($this->getProjectPath().'/Thrift/'.ucfirst($tableSchema->getTABLENAME()).'.thrift', __DIR__.'/Template/Model/Thrift.php');
+
         }
     }
 

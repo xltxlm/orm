@@ -15,12 +15,25 @@ namespace xltxlm\orm\Config;
  */
 class PDO extends \PDO
 {
+    private $tns = "";
+
     function __destruct()
     {
         /**
          * 注销的时候记录日志
          */
         $this->commit();
+        PdoConfig::unsetinstance($this->tns);
+    }
+
+    /**
+     * @param string $tns
+     * @return $this
+     */
+    public function lock(string $tns)
+    {
+        $this->tns = $tns;
+        return $this;
     }
 
 }

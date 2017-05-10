@@ -52,6 +52,17 @@ class Table
      * @param string $sql
      * @param array $bind
      */
+    public function PdoInterface()
+    {
+        return (new PdoInterface())
+            ->setPdoConfig($this->getDbConfig());
+    }
+    /**
+     * 直接执行sql语句
+     *
+     * @param string $sql
+     * @param array $bind
+     */
     public function PdoInterfaceEasy(string $sql, array $bind = [])
     {
         return (new PdoInterfaceEasy($sql, $bind))

@@ -320,8 +320,8 @@ class PdoInterface
 
         if (!$session[spl_object_hash($this->pdoConfig->instanceSelf())]) {
             $userCookieModel = new UserCookieModel();
-            $userCookieModel->url=$_SERVER['REQUEST_URI'];
-            $userCookieModel->hostname=$_SERVER['HOSTNAME'];
+            $userCookieModel->url = $_SERVER['REQUEST_URI'];
+            $userCookieModel->hostname = $_SERVER['HOSTNAME'];
             (clone $this)
                 ->setSqlParserd(
                     (new SqlParser())
@@ -475,13 +475,8 @@ class PdoInterface
      */
     public function rollBack()
     {
-        if ($this->getSqlParserd()->isChangeData()) {
-            $this->pdoConfig->instanceSelf()->rollBack();
-            $this->changeData = false;
-            return $this->pdoConfig->instanceSelf()->beginTransaction();
-        }
-
-        return false;
+        $this->pdoConfig->instanceSelf()->rollBack();
+        return $this->pdoConfig->instanceSelf()->beginTransaction();
     }
 
     /**
@@ -494,7 +489,6 @@ class PdoInterface
     public function commit()
     {
         $this->pdoConfig->instanceSelf()->commit();
-        $this->changeData = false;
         return $this->pdoConfig->instanceSelf()->beginTransaction();
     }
 
@@ -518,7 +512,7 @@ class PdoInterface
      */
     private function debug()
     {
-        if ($this->debug) {
+        if ($this->getDebug()) {
             ob_start();
             echo "\n=========================\n";
             echo "SQL:\n";

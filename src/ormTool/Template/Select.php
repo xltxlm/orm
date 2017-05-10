@@ -33,6 +33,28 @@ class Select extends PdoAction
     protected $columnName = "";
     /** @var int 限制返回条数 */
     protected $limit = 0;
+    /** @var bool 当前查询连接,是否复用上次的查询连接 */
+    protected $buff = true;
+
+    /**
+     * @return bool
+     */
+    public function isBuff(): bool
+    {
+        return $this->buff;
+    }
+
+    /**
+     * @param bool $buff
+     * @return $this
+     */
+    public function setBuff(bool $buff)
+    {
+        $this->buff = $buff;
+        return $this;
+    }
+
+
 
     /**
      * @return int
@@ -159,6 +181,7 @@ class Select extends PdoAction
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)
+            ->setBuff($this->isBuff())
             ->setConvertToArray($this->isConvertToArray())
             ->setClassName($this->modelClass);
     }

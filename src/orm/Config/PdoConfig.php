@@ -18,14 +18,14 @@ use xltxlm\orm\Logger\PdoConnectLogger;
 abstract class PdoConfig implements TestConfig
 {
     protected $db;
-    /** @var array 确保一个进程相同配置只能链接一次 */
+    /** @var PDO[] 确保一个进程相同配置只能链接一次 */
     private static $instance = [];
 
     const MYSQL = 'mysql';
     const POSTGRESQL = 'postgresql';
     /** @var string tns链接字符串 */
     private $link = '';
-    /** @var \PDO */
+    /** @var PDO */
     protected $PDOObject;
     /** @var string 数据库的驱动 */
     protected $driver = self::MYSQL;
@@ -175,6 +175,7 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 返回链接,重新链接.
+     * @return PDO
      */
     private function instance($buff = true)
     {
@@ -196,17 +197,50 @@ abstract class PdoConfig implements TestConfig
     /**
      * 返回链接,单例.
      * @param bool $buff 是否正常数据量查询. false:准备查询超级大数据
-     * @return \PDO
+     * @return PDO
      */
     final public function instanceSelf($buff = true)
     {
         if (!$buff) {
             return $this->instance($buff);
         } elseif (!self::$instance[$this->getPdoString()]) {
-            self::$instance[$this->getPdoString()] = $this->instance($buff);
+            $tns = $this->getPdoString();
+            self::$instance[$tns] = $this->instance($buff);
+            $this->PDOObject->lock($tns);
         }
 
         return self::$instance[$this->getPdoString()];
+    }
+
+    /**
+     * 全部数据提交事务
+     */
+    final public static function commit()
+    {
+        foreach (self::$instance as $item) {
+            $item->commit();
+            //提交之后,继续事务
+            $item->beginTransaction();
+        }
+    }
+
+    /**
+     * 全部数据回滚事务
+     */
+    final public static function rollback()
+    {
+        foreach (self::$instance as $item) {
+            $item->rollBack();
+            //提交之后,继续事务
+            $item->beginTransaction();
+        }
+    }
+
+
+    //注销完毕之后删除掉实例
+    final public static function unsetinstance($tns)
+    {
+        unset(self::$instance[$tns]);
     }
 
     /**

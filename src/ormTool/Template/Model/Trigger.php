@@ -20,7 +20,7 @@ if (count($this->getTableObject()->getPrimaryKey())>1)
 CREATE  TABLE IF NOT EXISTS  <?=$this->getTableObject()->getName()?>log(
 `id` INT(11) unsigned NOT NULl AUTO_INCREMENT COMMENT '自增id',
 `pid` varchar(120) COMMENT '业务的id',
-`field` VARCHAR (255) NOT NULL  DEFAULT '' COMMENT '被改变的字段',
+`field` text   COMMENT '被改变的字段',
 `action` ENUM('创建','修改','删除') NOT NULL  DEFAULT '创建' COMMENT '数据操作',
 `correct` ENUM('未处理','已处理') NOT NULL  DEFAULT '未处理' COMMENT '意义解析',
 `business`  VARCHAR (100)   DEFAULT '' COMMENT '业务操作',
@@ -29,7 +29,7 @@ CREATE  TABLE IF NOT EXISTS  <?=$this->getTableObject()->getName()?>log(
 `sql` VARCHAR (2000)   DEFAULT '' COMMENT 'SQL语句',
 `username` VARCHAR (100)   DEFAULT '' COMMENT '账户',
 `ip` VARCHAR (60)   DEFAULT '' COMMENT 'ip',
-`userflag` VARCHAR (255)    DEFAULT ''   COMMENT '账户属性',
+`userflag`  text   COMMENT '账户属性',
 `add_time` TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP   COMMENT '触发器时间',
 PRIMARY KEY (`id`),
 INDEX (`pid`),
