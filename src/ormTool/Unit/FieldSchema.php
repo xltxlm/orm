@@ -83,13 +83,18 @@ final class FieldSchema
     {
         //准备拼音类
         static $pinyin;
+        static $pinyins;
         if (!$pinyin) {
             $pinyin = new Pinyin();
         }
         preg_match_all("#'([^']+)'#iUs", $this->getCOLUMNTYPE(), $out);
         foreach ($out[1] as $key => $item) {
-            $sentence = $pinyin->sentence($item);
-            $itemPinyin = strtr(strtoupper($sentence), [' ' => '_']);
+            $itemPinyin = $pinyins[$item];
+            if (!$itemPinyin) {
+                $sentence = $pinyin->sentence($item);
+                $itemPinyin = strtr(strtoupper($sentence), [' ' => '_']);
+                $pinyins[$item] = $itemPinyin;
+            }
             $out[1][$itemPinyin] = $item;
             unset($out[1][$key]);
         }

@@ -276,7 +276,7 @@ class PdoInterface
      * 查询多条数据,延迟返回
      * @return \Generator
      */
-    public function yied()
+    public function yield()
     {
         $this->setBuff(false);
         $stmt = $this->pdoexecute();

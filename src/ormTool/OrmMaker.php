@@ -167,7 +167,7 @@ final class OrmMaker
 
     public function __invoke()
     {
-        $allTable = $backupTables = [];
+        $allTable = [];
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
         $className = array_pop(explode('\\', get_class($this->dbConfig)));
@@ -203,8 +203,6 @@ final class OrmMaker
                 continue;
             }
             $this->setTableSchema($tableSchema);
-            //记录下处理到的表名称,等下备份有用
-            $backupTables[] = $tableSchema->getTABLENAME();
 
             //表格定义
             $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'.php', __DIR__.'/Template/Model/Table.tpl.php');
