@@ -21,7 +21,7 @@ CREATE  TABLE IF NOT EXISTS  <?=$this->getTableObject()->getName()?>log(
 `id` INT(11) unsigned NOT NULl AUTO_INCREMENT COMMENT '自增id',
 `pid` varchar(120) COMMENT '业务的id',
 `field` text   COMMENT '被改变的字段',
-`action` ENUM('创建','修改','删除') NOT NULL  DEFAULT '创建' COMMENT '数据操作',
+`action` ENUM('创建','修改','查询','删除') NOT NULL  DEFAULT '创建' COMMENT '数据操作',
 `correct` ENUM('未处理','已处理') NOT NULL  DEFAULT '未处理' COMMENT '意义解析',
 `business`  VARCHAR (100)   DEFAULT '' COMMENT '业务操作',
 `sessionuser` VARCHAR (100)   DEFAULT '' COMMENT '会话信息',
