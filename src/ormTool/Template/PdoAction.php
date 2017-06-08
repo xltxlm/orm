@@ -28,6 +28,8 @@ abstract class PdoAction
     const NOTLIKE = " instr ";
     //日期专用的区间判断
     const INDATE = " in ";
+    /** 空数据，null，或者空字符串 */
+    const EMPTY = "EMPTY";
 
     /** @var array 连表查询的SQl */
     protected $joinSql = [];

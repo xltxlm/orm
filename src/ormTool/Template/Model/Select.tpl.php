@@ -80,7 +80,7 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
     /**
      * out:<?=$field->getCOLUMNCOMMENT()?>
 
-     * @param mixed $<?=$field->getCOLUMNNAME()?>
+     * @param bool $<?=$field->getCOLUMNNAME()?>
 
      * @return $this
      */
@@ -90,6 +90,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
         if($<?=$field->getCOLUMNNAME()?> == true)
         {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NULL";
+        }elseif($<?=$field->getCOLUMNNAME()?> == PdoAction::EMPTY)
+        {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "ifnull(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,'')=''";
         }else
         {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NOT NULL";
