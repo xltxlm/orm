@@ -87,7 +87,7 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
     public function where<?=ucfirst($field->getCOLUMNNAME())?>NULL($<?=$field->getCOLUMNNAME()?>=true)
     {
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
-        if($<?=$field->getCOLUMNNAME()?> == true)
+        if($<?=$field->getCOLUMNNAME()?> === true)
         {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> IS NULL";
         }elseif($<?=$field->getCOLUMNNAME()?> == PdoAction::EMPTY)

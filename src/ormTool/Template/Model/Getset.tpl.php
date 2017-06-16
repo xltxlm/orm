@@ -42,7 +42,10 @@ trait <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Getset
     */
     public function get<?=ucfirst($field->getCOLUMNNAME())?>()
     {
-        return new BasicType($this-><?=$field->getCOLUMNNAME()?>);
+        if(get_class($this-><?=$field->getCOLUMNNAME()?>)==BasicType::class)
+            return $this-><?=$field->getCOLUMNNAME()?>;
+        else
+            return new BasicType($this-><?=$field->getCOLUMNNAME()?>);
     }
 
     /**
@@ -54,7 +57,13 @@ trait <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Getset
     */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
-        $this-><?=$field->getCOLUMNNAME()?> = new BasicType($<?=$field->getCOLUMNNAME()?>);
+<?php if(in_array($field->getDATATYPE(),['timestamp','date','datetime'])){?>
+        //如果是日期格式的，那么josn格式的转换成区间
+        if(is_string($<?=$field->getCOLUMNNAME()?>) &&  $<?=$field->getCOLUMNNAME()?>[0]=='[' && substr($<?=$field->getCOLUMNNAME()?>,-1) == ']')
+            $this-><?=$field->getCOLUMNNAME()?> = new BasicType(json_decode($<?=$field->getCOLUMNNAME()?>,true));
+        else
+<?php }?>
+            $this-><?=$field->getCOLUMNNAME()?> = new BasicType($<?=$field->getCOLUMNNAME()?>);
         return $this;
     }
     <?php
