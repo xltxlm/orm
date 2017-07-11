@@ -28,6 +28,8 @@ abstract class PdoAction
     const NOTLIKE = " instr ";
     //日期专用的区间判断
     const INDATE = " in ";
+    //在指定的json数组里面的值
+    const INJSON = " injson ";
     /** 空数据，null，或者空字符串 */
     const EMPTY = "EMPTY";
 
@@ -98,7 +100,7 @@ abstract class PdoAction
      */
     final public function getJoinTable()
     {
-        $this->joinTable[$this->tableObject->getName()] = $this->tableObject->getName().".*";
+        $this->joinTable[$this->tableObject->getName()] = $this->tableObject->getName() . ".*";
         return join(",", $this->joinTable);
     }
 

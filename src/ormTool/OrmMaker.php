@@ -256,9 +256,12 @@ final class OrmMaker
             }
 
             //生成 Elasticsearch 查询操作类
-            (new ElasticsearchMakeTool())
-                ->setClassNames($this->getDbNameSpace().'\\'.ucfirst($tableSchema->getTABLENAME()).'Model')
-                ->__invoke();
+            try {
+                (new ElasticsearchMakeTool())
+                    ->setClassNames($this->getDbNameSpace() . '\\' . ucfirst($tableSchema->getTABLENAME()) . 'Model')
+                    ->__invoke();
+            } catch (\Throwable $e) {
+            }
 
             //生成Thrift模型
             $this->file_put_contents($this->getProjectPath().'/Thrift/'.ucfirst($tableSchema->getTABLENAME()).'.thrift', __DIR__.'/Template/Model/Thrift.php');

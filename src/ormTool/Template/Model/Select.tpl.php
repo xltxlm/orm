@@ -67,6 +67,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
         }elseif($PdoAction == PdoAction::LIKE) {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
             $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "%$<?=$field->getCOLUMNNAME()?>%";
+        }elseif($PdoAction == PdoAction::INJSON) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
+            $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
         }else{
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
         }
@@ -128,6 +131,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
             }elseif($PdoAction == PdoAction::LIKE) {
                 $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "%$<?=$field->getCOLUMNNAME()?>%";
+            }elseif($PdoAction == PdoAction::INJSON) {
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
+                $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
             }else
             {
                 $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";

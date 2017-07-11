@@ -43,6 +43,13 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Type
     /**
      * @return bool
     */
+    public static function <?=$item->getCOLUMNNAME()?>IsFullDate() :bool
+    {
+        return in_array('<?=$item->getDATATYPE()?>' , [FieldSchema::TIMESTAMP,FieldSchema::DATETIME]);
+    }
+    /**
+     * @return bool
+    */
     public static function <?=$item->getCOLUMNNAME()?>IsTime() :bool
     {
         return in_array('<?=$item->getDATATYPE()?>' , [FieldSchema::TIME]);

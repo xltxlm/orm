@@ -123,7 +123,7 @@ final class SqlParser
                 ->settype(LogLevel::ERROR)
                 ->__invoke();
             throw new SqlParserException(
-                $bindError
+                $this->getSql().$bindError
             );
         }
 
