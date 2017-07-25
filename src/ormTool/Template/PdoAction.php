@@ -30,6 +30,8 @@ abstract class PdoAction
     const INDATE = " in ";
     //在指定的json数组里面的值
     const INJSON = " injson ";
+    //在列表中
+    const INLIST = " inlist ";
     /** 空数据，null，或者空字符串 */
     const EMPTY = "EMPTY";
 

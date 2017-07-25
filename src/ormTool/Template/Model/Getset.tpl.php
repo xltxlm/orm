@@ -18,13 +18,11 @@ trait <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Getset
     public function default()
     {
 <?php foreach ($this->getTableObject()->getFieldSchemas() as $field) {
-    if(!$field->getCOLUMNDEFAULT())
-    {
-        continue;
-    }
     if($field->getCOLUMNDEFAULT()=='CURRENT_TIMESTAMP'){
     ?>
         $value = date('Y-m-d H:i:s');
+    <?php }elseif($field->getDATATYPE()=='date'){?>
+        $value = date('Y-m-d');
     <?php }else{?>
         $value='<?=$field->getCOLUMNDEFAULT()?>';
     <?php }?>

@@ -70,6 +70,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
         }elseif($PdoAction == PdoAction::INJSON) {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
             $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
+        }elseif($PdoAction == PdoAction::INLIST){
+            $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
+            $this->binds['<?=$field->getCOLUMNNAME()?>' . $uniqid] = preg_split("/\s/",$<?=$field->getCOLUMNNAME()?>);
         }else{
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
         }
@@ -110,7 +113,7 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
 
      * @return $this
      */
-    public function where<?=ucfirst($field->getCOLUMNNAME())?>Maybe(string$<?=$field->getCOLUMNNAME()?>,$PdoAction=PdoAction::EQUAL,$explode =' - ')
+    public function where<?=ucfirst($field->getCOLUMNNAME())?>Maybe(string $<?=$field->getCOLUMNNAME()?>,$PdoAction=PdoAction::EQUAL,$explode =' - ')
     {
         if(!empty($<?=$field->getCOLUMNNAME()?>) || strlen($<?=$field->getCOLUMNNAME()?>)>0){
             $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
@@ -134,6 +137,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
             }elseif($PdoAction == PdoAction::INJSON) {
                 $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
+            }elseif($PdoAction == PdoAction::INLIST){
+                $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
+                $this->binds['<?=$field->getCOLUMNNAME()?>' . $uniqid] = preg_split("/\s/",$<?=$field->getCOLUMNNAME()?>);
             }else
             {
                 $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
