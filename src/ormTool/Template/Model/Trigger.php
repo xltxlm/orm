@@ -26,7 +26,7 @@ CREATE  TABLE IF NOT EXISTS  <?=$this->getTableObject()->getName()?>log(
 `business`  VARCHAR (100)   DEFAULT '' COMMENT '业务操作',
 `sessionuser` VARCHAR (100)   DEFAULT '' COMMENT '会话信息',
 `updatefield` VARCHAR (2000)   DEFAULT '' COMMENT '被影响到的字段',
-`sql` VARCHAR (2000)   DEFAULT '' COMMENT 'SQL语句',
+`sql` text COMMENT 'SQL语句',
 `username` VARCHAR (100)   DEFAULT '' COMMENT '账户',
 `ip` VARCHAR (60)   DEFAULT '' COMMENT 'ip',
 `userflag`  text   COMMENT '账户属性',

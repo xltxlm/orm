@@ -61,6 +61,18 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
      */
     public function where<?=ucfirst($field->getCOLUMNNAME())?>(string $<?=$field->getCOLUMNNAME()?>,$PdoAction=PdoAction::EQUAL)
     {
+        //如果是等于一个json值，那么自动转换成in操作
+        if($<?=$field->getCOLUMNNAME()?>[0]=='[' && substr($<?=$field->getCOLUMNNAME()?>,-1)==']')
+        {
+            if($<?=$field->getCOLUMNNAME()?> == '[""]')
+            {
+                $<?=$field->getCOLUMNNAME()?>=null;
+            }else
+            {
+                $PdoAction=PdoAction::INJSON;
+            }
+            $PdoAction=PdoAction::INJSON;
+        }
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
         if($PdoAction == PdoAction::NOTLIKE) {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
@@ -115,6 +127,18 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
      */
     public function where<?=ucfirst($field->getCOLUMNNAME())?>Maybe(string $<?=$field->getCOLUMNNAME()?>,$PdoAction=PdoAction::EQUAL,$explode =' - ')
     {
+        //如果是等于一个json值，那么自动转换成in操作
+        if($<?=$field->getCOLUMNNAME()?>[0]=='[' && substr($<?=$field->getCOLUMNNAME()?>,-1)==']')
+        {
+            if($<?=$field->getCOLUMNNAME()?> == '[""]')
+            {
+                $<?=$field->getCOLUMNNAME()?>=null;
+            }else
+            {
+                $PdoAction=PdoAction::INJSON;
+            }
+        }
+
         if(!empty($<?=$field->getCOLUMNNAME()?>) || strlen($<?=$field->getCOLUMNNAME()?>)>0){
             $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
             if($PdoAction == PdoAction::INDATE)
