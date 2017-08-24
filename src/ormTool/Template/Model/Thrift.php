@@ -57,7 +57,15 @@ enum <?=$fieldSchema->getCOLUMNNAME()?> {
  * in the serialized output if they aren't set.  Note that this requires some
  * manual management in some languages.
  */
-struct <?=$TableName?> {
+<?php
+//修正 thrift的天坑，自作聪明修改的生成的类名,下划线改成驼峰命名
+$TableNameStrings=explode("_",$TableName);
+$fixTableName="";
+foreach ($TableNameStrings as $tableNameString) {
+    $fixTableName.=ucfirst($tableNameString);
+}
+?>
+struct <?=$fixTableName?> {
 <?php $i=0; foreach ($this->getTableObject()->getFieldSchemas() as $fieldSchema){ $i++;?>
   //<?=$fieldSchema->getCOLUMNCOMMENT()?>
 
@@ -67,7 +75,7 @@ struct <?=$TableName?> {
 }
 
 service ThriftServer {
-   i32 <?=ucfirst($this->getTableObject()->getName())?>Insert(1:<?=$TableName?> <?=$TableName?>)
-    <?=$TableName?> <?=ucfirst($this->getTableObject()->getName())?>SelectOne(1:<?=$TableName?> <?=$TableName?>)
-   list<<?=$TableName?>> <?=ucfirst($this->getTableObject()->getName())?>SelectAll(1:<?=$TableName?> <?=$TableName?>)
+   i32 <?=ucfirst($this->getTableObject()->getName())?>Insert(1:<?=$fixTableName?> <?=$fixTableName?>)
+    <?=$fixTableName?> <?=ucfirst($this->getTableObject()->getName())?>SelectOne(1:<?=$fixTableName?> <?=$fixTableName?>)
+   list<<?=$fixTableName?>> <?=ucfirst($this->getTableObject()->getName())?>SelectAll(1:<?=$fixTableName?> <?=$fixTableName?>)
 }
