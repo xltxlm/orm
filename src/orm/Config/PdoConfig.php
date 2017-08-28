@@ -182,7 +182,7 @@ abstract class PdoConfig implements TestConfig
         $tns = $this->getPdoString();
         try {
             $this->PDOObject = new  PDO($tns, $this->getUsername(), $this->getPassword());
-            $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 1);
+            $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
             $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
             //所有数据库,默认都必须开启事务
             $this->PDOObject->beginTransaction();

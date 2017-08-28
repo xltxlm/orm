@@ -411,7 +411,7 @@ class PdoInterface
         } catch (\Exception $e) {
             $DefineLog
                 ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
-                ->setMessageDescribe('SQL解析错误')
+                ->setMessageDescribe('链接服务器异常')
                 ->setType(LogLevel::ERROR);
             (new Logger())
                 ->setLogDefine($DefineLog)
