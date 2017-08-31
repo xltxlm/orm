@@ -5,7 +5,7 @@ use xltxlm\ormTool\Unit\FieldSchema;
 $TableName=ucfirst($this->getTableObject()->getName());
 ?>
 
-// thrift -r   --gen php:psr4  ./Thrift/<?=ucfirst($this->getTableObject()->getName())?>.thrift
+// thrift -r  -out /tmp/thrift/ --gen php:psr4  ./Thrift/<?=ucfirst($this->getTableObject()->getName())?>.thrift
 
 /**
  * The first thing to know about are types. The available types in Thrift are:
