@@ -74,7 +74,7 @@ struct <?=$fixTableName?> {
 <?php }?>
 }
 
-service ThriftServer {
+service ThriftServer<?=$fixTableName?> {
    i32 <?=ucfirst($this->getTableObject()->getName())?>Insert(1:<?=$fixTableName?> <?=$fixTableName?>)
     <?=$fixTableName?> <?=ucfirst($this->getTableObject()->getName())?>SelectOne(1:<?=$fixTableName?> <?=$fixTableName?>)
    list<<?=$fixTableName?>> <?=ucfirst($this->getTableObject()->getName())?>SelectAll(1:<?=$fixTableName?> <?=$fixTableName?>)
