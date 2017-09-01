@@ -39,7 +39,7 @@ final class OrmMaker
     protected $field;
 
     /** @var string 当前项目所在的磁盘路径 */
-    protected $ProjectPath="";
+    protected $ProjectPath = "";
 
     /**
      * @return string
@@ -58,7 +58,6 @@ final class OrmMaker
         $this->ProjectPath = $ProjectPath;
         return $this;
     }
-
 
 
     /**
@@ -171,8 +170,8 @@ final class OrmMaker
         //生成目录
         $ReflectionClass = new \ReflectionClass($this->dbConfig);
         $className = array_pop(explode('\\', get_class($this->dbConfig)));
-        $path = dirname($ReflectionClass->getFileName()).'/'.$className;
-        $this->dbNameSpace = $ReflectionClass->getNamespaceName().'\\'.$className;
+        $path = dirname($ReflectionClass->getFileName()) . '/' . $className;
+        $this->dbNameSpace = $ReflectionClass->getNamespaceName() . '\\' . $className;
         mkdir($path);
         if (!is_dir($path)) {
             throw new FileException(
@@ -180,8 +179,8 @@ final class OrmMaker
                     ->getMakeDirError()
             );
         }
-        mkdir($path.'/enum/');
-        if (!is_dir($path.'/enum/')) {
+        mkdir($path . '/enum/');
+        if (!is_dir($path . '/enum/')) {
             throw new FileException(
                 (new FileI18N())
                     ->getMakeDirError()
@@ -205,7 +204,7 @@ final class OrmMaker
             $this->setTableSchema($tableSchema);
 
             //表格定义
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'.php', __DIR__.'/Template/Model/Table.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . '.php', __DIR__ . '/Template/Model/Table.tpl.php');
 
             //字段列表
             $this->tableObject = (new Table())
@@ -213,45 +212,48 @@ final class OrmMaker
                 ->setName($tableSchema->getTABLENAME());
 
             //基本表字段模型
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Model.php', __DIR__.'/Template/Model/Model.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Model.php', __DIR__ . '/Template/Model/Model.tpl.php');
 
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Base.php', __DIR__.'/Template/Model/Base.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Base.php', __DIR__ . '/Template/Model/Base.tpl.php');
 
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Getset.php', __DIR__.'/Template/Model/Getset.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Getset.php', __DIR__ . '/Template/Model/Getset.tpl.php');
 
             //操作 - 一维查询
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectOne.php', __DIR__.'/Template/Model/Select.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectOne.php', __DIR__ . '/Template/Model/Select.tpl.php');
 
             //操作 - 二维查询
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'SelectAll.php', __DIR__.'/Template/Model/Select.tpl.php', true);
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectAll.php', __DIR__ . '/Template/Model/Select.tpl.php', true);
             //操作 - 二维查询 - 带分页条
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Page.php', __DIR__.'/Template/Model/Select.tpl.php', true, true);
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Page.php', __DIR__ . '/Template/Model/Select.tpl.php', true, true);
 
             //写入数据 模型
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Insert.php', __DIR__.'/Template/Model/Insert.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Insert.php', __DIR__ . '/Template/Model/Insert.tpl.php');
             // 更新数据库操作
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Update.php', __DIR__.'/Template/Model/Update.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Update.php', __DIR__ . '/Template/Model/Update.tpl.php');
 
             //字段类型
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Type.php', __DIR__.'/Template/Model/Type.tpl.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Type.php', __DIR__ . '/Template/Model/Type.tpl.php');
 
             //生成触发器
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'Trigger.sql', __DIR__.'/Template/Model/Trigger.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Trigger.sql', __DIR__ . '/Template/Model/Trigger.php');
 
             //生成表语法结构
             $ddl = $this->getTableObject()->getDdl();
             $ddl = preg_replace("#AUTO_INCREMENT=\d+ #", " ", $ddl);
-            $this->file_write_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ddl.sql', $ddl);
+            $this->file_write_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'ddl.sql', $ddl);
 
             //elasticsearch.map
-            $this->file_put_contents($path.'/'.ucfirst($tableSchema->getTABLENAME()).'ModelElasticsearchQuery.json', __DIR__.'/Template/Model/Elasticsearch.map.php');
+            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'ModelElasticsearchQuery.json', __DIR__ . '/Template/Model/Elasticsearch.map.php');
 
-
-            //枚举类型类
+            $islogtable = false;
+            //枚举类型类特别处理，顺便识别下当前表是否是log表
             foreach ($this->getTableObject()->getFieldSchemas() as $field) {
+                if ($field->getCOLUMNNAME() == 'sessionuser') {
+                    $islogtable = true;
+                }
                 $this->setField($field);
                 if ($field->getDATATYPE() == FieldSchema::ENUM) {
-                    $this->file_put_contents($path.'/enum/Enum'.ucfirst($tableSchema->getTABLENAME()).ucfirst($field->getCOLUMNNAME()).'.php', __DIR__.'/Template/Model/Enum.tpl.php');
+                    $this->file_put_contents($path . '/enum/Enum' . ucfirst($tableSchema->getTABLENAME()) . ucfirst($field->getCOLUMNNAME()) . '.php', __DIR__ . '/Template/Model/Enum.tpl.php');
                 }
             }
 
@@ -263,8 +265,10 @@ final class OrmMaker
             } catch (\Throwable $e) {
             }
 
-            //生成Thrift模型
-            $this->file_put_contents($this->getProjectPath().'/Thrift/'.ucfirst($tableSchema->getTABLENAME()).'.thrift', __DIR__.'/Template/Model/Thrift.php');
+            //生成Thrift模型-log类型的表，不需要生成
+            if (!$islogtable) {
+                $this->file_put_contents($this->getProjectPath() . '/Thrift/' . ucfirst($tableSchema->getTABLENAME()) . '.thrift', __DIR__ . '/Template/Model/Thrift.php');
+            }
 
         }
     }
