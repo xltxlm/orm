@@ -189,7 +189,7 @@ abstract class PdoConfig implements TestConfig
             (new PdoConnectLogger($this))
                 ->__invoke();
         } catch (\PDOException $e) {
-            throw new \PDOException(trim($e->getMessage())."[$tns]");
+            throw new \PDOException(trim($e->getMessage()) . "[$tns]");
         }
         return $this->PDOObject;
     }
@@ -248,7 +248,12 @@ abstract class PdoConfig implements TestConfig
      */
     public function test()
     {
-        return $this::instanceSelf();
+        $PDOObject = $this::instanceSelf();
+        //查询锁，如果存在，那么报错
+        foreach ($PDOObject->query("information_schema.INNODB_LOCK_WAITS", \PDO::FETCH_ASSOC) as $lock) {
+            throw new \Exception("Mysql锁等待:", var_export($lock, true));
+        }
+        return $PDOObject;
     }
 
     /**
@@ -272,10 +277,10 @@ abstract class PdoConfig implements TestConfig
      */
     public function getPdoString(): string
     {
-        $this->link = $this->getDriver().
-            ':dbname='.$this->getDb().
-            ';host='.$this->getTNS().
-            ';port='.$this->getPort();
+        $this->link = $this->getDriver() .
+            ':dbname=' . $this->getDb() .
+            ';host=' . $this->getTNS() .
+            ';port=' . $this->getPort();
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
             $this->link .= ';charset=utf8';

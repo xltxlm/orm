@@ -18,6 +18,8 @@ class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model extends ObjectI
     use <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Getset;
 
     /**
+    * 以下是查询的sql
+    *  SELECT  <?php $i=count($this->getTableObject()->getFieldSchemas()); foreach ($this->getTableObject()->getFieldSchemas() as $iindex=>$field) { echo "`{$field->getCOLUMNNAME()}` {$field->getCOLUMNNAME()}"; if($iindex+1!=$i) echo ','; } ?> FROM <?=$this->getTableObject()->getName()?>;
     * @return array
     */
     final public function __invoke()

@@ -1,4 +1,6 @@
-<?php /** @var \xltxlm\ormTool\OrmMaker $this */ ?>
+<?php /** @var \xltxlm\ormTool\OrmMaker $this */
+
+use xltxlm\ormTool\Unit\FieldSchema; ?>
 <<?='?'?>php
 /**
  * Created by PhpStorm.
@@ -34,6 +36,12 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Update extends 
      */
     public function Optimistic<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
+<?php if(in_array($field->getDATATYPE() , [FieldSchema::INT,FieldSchema::BIGINT,FieldSchema::TINYINT])){?>
+        $<?=$field->getCOLUMNNAME()?>=(int)(string)$<?=$field->getCOLUMNNAME()?>;
+<?php }?>
+<?php if(in_array($field->getDATATYPE() , [FieldSchema::FLOAT,FieldSchema::DECIMAL])){?>
+        $<?=$field->getCOLUMNNAME()?>=(float)(string)$<?=$field->getCOLUMNNAME()?>;
+<?php }?>
         $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
 
@@ -50,6 +58,12 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Update extends 
      */
     public function set<?=ucfirst($field->getCOLUMNNAME())?>($<?=$field->getCOLUMNNAME()?>)
     {
+<?php if(in_array($field->getDATATYPE() , [FieldSchema::INT,FieldSchema::BIGINT,FieldSchema::TINYINT])){?>
+        $<?=$field->getCOLUMNNAME()?>=(int)(string)$<?=$field->getCOLUMNNAME()?>;
+<?php }?>
+<?php if(in_array($field->getDATATYPE() , [FieldSchema::FLOAT,FieldSchema::DECIMAL])){?>
+        $<?=$field->getCOLUMNNAME()?>=(float)(string)$<?=$field->getCOLUMNNAME()?>;
+<?php }?>
         $this->sqls['<?=$field->getCOLUMNNAME()?>'] = "`<?=$field->getCOLUMNNAME()?>`=:<?=$field->getCOLUMNNAME()?>";
         $this->binds['<?=$field->getCOLUMNNAME()?>'] = $<?=$field->getCOLUMNNAME()?>;
         return $this;
