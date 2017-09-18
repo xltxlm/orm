@@ -12,16 +12,28 @@ namespace <?=$this->getDbNameSpace()?>\enum;
 class Enum<?=ucfirst($this->getTableSchema()->getTABLENAME())?><?=ucfirst($this->getField()->getCOLUMNNAME())?>
 
 {
-<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {
-    ?>
+<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {   ?>
     const <?=$key?>='<?=$value?>';
-<?php
+<?php }?>
 
-}?>
+    /**
+     * 返回当前选项所在的索引位置，从1开始计算
+     * @param $key
+     * @return int|null
+     */
+    public static function index($key)
+    {
+            $indexs=[];
+<?php $i=0; foreach ($this->getField()->getENUMARRAY() as $key=>$value) {   ?>
+            $indexs[self::<?=$key?>]=<?=++$i?>;
+<?php }?>
+        return $indexs[$key];
+    }
 
     public static function ALL():array
     {
-        return [<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {
+        return [
+<?php foreach ($this->getField()->getENUMARRAY() as $key=>$value) {
     ?>
             '<?=$value?>'=>'<?=$value?>',
             <?php

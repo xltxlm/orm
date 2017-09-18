@@ -9,7 +9,7 @@
 namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
-use xltxlm\orm\Logger\PdoConnectLogger;
+use xltxlm\logger\Operation\Connect\PdoConnectLog;
 
 /**
  * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
@@ -181,13 +181,14 @@ abstract class PdoConfig implements TestConfig
     {
         $tns = $this->getPdoString();
         try {
+            $start = microtime(true);
             $this->PDOObject = new  PDO($tns, $this->getUsername(), $this->getPassword());
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
             $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
             //所有数据库,默认都必须开启事务
             $this->PDOObject->beginTransaction();
-            (new PdoConnectLogger($this))
-                ->__invoke();
+            $time = sprintf('%.4f', microtime(true) - $start);
+            (new PdoConnectLog($this))->setRunTime($time)();
         } catch (\PDOException $e) {
             throw new \PDOException(trim($e->getMessage()) . "[$tns]");
         }

@@ -12,12 +12,13 @@ use Psr\Log\LogLevel;
 use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Util;
+use xltxlm\logger\Log\DefineLog;
 use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
-use xltxlm\orm\Logger\PdoRunLogger;
+use xltxlm\logger\Operation\Action\PdoRunLog;
 use xltxlm\orm\Sql\SqlParser;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
@@ -370,7 +371,7 @@ class PdoInterface
         $pos = stripos($this->sqlParserd->getSql(), $str);
         $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
         $SqlParserd = (new SqlParserd())
-            ->setSql('SELECT count(*) FROM '.$whereSql);
+            ->setSql('SELECT count(*) FROM ' . $whereSql);
         foreach ($this->getSqlParserd()->getBind() as $value) {
             $SqlParserd->setBind($value);
         }
@@ -387,7 +388,7 @@ class PdoInterface
             ->__invoke();
 
         $this->getSqlParserd()
-            ->setSql($this->getSqlParserd()->getSql().' limit '.$pageObject->getFrom().','.$pageObject->getPrepage());
+            ->setSql($this->getSqlParserd()->getSql() . ' limit ' . $pageObject->getFrom() . ',' . $pageObject->getPrepage());
 
         return $this->selectAll();
     }
@@ -401,7 +402,7 @@ class PdoInterface
     private function pdoexecute(): \PDOStatement
     {
         //记录日志
-        $DefineLog = (new PdoRunLogger($this->getPdoConfig()))
+        $PdoRunLog = (new PdoRunLog($this->getPdoConfig()))
             ->setPdoSql($this->getSqlParserd());
         $start = microtime(true);
         //执行sql
@@ -409,12 +410,11 @@ class PdoInterface
             $this->setChangeData($this->getSqlParserd()->isChangeData());
             $stmt = $this->pdoConfig->instanceSelf($this->isBuff())->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
-            $DefineLog
+            $PdoRunLog
+                ->setAction(DefineLog::CUO_WU)
                 ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
                 ->setMessageDescribe('链接服务器异常')
-                ->setType(LogLevel::ERROR);
-            (new Logger())
-                ->setLogDefine($DefineLog)
+                ->setType(LogLevel::ERROR)
                 ->__invoke();
             throw $e;
         }
@@ -422,30 +422,25 @@ class PdoInterface
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
-        if ($DefineLog) {
-            $time = sprintf('%.4f', microtime(true) - $start);
-            $DefineLog->setRunTime($time);
-        }
+        $time = sprintf('%.4f', microtime(true) - $start);
+        $PdoRunLog->setRunTime($time);
         $error = $stmt->errorInfo();
         $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
 
         if ($error[0] || $error[2]) {
             $this->rollBack();
-            if ($DefineLog) {
-                $DefineLog
-                    ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
-                    ->setMessageDescribe('SQL运行错误')
-                    ->setType(LogLevel::ERROR);
-                (new Logger())
-                    ->setLogDefine($DefineLog)
-                    ->__invoke();
-            }
+            $PdoRunLog
+                ->setAction(DefineLog::CUO_WU)
+                ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
+                ->setMessageDescribe('SQL运行错误')
+                ->setType(LogLevel::ERROR)
+                ->__invoke();
             throw (new PdoSqlError(
                 json_encode(
                     [
-                        $this->getSqlParserd()->getSql(),
-                        $this->getSqlParserd()->getBindArray(),
                         $error,
+                        $this->getSqlParserd()->getSql(),
+                        $this->getSqlParserd()->getBindArray()
                     ]
                 )
             )
@@ -454,11 +449,8 @@ class PdoInterface
                 ->setBinds($this->getSqlParserd()->getBind())
                 ->setErrorinfo(json_encode($error));
         }
-        if ($DefineLog) {
-            (new Logger())
-                ->setLogDefine($DefineLog)
-                ->__invoke();
-        }
+        //记录普通日志
+        $PdoRunLog();
         $this->debug();
         //sql计数
         self::setSqlCount(1);
@@ -521,7 +513,7 @@ class PdoInterface
             print_r($this->getPdoConfig()->getPdoString());
             echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            echo "\n=========================@in ".__FILE__.' on line '.__LINE__."\n";
+            echo "\n=========================@in " . __FILE__ . ' on line ' . __LINE__ . "\n";
             Util::d(ob_get_clean());
         }
     }
