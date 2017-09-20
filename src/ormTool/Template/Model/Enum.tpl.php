@@ -29,6 +29,19 @@ class Enum<?=ucfirst($this->getTableSchema()->getTABLENAME())?><?=ucfirst($this-
 <?php }?>
         return $indexs[$key];
     }
+    /**
+     * 返回索引位置的值，从1开始计算
+     * @param $key
+     * @return int|null
+     */
+    public static function value($key)
+    {
+            $indexs=[];
+<?php $i=0; foreach ($this->getField()->getENUMARRAY() as $key=>$value) {   ?>
+            $indexs[<?=++$i?>]=self::<?=$key?>;
+<?php }?>
+        return $indexs[$key];
+    }
 
     public static function ALL():array
     {
