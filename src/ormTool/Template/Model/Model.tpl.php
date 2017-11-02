@@ -8,6 +8,7 @@ use xltxlm\helper\Hclass\ObjectToJson;
 use xltxlm\helper\Hclass\ObjectIteratorAggregate;
 
 /**
+* 数据结构模型，提供表字段的get/set操作入口
 * Class select
 */
 class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Model extends ObjectIteratorAggregate

@@ -69,12 +69,17 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
                 $<?=$field->getCOLUMNNAME()?>=null;
             }else
             {
-                $PdoAction=PdoAction::INJSON;
+                if ($PdoAction == PdoAction::EQUAL) {
+                    $PdoAction=PdoAction::INJSON;
+                }
             }
-            $PdoAction=PdoAction::INJSON;
         }
         $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
-        if($PdoAction == PdoAction::NOTLIKE) {
+        if($PdoAction == PdoAction::EMPTY) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "ifnull(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,'') in ('','{}','[]')";
+        }elseif($PdoAction == PdoAction::NOTEMPTY) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "ifnull(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,'') not in ('','{}','[]')";
+        } elseif($PdoAction == PdoAction::NOTLIKE) {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "$PdoAction(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,:<?=$field->getCOLUMNNAME()?>$uniqid)=0";
         }elseif($PdoAction == PdoAction::LIKE) {
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
@@ -88,7 +93,7 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
         }else{
             $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>$PdoAction:<?=$field->getCOLUMNNAME()?>$uniqid";
         }
-        if(!$this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid])
+        if(!$this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] && !in_array($PdoAction ,[PdoAction::EMPTY,PdoAction::NOTEMPTY]))
         {
             $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = $<?=$field->getCOLUMNNAME()?>;
         }
@@ -135,12 +140,18 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
                 $<?=$field->getCOLUMNNAME()?>=null;
             }else
             {
-                $PdoAction=PdoAction::INJSON;
+                if ($PdoAction == PdoAction::EQUAL) {
+                    $PdoAction=PdoAction::INJSON;
+                }
             }
         }
 
-        if(!empty($<?=$field->getCOLUMNNAME()?>) || strlen($<?=$field->getCOLUMNNAME()?>)>0){
-            $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
+        $uniqid=$this->execCount['<?=$field->getCOLUMNNAME()?>']?$this->execCount['<?=$field->getCOLUMNNAME()?>']:null;
+        if($PdoAction == PdoAction::EMPTY) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "ifnull(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,'') in ('','{}','[]')";
+        }elseif($PdoAction == PdoAction::NOTEMPTY) {
+            $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "ifnull(<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?>,'') not in ('','{}','[]')";
+        } elseif(!empty($<?=$field->getCOLUMNNAME()?>) || strlen($<?=$field->getCOLUMNNAME()?>)>0){
             if($PdoAction == PdoAction::INDATE)
             {
                 list($start,$end) = explode($explode,$<?=$field->getCOLUMNNAME()?>,2);
@@ -160,6 +171,9 @@ final class <?=ucfirst($this->getTableSchema()->getTABLENAME())?>Select<?=$moreD
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "%$<?=$field->getCOLUMNNAME()?>%";
             }elseif($PdoAction == PdoAction::INJSON) {
                 $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";
+                $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
+            }elseif($PdoAction == PdoAction::NOTINJSON) {
+                $this->sqls['<?=$field->getCOLUMNNAME()?>'.$uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> not =:<?=$field->getCOLUMNNAME()?>$uniqid ";
                 $this->binds['<?=$field->getCOLUMNNAME()?>'.$uniqid] = json_decode($<?=$field->getCOLUMNNAME()?>,true);
             }elseif($PdoAction == PdoAction::INLIST){
                 $this->sqls['<?=$field->getCOLUMNNAME()?>' . $uniqid] = "<?=$this->getTableSchema()->getTABLENAME()?>.<?=$field->getCOLUMNNAME()?> =:<?=$field->getCOLUMNNAME()?>$uniqid ";

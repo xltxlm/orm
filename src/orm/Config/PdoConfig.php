@@ -134,6 +134,17 @@ abstract class PdoConfig implements TestConfig
     }
 
     /**
+     * @param mixed $db
+     * @return PdoConfig
+     */
+    public function setDb($db)
+    {
+        $this->db = $db;
+        return $this;
+    }
+    
+
+    /**
      * @return string
      */
     public function getUsername(): string

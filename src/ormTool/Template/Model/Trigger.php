@@ -34,6 +34,7 @@ CREATE  TABLE IF NOT EXISTS  <?=$this->getTableObject()->getName()?>log(
 PRIMARY KEY (`id`),
 INDEX (`pid`),
 INDEX (`username`),
+INDEX (`add_time`),
 INDEX (`ip`)
 ) COMMENT='数据源修改过程表';
 

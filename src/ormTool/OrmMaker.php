@@ -245,31 +245,13 @@ final class OrmMaker
             //elasticsearch.map
             $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'ModelElasticsearchQuery.json', __DIR__ . '/Template/Model/Elasticsearch.map.php');
 
-            $islogtable = false;
             //枚举类型类特别处理，顺便识别下当前表是否是log表
             foreach ($this->getTableObject()->getFieldSchemas() as $field) {
-                if ($field->getCOLUMNNAME() == 'sessionuser') {
-                    $islogtable = true;
-                }
                 $this->setField($field);
                 if ($field->getDATATYPE() == FieldSchema::ENUM) {
                     $this->file_put_contents($path . '/enum/Enum' . ucfirst($tableSchema->getTABLENAME()) . ucfirst($field->getCOLUMNNAME()) . '.php', __DIR__ . '/Template/Model/Enum.tpl.php');
                 }
             }
-
-            //生成 Elasticsearch 查询操作类
-            try {
-                (new ElasticsearchMakeTool())
-                    ->setClassNames($this->getDbNameSpace() . '\\' . ucfirst($tableSchema->getTABLENAME()) . 'Model')
-                    ->__invoke();
-            } catch (\Throwable $e) {
-            }
-
-            //生成Thrift模型-log类型的表，不需要生成
-            if (!$islogtable) {
-                $this->file_put_contents($this->getProjectPath() . '/Thrift/' . ucfirst($tableSchema->getTABLENAME()) . '.thrift', __DIR__ . '/Template/Model/Thrift.php');
-            }
-
         }
     }
 

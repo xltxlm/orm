@@ -30,10 +30,14 @@ abstract class PdoAction
     const INDATE = " in ";
     //在指定的json数组里面的值
     const INJSON = " injson ";
+    //在指定的json数组里面的值
+    const NOTINJSON = " notinjson ";
     //在列表中
     const INLIST = " inlist ";
     /** 空数据，null，或者空字符串 */
     const EMPTY = "EMPTY";
+    /** 空数据，null，或者空字符串 */
+    const NOTEMPTY = "NOTEMPTY";
 
     /** @var array 连表查询的SQl */
     protected $joinSql = [];
