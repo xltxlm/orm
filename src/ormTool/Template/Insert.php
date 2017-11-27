@@ -8,6 +8,7 @@
 
 namespace xltxlm\ormTool\Template;
 
+use kuaigeng\kkreview\vendor\xltxlm\orm\src\ormTool\Template\InsertMore;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
 
@@ -19,6 +20,27 @@ class Insert extends PdoAction
 {
     /** @var string 是否可以忽略写入错误 */
     private $ignore = '';
+    /** @var bool 当前查询连接,是否复用上次的查询连接 */
+    protected $buff = true;
+
+    /**
+     * @return bool
+     */
+    public function isBuff(): bool
+    {
+        return $this->buff;
+    }
+
+    /**
+     * @param bool $buff
+     * @return static
+     */
+    public function setBuff(bool $buff)
+    {
+        $this->buff = $buff;
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -58,9 +80,23 @@ class Insert extends PdoAction
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)
+            ->setBuff($this->isBuff())
             ->setClassName(static::class);
-
-        return $this->pdoInterface
+        /** @var int $insertID 新增的账户id */
+        $insertID = $this->pdoInterface
             ->insert();
+        //如果写入成功了
+        if ($insertID) {
+            //并且还存在后续的操作，那么继续执行
+            $className = static::class . 'More';
+            if (class_exists($className)) {
+                /** @var InsertMore $classNameObject */
+                $classNameObject = new $className;
+                $classNameObject
+                    ->setInsertID($insertID)
+                    ->__invoke();
+            }
+        }
+        return $insertID;
     }
 }

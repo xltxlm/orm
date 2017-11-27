@@ -22,7 +22,10 @@ class PDO extends \PDO
         /**
          * 注销的时候记录日志
          */
-        $this->commit();
+        //如果不是提交类型的
+        if (substr($this->tns, -1) == 1) {
+            $this->commit();
+        }
         PdoConfig::unsetinstance($this->tns);
     }
 

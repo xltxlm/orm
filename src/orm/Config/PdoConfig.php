@@ -142,7 +142,7 @@ abstract class PdoConfig implements TestConfig
         $this->db = $db;
         return $this;
     }
-    
+
 
     /**
      * @return string
@@ -197,7 +197,9 @@ abstract class PdoConfig implements TestConfig
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
             $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
             //所有数据库,默认都必须开启事务
-            $this->PDOObject->beginTransaction();
+            if ($buff) {
+                $this->PDOObject->beginTransaction();
+            }
             $time = sprintf('%.4f', microtime(true) - $start);
             (new PdoConnectLog($this))->setRunTime($time)();
         } catch (\PDOException $e) {
@@ -208,20 +210,22 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 返回链接,单例.
-     * @param bool $buff 是否正常数据量查询. false:准备查询超级大数据
+     * @param bool $buff 是否正常数据量查询. false:准备查询超级大数据,两种连接在一个进程里面只能各开一种
      * @return PDO
      */
     final public function instanceSelf($buff = true)
     {
-        if (!$buff) {
-            return $this->instance($buff);
-        } elseif (!self::$instance[$this->getPdoString()]) {
-            $tns = $this->getPdoString();
-            self::$instance[$tns] = $this->instance($buff);
-            $this->PDOObject->lock($tns);
+        $tns = $this->getPdoString() . (int)$buff;
+        if (!self::$instance[$tns]) {
+            if (!$buff) {
+                self::$instance[$tns] = $this->instance($buff);
+            } else {
+                self::$instance[$tns] = $this->instance($buff);
+                $this->PDOObject->lock($tns);
+            }
         }
 
-        return self::$instance[$this->getPdoString()];
+        return self::$instance[$tns];
     }
 
     /**
@@ -229,7 +233,11 @@ abstract class PdoConfig implements TestConfig
      */
     final public static function commit()
     {
-        foreach (self::$instance as $item) {
+        foreach (self::$instance as $key => $item) {
+            //如果不是提交类型的
+            if (substr($key, -1) == 0) {
+                continue;
+            }
             $item->commit();
             //提交之后,继续事务
             $item->beginTransaction();
@@ -241,7 +249,11 @@ abstract class PdoConfig implements TestConfig
      */
     final public static function rollback()
     {
-        foreach (self::$instance as $item) {
+        foreach (self::$instance as $key => $item) {
+            //如果不是提交类型的
+            if (substr($key, -1) == 0) {
+                continue;
+            }
             $item->rollBack();
             //提交之后,继续事务
             $item->beginTransaction();
