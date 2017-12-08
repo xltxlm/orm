@@ -23,6 +23,51 @@ class Update extends PdoAction
     /** @var bool 当前查询连接,是否复用上次的查询连接 */
     protected $buff = true;
 
+    /** @var int 针对主键进行的更新，会触发联动的更新动作 */
+    protected $_updateMainId = 0;
+
+    /** @var array 被更新影响到的字段 */
+    protected $_updateFields=[];
+
+    /**
+     * @return array
+     */
+    public function get_UpdateFields(): array
+    {
+        return $this->_updateFields;
+    }
+
+    /**
+     * @param string $updateFields
+     * @return static
+     */
+    public function set_UpdateFields(string $updateFields)
+    {
+        $this->_updateFields[] = $updateFields;
+        return $this;
+    }
+
+
+
+    /**
+     * @return int
+     */
+    public function get_UpdateMainId(): int
+    {
+        return $this->_updateMainId;
+    }
+
+    /**
+     * @param int $_updateMainId
+     * @return static
+     */
+    public function set_UpdateMainId(int $_updateMainId)
+    {
+        $this->_updateMainId = $_updateMainId;
+        return $this;
+    }
+
+
     /**
      * @return bool
      */
@@ -41,13 +86,30 @@ class Update extends PdoAction
         return $this;
     }
 
+    protected function callUpdate()
+    {
 
+    }
 
+    /**
+     * 写入sql原型
+     * @param mixed $sql
+     * @param array $value
+     * @return $this
+     */
+    public function set_SQL($sql, $value = [])
+    {
+        $this->whereSqls[] = $sql;
+        if ($value) {
+            $this->binds = array_merge($this->binds, $value);
+        }
+        return $this;
+    }
 
     final public function __invoke()
     {
-        $sql = 'UPDATE '.$this->tableObject->getName().' SET '.
-            implode(',', $this->sqls).' WHERE '.
+        $sql = 'UPDATE ' . $this->tableObject->getName() . ' SET ' .
+            implode(',', $this->sqls) . ' WHERE ' .
             implode(' AND ', $this->whereSqls);
         $SqlParserd = (new SqlParser())
             ->setSql($sql)
@@ -60,7 +122,18 @@ class Update extends PdoAction
             ->setBuff($this->isBuff())
             ->setDebug($this->debug);
 
-        return $this->pdoInterface
+        $updatenum = $this->pdoInterface
             ->update();
+
+        //如果写入成功了
+        if ($updatenum) {
+            //并且还存在后续的操作，那么继续执行
+            $className = static::class . 'More';
+            if ($this->get_UpdateMainId() && $updatenum == 1 && class_exists($className)) {
+                $this->callUpdate();
+            }
+        }
+
+        return $updatenum;
     }
 }

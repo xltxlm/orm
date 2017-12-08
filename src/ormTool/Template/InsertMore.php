@@ -6,7 +6,7 @@
  * Time: 13:42
  */
 
-namespace kuaigeng\kkreview\vendor\xltxlm\orm\src\ormTool\Template;
+namespace xltxlm\ormTool\Template;
 
 /**
  * 写入数据的时候，统一执行的操作

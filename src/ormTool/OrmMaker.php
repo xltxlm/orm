@@ -203,55 +203,19 @@ final class OrmMaker
             }
             $this->setTableSchema($tableSchema);
 
-            //表格定义
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . '.php', __DIR__ . '/Template/Model/Table.tpl.php');
 
             //字段列表
             $this->tableObject = (new Table())
                 ->setDbConfig($this->dbConfig)
                 ->setName($tableSchema->getTABLENAME());
 
-            //基本表字段模型
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Model.php', __DIR__ . '/Template/Model/Model.tpl.php');
 
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Base.php', __DIR__ . '/Template/Model/Base.tpl.php');
 
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Getset.php', __DIR__ . '/Template/Model/Getset.tpl.php');
-
-            //操作 - 一维查询
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectOne.php', __DIR__ . '/Template/Model/Select.tpl.php');
-
-            //操作 - 二维查询
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'SelectAll.php', __DIR__ . '/Template/Model/Select.tpl.php', true);
-            //操作 - 二维查询 - 带分页条
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Page.php', __DIR__ . '/Template/Model/Select.tpl.php', true, true);
-
-            //写入数据 模型
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Insert.php', __DIR__ . '/Template/Model/Insert.tpl.php');
-            // 更新数据库操作
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Update.php', __DIR__ . '/Template/Model/Update.tpl.php');
-
-            //字段类型
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Type.php', __DIR__ . '/Template/Model/Type.tpl.php');
-
-            //生成触发器
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'Trigger.sql', __DIR__ . '/Template/Model/Trigger.php');
 
             //生成表语法结构
             $ddl = $this->getTableObject()->getDdl();
             $ddl = preg_replace("#AUTO_INCREMENT=\d+ #", " ", $ddl);
             $this->file_write_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'ddl.sql', $ddl);
-
-            //elasticsearch.map
-            $this->file_put_contents($path . '/' . ucfirst($tableSchema->getTABLENAME()) . 'ModelElasticsearchQuery.json', __DIR__ . '/Template/Model/Elasticsearch.map.php');
-
-            //枚举类型类特别处理，顺便识别下当前表是否是log表
-            foreach ($this->getTableObject()->getFieldSchemas() as $field) {
-                $this->setField($field);
-                if ($field->getDATATYPE() == FieldSchema::ENUM) {
-                    $this->file_put_contents($path . '/enum/Enum' . ucfirst($tableSchema->getTABLENAME()) . ucfirst($field->getCOLUMNNAME()) . '.php', __DIR__ . '/Template/Model/Enum.tpl.php');
-                }
-            }
         }
     }
 

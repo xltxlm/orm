@@ -238,9 +238,11 @@ abstract class PdoConfig implements TestConfig
             if (substr($key, -1) == 0) {
                 continue;
             }
-            $item->commit();
-            //提交之后,继续事务
-            $item->beginTransaction();
+            try {
+                $item->commit();//提交之后,继续事务
+                $item->beginTransaction();
+            } catch (\Throwable $e) {
+            }
         }
     }
 
@@ -254,9 +256,11 @@ abstract class PdoConfig implements TestConfig
             if (substr($key, -1) == 0) {
                 continue;
             }
-            $item->rollBack();
-            //提交之后,继续事务
-            $item->beginTransaction();
+            try {
+                $item->rollBack();//提交之后,继续事务
+                $item->beginTransaction();
+            } catch (\Throwable $e) {
+            }
         }
     }
 

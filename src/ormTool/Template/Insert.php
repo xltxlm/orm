@@ -8,7 +8,6 @@
 
 namespace xltxlm\ormTool\Template;
 
-use kuaigeng\kkreview\vendor\xltxlm\orm\src\ormTool\Template\InsertMore;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
 
