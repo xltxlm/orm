@@ -9,6 +9,7 @@
 namespace xltxlm\orm;
 
 use Psr\Log\LogLevel;
+use xltxlm\logger\Operation\Action\PdoRead;
 use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Util;
@@ -230,6 +231,7 @@ class PdoInterface
         $stmt = $this->pdoexecute();
         $this->checkClassName();
 
+        $start = microtime(true);
         $return = $stmt->fetchObject($this->className);
         if (empty($return)) {
             $return = new $this->className();
@@ -237,6 +239,11 @@ class PdoInterface
         if ($this->isConvertToArray()) {
             $return = get_object_vars($return);
         }
+        $time = sprintf('%.4f', microtime(true) - $start);
+        (new PdoRead($this->getPdoConfig()))
+            ->setPdoSql($this->getSqlParserd())
+            ->setRunTime($time)
+            ->__invoke();
 
         return $return;
     }
@@ -251,7 +258,15 @@ class PdoInterface
         $stmt = $this->pdoexecute();
         $this->checkClassName();
 
-        return $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
+        $start = microtime(true);
+        $return = $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
+
+        $time = sprintf('%.4f', microtime(true) - $start);
+        (new PdoRead($this->getPdoConfig()))
+            ->setPdoSql($this->getSqlParserd())
+            ->setRunTime($time)
+            ->__invoke();
+        return $return;
     }
 
     /**
@@ -263,12 +278,18 @@ class PdoInterface
         $stmt = $this->pdoexecute();
         $this->checkClassName();
 
+        $start = microtime(true);
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
         if ($this->isConvertToArray()) {
             foreach ($return as &$v) {
                 $v = get_object_vars($v);
             }
         }
+        $time = sprintf('%.4f', microtime(true) - $start);
+        (new PdoRead($this->getPdoConfig()))
+            ->setPdoSql($this->getSqlParserd())
+            ->setRunTime($time)
+            ->__invoke();
 
         return $return;
     }
@@ -366,27 +387,30 @@ class PdoInterface
      */
     public function page(PageObject &$pageObject)
     {
-        //查询当前条件下可以命中多少数据量
-        $str = ' FROM ';
-        $pos = stripos($this->sqlParserd->getSql(), $str);
-        $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
-        $SqlParserd = (new SqlParserd())
-            ->setSql('SELECT count(*) FROM ' . $whereSql);
-        foreach ($this->getSqlParserd()->getBind() as $value) {
-            $SqlParserd->setBind($value);
+        //如果已经处理过分页了，那么不要再折腾了
+        if ($pageObject->getTotal()) {
+        } else {
+            //查询当前条件下可以命中多少数据量
+            $str = ' FROM ';
+            $pos = stripos($this->sqlParserd->getSql(), $str);
+            $whereSql = substr($this->sqlParserd->getSql(), $pos + strlen($str));
+            $SqlParserd = (new SqlParserd())
+                ->setSql('SELECT count(*) FROM ' . $whereSql);
+            foreach ($this->getSqlParserd()->getBind() as $value) {
+                $SqlParserd->setBind($value);
+            }
+
+            $num = (new self())
+                ->setPdoConfig($this->getPdoConfig())
+                ->setSqlParserd($SqlParserd)
+                ->setDebug($this->getDebug())
+                ->setClassName(\stdClass::class)
+                ->selectVar();
+
+            $pageObject
+                ->setTotal($num)
+                ->__invoke();
         }
-
-        $num = (new self())
-            ->setPdoConfig($this->getPdoConfig())
-            ->setSqlParserd($SqlParserd)
-            ->setDebug($this->getDebug())
-            ->setClassName(\stdClass::class)
-            ->selectVar();
-
-        $pageObject
-            ->setTotal($num)
-            ->__invoke();
-
         $this->getSqlParserd()
             ->setSql($this->getSqlParserd()->getSql() . ' limit ' . $pageObject->getFrom() . ',' . $pageObject->getPrepage());
 

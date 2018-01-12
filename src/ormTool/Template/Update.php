@@ -20,14 +20,36 @@ class Update extends PdoAction
     /** @var array where 部分的sql */
     protected $whereSqls = [];
 
-    /** @var bool 当前查询连接,是否复用上次的查询连接 */
+    /** @var bool 是否开启事务查询 */
     protected $buff = true;
+
+    /** @var bool 是否执行钩子代码 */
+    protected $_hook = true;
 
     /** @var int 针对主键进行的更新，会触发联动的更新动作 */
     protected $_updateMainId = 0;
 
     /** @var array 被更新影响到的字段 */
-    protected $_updateFields=[];
+    protected $_updateFields = [];
+
+    /**
+     * @return bool
+     */
+    public function is_Hook(): bool
+    {
+        return $this->_hook;
+    }
+
+    /**
+     * @param bool $hook
+     * @return static
+     */
+    public function set_Hook(bool $hook)
+    {
+        $this->_hook = $hook;
+        return $this;
+    }
+
 
     /**
      * @return array
@@ -46,7 +68,6 @@ class Update extends PdoAction
         $this->_updateFields[] = $updateFields;
         return $this;
     }
-
 
 
     /**
@@ -125,11 +146,11 @@ class Update extends PdoAction
         $updatenum = $this->pdoInterface
             ->update();
 
-        //如果写入成功了
+        //如果写入成功了,准备执行钩子代码
         if ($updatenum) {
             //并且还存在后续的操作，那么继续执行
             $className = static::class . 'More';
-            if ($this->get_UpdateMainId() && $updatenum == 1 && class_exists($className)) {
+            if ($this->is_Hook() && $this->get_UpdateMainId() && $updatenum == 1 && class_exists($className)) {
                 $this->callUpdate();
             }
         }

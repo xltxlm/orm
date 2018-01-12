@@ -215,7 +215,7 @@ abstract class PdoConfig implements TestConfig
      */
     final public function instanceSelf($buff = true)
     {
-        $tns = $this->getPdoString() . (int)$buff;
+        $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
         if (!self::$instance[$tns]) {
             if (!$buff) {
                 self::$instance[$tns] = $this->instance($buff);

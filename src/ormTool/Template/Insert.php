@@ -22,6 +22,28 @@ class Insert extends PdoAction
     /** @var bool 当前查询连接,是否复用上次的查询连接 */
     protected $buff = true;
 
+    /** @var bool 是否执行钩子代码 */
+    protected $hook = true;
+
+    /**
+     * @return bool
+     */
+    public function is_Hook(): bool
+    {
+        return $this->hook;
+    }
+
+    /**
+     * @param bool $hook
+     * @return Insert
+     */
+    public function set_Hook(bool $hook): Insert
+    {
+        $this->hook = $hook;
+        return $this;
+    }
+
+
     /**
      * @return bool
      */
@@ -88,7 +110,7 @@ class Insert extends PdoAction
         if ($insertID) {
             //并且还存在后续的操作，那么继续执行
             $className = static::class . 'More';
-            if (class_exists($className)) {
+            if ($this->is_Hook() && class_exists($className)) {
                 /** @var InsertMore $classNameObject */
                 $classNameObject = new $className;
                 $classNameObject

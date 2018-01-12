@@ -15,8 +15,28 @@ namespace xltxlm\ormTool\Template;
  */
 abstract class InsertMore
 {
+    protected $Model;
     /** @var int 新增的数据id */
     protected $insertID = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->Model;
+    }
+
+    /**
+     * @param mixed $Model
+     * @return InsertMore
+     */
+    public function setModel($Model)
+    {
+        $this->Model = $Model;
+        return $this;
+    }
+
 
     /**
      * @return int
