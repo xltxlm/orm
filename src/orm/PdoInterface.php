@@ -37,42 +37,16 @@ class PdoInterface
     protected $sqlParserd;
     /** @var bool 是否再转换成数组,如果是的话, $className= \stdClass:class */
     protected $convertToArray = false;
-    /** @var string 数据对象 */
+    /** @var string 查询是，默认数据对象结构 */
     protected $className = \stdClass::class;
     /** @var bool 是否开启调试 */
     protected $debug = false;
 
-    /** @var int 执行sql的条数 */
+    /** @var int 整个会话里面执行sql的数量 */
     private static $sqlCount = 0;
 
-    /** @var bool 是否正常数据量查询. false:准备查询超级大数据 */
+    /** @var bool 是否正常数据量查询. false:准备查询超级大数据，并且不开启事务 */
     protected $buff = true;
-
-    /** @var bool 是否修改了数据库 */
-    protected $changeData = false;
-
-    /**
-     * @return bool
-     */
-    public function isChangeData(): bool
-    {
-        return $this->changeData;
-    }
-
-    /**
-     * 只要有一次是修改了数据,整个都连接过程记录修改数据
-     * @param bool $changeData
-     *
-     * @return PdoInterface
-     */
-    public function setChangeData(bool $changeData): PdoInterface
-    {
-        if ($changeData) {
-            $this->changeData = $changeData;
-        }
-
-        return $this;
-    }
 
     /**
      * @return bool
@@ -342,8 +316,9 @@ class PdoInterface
 
         if (!$session[spl_object_hash($this->pdoConfig->instanceSelf())]) {
             $userCookieModel = new UserCookieModel();
-            $userCookieModel->url = $_SERVER['REQUEST_URI'];
+            $userCookieModel->url = urldecode($_SERVER['REQUEST_URI']);
             $userCookieModel->hostname = $_SERVER['HOSTNAME'];
+            $userCookieModel->dockername = $_SERVER['dockername'];
             (clone $this)
                 ->setSqlParserd(
                     (new SqlParser())
@@ -429,9 +404,17 @@ class PdoInterface
         $PdoRunLog = (new PdoRunLog($this->getPdoConfig()))
             ->setPdoSql($this->getSqlParserd());
         $start = microtime(true);
+
+        $stmt2 = $this->pdoConfig->instanceSelf($this->isBuff())->prepare("SELECT CONNECTION_ID() as ThreadId");
+        $stmt2->execute();
+        $ThreadId = $stmt2->fetchObject(\stdClass::class);
+        $stmt2->closeCursor();
+        if ($ThreadId->ThreadId) {
+            $PdoRunLog->setThreadId($ThreadId->ThreadId);
+        }
+
         //执行sql
         try {
-            $this->setChangeData($this->getSqlParserd()->isChangeData());
             $stmt = $this->pdoConfig->instanceSelf($this->isBuff())->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
             $PdoRunLog
@@ -464,17 +447,19 @@ class PdoInterface
                     [
                         $error,
                         $this->getSqlParserd()->getSql(),
-                        $this->getSqlParserd()->getBindArray()
-                    ]
+                        $this->getSqlParserd()->getBindArray(),
+                        PdoConfig::getInstance(),
+                    ], JSON_UNESCAPED_UNICODE
                 )
             )
             )
                 ->setSql($this->getSqlParserd()->getSql())
                 ->setBinds($this->getSqlParserd()->getBind())
                 ->setErrorinfo(json_encode($error));
+        } else {
+            $PdoRunLog->__invoke();
         }
-        //记录普通日志
-        $PdoRunLog();
+
         $this->debug();
         //sql计数
         self::setSqlCount(1);

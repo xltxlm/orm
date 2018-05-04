@@ -24,6 +24,26 @@ class Page extends PdoAction
     protected $modelClass = '';
     /** @var bool 是否把结果转换成数组格式 */
     protected $convertToArray = false;
+    /** @var string 强制指定索引 */
+    protected $_index = "";
+
+    /**
+     * @return string
+     */
+    public function get_Index(): string
+    {
+        return $this->_index;
+    }
+
+    /**
+     * @param string $index
+     * @return Page
+     */
+    public function set_Index(string $index)
+    {
+        $this->_index = $index;
+        return $this;
+    }
 
     /**
      * @return bool
@@ -76,7 +96,7 @@ class Page extends PdoAction
         if ($this->getSqls()) {
             $where = ' WHERE '.implode(' AND ', $this->getSqls());
         }
-        $sql = 'SELECT * FROM '.$this->tableObject->getName().$where;
+        $sql = 'SELECT * FROM '.$this->tableObject->getName(). ($this->get_Index() ? " force index({$this->get_Index()}) " : '') .$where;
         //有排序要求
         if ($this->getSqlsOrder()) {
             $sql .= ' Order By '.implode(',', $this->getSqlsOrder());

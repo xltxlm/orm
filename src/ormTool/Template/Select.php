@@ -10,9 +10,9 @@ namespace xltxlm\ormTool\Template;
 
 use Psr\Log\LogLevel;
 use xltxlm\logger\Log\BasicLog;
+use xltxlm\logger\Operation\Action\PdoRead;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
-use xltxlm\page\PageObject;
 
 /**
  * Class SelectOne.
@@ -35,6 +35,27 @@ class Select extends PdoAction
     protected $limit = 0;
     /** @var bool 当前查询连接,是否复用上次的查询连接 */
     protected $buff = true;
+    /** @var string 强制指定索引 */
+    protected $_index = "";
+
+    /**
+     * @return string
+     */
+    public function get_Index(): string
+    {
+        return $this->_index;
+    }
+
+    /**
+     * @param string $index
+     * @return Select
+     */
+    public function set_Index(string $index)
+    {
+        $this->_index = $index;
+        return $this;
+    }
+
 
     /**
      * @return bool
@@ -53,7 +74,6 @@ class Select extends PdoAction
         $this->buff = $buff;
         return $this;
     }
-
 
 
     /**
@@ -142,13 +162,14 @@ class Select extends PdoAction
                     ->selectAll();
             }
         } else {
+            $this->setLimit(1);
             $empty = (new $this->modelClass);
             $this->result = $this->pdoInterface
                 ->selectOne();
 
             //如果指定查询单条的数据,一半返回空就是有问题
             if ($this->result == $empty && !$this->isExistTest()) {
-                (new BasicLog($this->pdoInterface->getSqlParserd()))
+                (new PdoRead($this->pdoInterface->getPdoConfig()))
                     ->setMessageDescribe('查询结果为空')
                     ->setType(LogLevel::ERROR)
                     ->__invoke();
@@ -159,21 +180,21 @@ class Select extends PdoAction
 
     protected function makePdoInterface($addsql = "")
     {
-        $sql = 'SELECT '.$this->getJoinTable().' FROM '.$this->tableObject->getName().
-            join(" ", $this->joinSql).
-            ' WHERE '.implode(' AND ', $this->getSqls());
+        $sql = 'SELECT ' . $this->getJoinTable() . ' FROM ' . $this->tableObject->getName() .
+            join(" ", $this->joinSql) . ($this->get_Index() ? " force index({$this->get_Index()}) " : '') .
+            ' WHERE ' . implode(' AND ', $this->getSqls());
 
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
+            $sql .= ' Order By ' . implode(',', $this->getSqlsOrder());
         }
         //限制查询条数
         if ($this->getLimit()) {
-            $sql .= ' Limit '.$this->getLimit();
+            $sql .= ' Limit ' . $this->getLimit();
         }
 
         $SqlParserd = (new SqlParser())
-            ->setSql($sql.$addsql)
+            ->setSql($sql . $addsql)
             ->setBind($this->getBinds())
             ->__invoke();
         //执行sql

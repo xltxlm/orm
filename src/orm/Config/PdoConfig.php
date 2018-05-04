@@ -201,7 +201,7 @@ abstract class PdoConfig implements TestConfig
                 $this->PDOObject->beginTransaction();
             }
             $time = sprintf('%.4f', microtime(true) - $start);
-            (new PdoConnectLog($this))->setRunTime($time)();
+            (new PdoConnectLog($this))->setRunTime($time)->__invoke();
         } catch (\PDOException $e) {
             throw new \PDOException(trim($e->getMessage()) . "[$tns]");
         }
@@ -226,6 +226,16 @@ abstract class PdoConfig implements TestConfig
         }
 
         return self::$instance[$tns];
+    }
+
+    /**
+     * 断开连接，重新连接
+     */
+    public function resetInstance($buff = true)
+    {
+        $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
+        unset(self::$instance[$tns]);
+        return $this->instanceSelf($buff);
     }
 
     /**
@@ -311,7 +321,7 @@ abstract class PdoConfig implements TestConfig
             ';port=' . $this->getPort();
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
-            $this->link .= ';charset=utf8';
+            $this->link .= ';charset=utf8mb4';
         }
 
         return $this->link;
