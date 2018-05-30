@@ -4,15 +4,14 @@ namespace Swoole;
 /**
  * 请求Swoole数据库连接池;
 */
-class Request{
-    public function __construct( $pdoaction=null,string $callfunction=null)
+class Request
+{
+    public function __construct($pdoaction=null, string $callfunction=null)
     {
-        if($pdoaction!==null)
-        {
+        if ($pdoaction!==null) {
             $this->setpdoaction($pdoaction);
         }
-        if($callfunction!==null)
-        {
+        if ($callfunction!==null) {
             $this->setcallfunction($callfunction);
         }
     }
@@ -23,7 +22,8 @@ class Request{
     /**
      * @return \xltxlm\ormTool\Template\PdoAction;
      */
-    public function getpdoaction():\xltxlm\ormTool\Template\PdoAction    {
+    public function getpdoaction():\xltxlm\ormTool\Template\PdoAction
+    {
         return $this->pdoaction;
     }
 
@@ -31,7 +31,7 @@ class Request{
      * @param string $pdoaction;
      * @return $this
      */
-    public function setpdoaction( $pdoaction)
+    public function setpdoaction($pdoaction)
     {
         $this->pdoaction = $pdoaction;
         return $this;
@@ -43,7 +43,8 @@ class Request{
     /**
      * @return string;
      */
-    public function getcallfunction():string    {
+    public function getcallfunction():string
+    {
         return $this->callfunction;
     }
 
@@ -56,5 +57,4 @@ class Request{
         $this->callfunction = $callfunction;
         return $this;
     }
-
 }

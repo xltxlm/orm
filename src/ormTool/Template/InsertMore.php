@@ -58,5 +58,4 @@ abstract class InsertMore
 
     //执行操作
     abstract public function __invoke();
-
 }

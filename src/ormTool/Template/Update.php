@@ -88,7 +88,6 @@ class Update extends PdoAction
 
     protected function callUpdate()
     {
-
     }
 
     /**

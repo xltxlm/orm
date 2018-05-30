@@ -8,7 +8,6 @@
 
 namespace xltxlm\ormTool\Template;
 
-
 abstract class UpdateMore
 {
     protected $Model;
@@ -52,5 +51,4 @@ abstract class UpdateMore
     }
 
     abstract public function __invoke();
-
 }

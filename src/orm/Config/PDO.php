@@ -219,12 +219,11 @@ class PDO extends \PDO
     /**
      * 退出的时候，主动提交事务
      */
-    function __destruct()
+    public function __destruct()
     {
         if ($this->getPosixGetpid() == posix_getpid() && $this->Transaction) {
             $this->commit();
         }
         PdoConfig::unsetinstance($this->tns);
     }
-
 }

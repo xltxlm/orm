@@ -305,5 +305,4 @@ class Table
 
         return $Column;
     }
-
 }

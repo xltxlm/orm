@@ -126,7 +126,6 @@ class Select extends PdoAction
      */
     public function __invoke()
     {
-
         $this->makePdoInterface();
         if ($this->moreData) {
             //如果是列查询

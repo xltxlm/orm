@@ -92,7 +92,7 @@ final class FieldSchema
             $itemPinyin = $pinyins[$item];
             if (!$itemPinyin) {
                 $sentence = $pinyin->sentence($item);
-                $itemPinyin = preg_replace( '/[ ，,]/' , '_',strtoupper($sentence));
+                $itemPinyin = preg_replace('/[ ，,]/', '_', strtoupper($sentence));
                 $pinyins[$item] = $itemPinyin;
             }
             $out[1][$itemPinyin] = $item;
