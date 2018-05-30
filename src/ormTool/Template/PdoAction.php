@@ -71,6 +71,29 @@ abstract class PdoAction
     /** @var \stdClass 本次查询的结果 */
     protected $result;
 
+    /** @var bool 当前查询连接,是否复用上次的查询连接 */
+    protected $buff = true;
+
+
+    /**
+     * @return bool
+     */
+    public function isBuff(): bool
+    {
+        return $this->buff;
+    }
+
+    /**
+     * @param bool $buff
+     * @return $this
+     */
+    public function setBuff(bool $buff)
+    {
+        $this->buff = $buff;
+        return $this;
+    }
+
+
     /**
      * @return PdoConfig
      */

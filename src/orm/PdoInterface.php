@@ -14,7 +14,6 @@ use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Util;
 use xltxlm\logger\Log\DefineLog;
-use xltxlm\logger\Logger;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
@@ -30,6 +29,8 @@ use xltxlm\page\PageObject;
  */
 class PdoInterface
 {
+    /** @var string 当前所处理的表格名称，由外部告诉，不去分析sql */
+    protected $table_name = "";
     /** @var PdoConfig 数据库配置 */
     protected $pdoConfig;
 
@@ -47,6 +48,25 @@ class PdoInterface
 
     /** @var bool 是否正常数据量查询. false:准备查询超级大数据，并且不开启事务 */
     protected $buff = true;
+
+    /**
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return $this->table_name;
+    }
+
+    /**
+     * @param string $table_name
+     * @return PdoInterface
+     */
+    public function setTableName(string $table_name): PdoInterface
+    {
+        $this->table_name = $table_name;
+        return $this;
+    }
+
 
     /**
      * @return bool
@@ -170,7 +190,7 @@ class PdoInterface
     /**
      * @return SqlParserd
      */
-    public function getSqlParserd(): SqlParserd
+    public function getSqlParserd()
     {
         return $this->sqlParserd;
     }
@@ -202,10 +222,10 @@ class PdoInterface
      */
     public function selectOne()
     {
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $start = microtime(true);
+        $pdoRead = new PdoRead($this);
         $return = $stmt->fetchObject($this->className);
         if (empty($return)) {
             $return = new $this->className();
@@ -213,10 +233,10 @@ class PdoInterface
         if ($this->isConvertToArray()) {
             $return = get_object_vars($return);
         }
-        $time = sprintf('%.4f', microtime(true) - $start);
-        (new PdoRead($this->getPdoConfig()))
-            ->setPdoSql($this->getSqlParserd())
-            ->setRunTime($time)
+        $pdoRead
+            ->setTableName($this->getTableName())
+            ->setSqlaction(__FUNCTION__)
+            ->setFetchnum($return ? 1 : 0)
             ->__invoke();
 
         return $return;
@@ -229,16 +249,16 @@ class PdoInterface
      */
     public function selectColumn($ColumnName = 0): array
     {
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $start = microtime(true);
+        $pdoRead = new PdoRead($this);
         $return = $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
 
-        $time = sprintf('%.4f', microtime(true) - $start);
-        (new PdoRead($this->getPdoConfig()))
-            ->setPdoSql($this->getSqlParserd())
-            ->setRunTime($time)
+        $pdoRead
+            ->setTableName($this->getTableName())
+            ->setSqlaction(__FUNCTION__)
+            ->setFetchnum(count($return))
             ->__invoke();
         return $return;
     }
@@ -249,20 +269,20 @@ class PdoInterface
      */
     public function selectAll()
     {
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $start = microtime(true);
+        $pdoRead = new PdoRead($this);
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
         if ($this->isConvertToArray()) {
             foreach ($return as &$v) {
                 $v = get_object_vars($v);
             }
         }
-        $time = sprintf('%.4f', microtime(true) - $start);
-        (new PdoRead($this->getPdoConfig()))
-            ->setPdoSql($this->getSqlParserd())
-            ->setRunTime($time)
+        $pdoRead
+            ->setTableName($this->getTableName())
+            ->setSqlaction(__FUNCTION__)
+            ->setFetchnum(count($return))
             ->__invoke();
 
         return $return;
@@ -275,23 +295,21 @@ class PdoInterface
     public function yield()
     {
         $this->setBuff(false);
-        $stmt = $this->pdoexecute();
+        $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
         while ($return = $stmt->fetchObject($this->className)) {
             if ($this->isConvertToArray()) {
                 $return = get_object_vars($return);
             }
+            //每次循环开始，都重置日志记录。
+            DefineLog::resetUniqids();
             yield $return;
         }
     }
 
     public function insert()
     {
-        //保证会话参数存在
-        $this->setSession();
-        $this->pdoexecute();
-
-        return $this->pdoConfig->instanceSelf()->lastInsertId();
+        return $this->pdoexecute(__FUNCTION__);
     }
 
     /**
@@ -301,38 +319,7 @@ class PdoInterface
      */
     public function execute()
     {
-        //保证会话参数存在
-        $this->setSession();
-
-        return $this->pdoexecute();
-    }
-
-    /**
-     * 设置当前账户的会话参数,在触发器中可以用来记录账户信息.
-     */
-    final protected function setSession()
-    {
-        static $session = [];
-
-        if (!$session[spl_object_hash($this->pdoConfig->instanceSelf())]) {
-            $userCookieModel = new UserCookieModel();
-            $userCookieModel->url = urldecode($_SERVER['REQUEST_URI']);
-            $userCookieModel->hostname = $_SERVER['HOSTNAME'];
-            $userCookieModel->dockername = $_SERVER['dockername'];
-            (clone $this)
-                ->setSqlParserd(
-                    (new SqlParser())
-                        ->setSql('set  @userflag=:userflag ,@username=:username ,@ip=:ip  ')
-                        ->setBind([
-                            'userflag' => $userCookieModel->__toString(),
-                            'username' => $userCookieModel->getUsername(),
-                            'ip' => $userCookieModel->getIp(),
-                        ])
-                        ->__invoke()
-                )
-                ->pdoexecute();
-            $session[spl_object_hash($this->pdoConfig->instanceSelf())] = true;
-        }
+        return $this->pdoexecute(__FUNCTION__);
     }
 
     /**
@@ -348,11 +335,7 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
-        //保证会话参数存在
-        $this->setSession();
-        $stmt = $this->pdoexecute();
-
-        return $stmt->rowCount();
+        return $this->pdoexecute(__FUNCTION__);
     }
 
     /**
@@ -396,31 +379,25 @@ class PdoInterface
      * @throws PdoSqlError
      * @throws \Exception
      *
-     * @return \PDOStatement
+     * @return \PDOStatement | int
      */
-    private function pdoexecute(): \PDOStatement
+    private function pdoexecute($action)
     {
+        tryagain:
+        $PDO = $this->getPdoConfig()->instanceSelf($this->isBuff());
         //记录日志
-        $PdoRunLog = (new PdoRunLog($this->getPdoConfig()))
-            ->setPdoSql($this->getSqlParserd());
-        $start = microtime(true);
-
-        $stmt2 = $this->pdoConfig->instanceSelf($this->isBuff())->prepare("SELECT CONNECTION_ID() as ThreadId");
-        $stmt2->execute();
-        $ThreadId = $stmt2->fetchObject(\stdClass::class);
-        $stmt2->closeCursor();
-        if ($ThreadId->ThreadId) {
-            $PdoRunLog->setThreadId($ThreadId->ThreadId);
-        }
+        $PdoRunLog = (new PdoRunLog($this))
+            ->setTableName($this->getTableName())
+            ->setSqlaction($action);
 
         //执行sql
         try {
-            $stmt = $this->pdoConfig->instanceSelf($this->isBuff())->prepare($this->getSqlParserd()->getSql());
+            $stmt = $PDO->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
             $PdoRunLog
-                ->setAction(DefineLog::CUO_WU)
                 ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
                 ->setMessageDescribe('链接服务器异常')
+                ->setException($e->getMessage())
                 ->setType(LogLevel::ERROR)
                 ->__invoke();
             throw $e;
@@ -429,42 +406,54 @@ class PdoInterface
             $stmt->bindValue($bind->getKey(), $bind->getValue());
         }
         $stmt->execute();
-        $time = sprintf('%.4f', microtime(true) - $start);
-        $PdoRunLog->setRunTime($time);
         $error = $stmt->errorInfo();
-        $error[0] = (int)filter_var($error[0], FILTER_SANITIZE_NUMBER_INT);
+        $error[1] = (int)filter_var($error[1], FILTER_SANITIZE_NUMBER_INT);
 
-        if ($error[0] || $error[2]) {
-            $this->rollBack();
+        //如果是在非事务下面，并且是被数据库断开了链接，那么可以重试
+        if ($this->isBuff() == false && in_array($error[1], [2013, 2006])) {
+            $this->getPdoConfig()->resetInstance($this->isBuff());
+            goto tryagain;
+        }
+
+        if ($error[1] || $error[2]) {
+            $this->isBuff() && $this->rollBack();
             $PdoRunLog
-                ->setAction(DefineLog::CUO_WU)
                 ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
+                ->setException(json_encode($error, JSON_UNESCAPED_UNICODE))
                 ->setMessageDescribe('SQL运行错误')
                 ->setType(LogLevel::ERROR)
                 ->__invoke();
-            throw (new PdoSqlError(
-                json_encode(
-                    [
-                        $error,
-                        $this->getSqlParserd()->getSql(),
-                        $this->getSqlParserd()->getBindArray(),
-                        PdoConfig::getInstance(),
-                    ], JSON_UNESCAPED_UNICODE
-                )
-            )
-            )
-                ->setSql($this->getSqlParserd()->getSql())
-                ->setBinds($this->getSqlParserd()->getBind())
-                ->setErrorinfo(json_encode($error));
-        } else {
-            $PdoRunLog->__invoke();
+            throw new \Exception(json_encode(
+                [
+                    $error,
+                    $this->getSqlParserd()->getSql(),
+                    $this->getSqlParserd()->getBindArray(),
+                    PdoConfig::getInstance(),
+                ], JSON_UNESCAPED_UNICODE
+            ));
         }
-
         $this->debug();
         //sql计数
         self::setSqlCount(1);
 
-        return $stmt;
+        //如果是更新的话，返回的是被影响到的条数
+        if ($action == 'update') {
+            $num = $stmt->rowCount();
+            $PdoRunLog
+                ->setFetchnum($num)
+                ->__invoke();
+            return $num;
+        } elseif ($action == 'insert') {
+            $inserid = $PDO->lastInsertId();
+            $PdoRunLog
+                ->setFetchnum($inserid ? 1 : 0)
+                ->__invoke();
+            return $inserid;
+        } else {
+            $PdoRunLog
+                ->__invoke();
+            return $stmt;
+        }
     }
 
     /**
@@ -477,7 +466,7 @@ class PdoInterface
     public function rollBack()
     {
         $this->pdoConfig->instanceSelf()->rollBack();
-        return $this->pdoConfig->instanceSelf()->beginTransaction();
+        return $this->pdoConfig->instanceSelf()->beginTransaction($this->isBuff());
     }
 
     /**
@@ -490,7 +479,7 @@ class PdoInterface
     public function commit()
     {
         $this->pdoConfig->instanceSelf()->commit();
-        return $this->pdoConfig->instanceSelf()->beginTransaction();
+        return $this->pdoConfig->instanceSelf()->beginTransaction($this->isBuff());
     }
 
     /**

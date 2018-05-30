@@ -125,6 +125,7 @@ class Group extends PdoAction
             ->__invoke();
         //执行sql
         $this->pdoInterface = (new PdoInterface())
+            ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)

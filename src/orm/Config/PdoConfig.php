@@ -10,6 +10,7 @@ namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
 use xltxlm\logger\Operation\Connect\PdoConnectLog;
+use xltxlm\orm\PdoInterface;
 
 /**
  * PDO配置的参数清单,文件的名称就是数据库的名称,所有没有db属性
@@ -39,6 +40,24 @@ abstract class PdoConfig implements TestConfig
     protected $username;
     /** @var string 数据密码 */
     protected $password;
+
+    /**
+     * @return PDO
+     */
+    public function getPDOObject()
+    {
+        return $this->PDOObject;
+    }
+
+    /**
+     * @param PDO $PDOObject
+     * @return PdoConfig
+     */
+    public function setPDOObject($PDOObject = null): PdoConfig
+    {
+        $this->PDOObject = $PDOObject;
+        return $this;
+    }
 
 
     /**
@@ -192,16 +211,18 @@ abstract class PdoConfig implements TestConfig
     {
         $tns = $this->getPdoString();
         try {
-            $start = microtime(true);
-            $this->PDOObject = new  PDO($tns, $this->getUsername(), $this->getPassword());
+            $pdoConnectLog = new PdoConnectLog((new PdoInterface())->setBuff($buff)->setPdoConfig($this));
+            $this->setPDOObject(new  PDO($tns, $this->getUsername(), $this->getPassword()));
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
             $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
+            $this->PDOObject->setPdoConfig(clone $this);
+            $this->PDOObject->beginTransaction($buff);
             //所有数据库,默认都必须开启事务
             if ($buff) {
-                $this->PDOObject->beginTransaction();
+                //标注下：此链接的注销的时候，需要提交事务
+                $this->PDOObject->setTns($this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff);
             }
-            $time = sprintf('%.4f', microtime(true) - $start);
-            (new PdoConnectLog($this))->setRunTime($time)->__invoke();
+            $pdoConnectLog->__invoke();
         } catch (\PDOException $e) {
             throw new \PDOException(trim($e->getMessage()) . "[$tns]");
         }
@@ -217,25 +238,10 @@ abstract class PdoConfig implements TestConfig
     {
         $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
         if (!self::$instance[$tns]) {
-            if (!$buff) {
-                self::$instance[$tns] = $this->instance($buff);
-            } else {
-                self::$instance[$tns] = $this->instance($buff);
-                $this->PDOObject->lock($tns);
-            }
+            self::$instance[$tns] = $this->instance($buff);
         }
 
         return self::$instance[$tns];
-    }
-
-    /**
-     * 断开连接，重新连接
-     */
-    public function resetInstance($buff = true)
-    {
-        $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
-        unset(self::$instance[$tns]);
-        return $this->instanceSelf($buff);
     }
 
     /**
@@ -274,6 +280,16 @@ abstract class PdoConfig implements TestConfig
         }
     }
 
+
+    /**
+     * 断开连接，重新连接
+     */
+    public function resetInstance($buff = true)
+    {
+        $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
+        unset(self::$instance[$tns]);
+        return $this->instanceSelf($buff);
+    }
 
     //注销完毕之后删除掉实例
     final public static function unsetinstance($tns)

@@ -19,8 +19,6 @@ class Insert extends PdoAction
 {
     /** @var string 是否可以忽略写入错误 */
     private $ignore = '';
-    /** @var bool 当前查询连接,是否复用上次的查询连接 */
-    protected $buff = true;
 
     /** @var bool 是否执行钩子代码 */
     protected $hook = true;
@@ -40,25 +38,6 @@ class Insert extends PdoAction
     public function set_Hook(bool $hook): Insert
     {
         $this->hook = $hook;
-        return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isBuff(): bool
-    {
-        return $this->buff;
-    }
-
-    /**
-     * @param bool $buff
-     * @return static
-     */
-    public function setBuff(bool $buff)
-    {
-        $this->buff = $buff;
         return $this;
     }
 
@@ -85,7 +64,7 @@ class Insert extends PdoAction
     /**
      * @return string
      */
-    final public function __invoke()
+    public function __invoke()
     {
         $sql = 'INSERT ' . $this->getIgnore() . ' INTO ' . $this->tableObject->getName() .
             ' (' . implode(',', array_keys($this->getSqls())) . ') VALUES ( ' .
@@ -98,6 +77,7 @@ class Insert extends PdoAction
 
         //执行sql
         $this->pdoInterface = (new PdoInterface())
+            ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)

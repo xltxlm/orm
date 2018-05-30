@@ -20,9 +20,6 @@ class Update extends PdoAction
     /** @var array where 部分的sql */
     protected $whereSqls = [];
 
-    /** @var bool 是否开启事务查询 */
-    protected $buff = true;
-
     /** @var bool 是否执行钩子代码 */
     protected $_hook = true;
 
@@ -89,24 +86,6 @@ class Update extends PdoAction
     }
 
 
-    /**
-     * @return bool
-     */
-    public function isBuff(): bool
-    {
-        return $this->buff;
-    }
-
-    /**
-     * @param bool $buff
-     * @return static
-     */
-    public function setBuff(bool $buff)
-    {
-        $this->buff = $buff;
-        return $this;
-    }
-
     protected function callUpdate()
     {
 
@@ -138,6 +117,7 @@ class Update extends PdoAction
             ->__invoke();
 
         $this->pdoInterface = (new PdoInterface())
+            ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setBuff($this->isBuff())

@@ -33,8 +33,7 @@ class Select extends PdoAction
     protected $columnName = "";
     /** @var int 限制返回条数 */
     protected $limit = 0;
-    /** @var bool 当前查询连接,是否复用上次的查询连接 */
-    protected $buff = true;
+
     /** @var string 强制指定索引 */
     protected $_index = "";
 
@@ -53,25 +52,6 @@ class Select extends PdoAction
     public function set_Index(string $index)
     {
         $this->_index = $index;
-        return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isBuff(): bool
-    {
-        return $this->buff;
-    }
-
-    /**
-     * @param bool $buff
-     * @return $this
-     */
-    public function setBuff(bool $buff)
-    {
-        $this->buff = $buff;
         return $this;
     }
 
@@ -169,8 +149,10 @@ class Select extends PdoAction
 
             //如果指定查询单条的数据,一半返回空就是有问题
             if ($this->result == $empty && !$this->isExistTest()) {
-                (new PdoRead($this->pdoInterface->getPdoConfig()))
+                (new PdoRead($this->pdoInterface))
+                    ->setTableName($this->getTableObject()->getName())
                     ->setMessageDescribe('查询结果为空')
+                    ->setException('查询结果为空')
                     ->setType(LogLevel::ERROR)
                     ->__invoke();
             }
@@ -199,6 +181,7 @@ class Select extends PdoAction
             ->__invoke();
         //执行sql
         $this->pdoInterface = (new PdoInterface())
+            ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
             ->setDebug($this->debug)
