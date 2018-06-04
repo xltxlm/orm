@@ -4,14 +4,14 @@
   "license": "Apache 2.0",
   "authors": [
     {
-      "name": "夏琳泰",
+      "name": "xltxlm",
       "email": "xltxlm@qq.com"
     }
   ],
   "require": {
     "php": ">=7.0",
     "ext-pdo": "*",
-    "overtrue/pinyin": "~3.0",
+    "overtrue/pinyin": "3.0.5",
     "xltxlm/helper": "*",
     "xltxlm/page": "*",
     "xltxlm/logger": "*",
