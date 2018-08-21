@@ -517,8 +517,7 @@ class PdoInterface
                 ->setFetchnum($inserid ? 1 : 0)
                 ->__invoke();
             return $inserid;
-        }elseif(in_array($action,['selectOne','selectColumn','selectAll']))
-        {
+        } elseif (in_array($action, ['selectOne','selectColumn','selectAll'])) {
             $PdoRunLog
                 ->setWritefilelog(false);
             return $stmt;

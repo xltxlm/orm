@@ -25,7 +25,7 @@ class Insert extends PdoAction
     /** @var bool 是否执行钩子代码 */
     protected $hook = true;
 
-        /** @var RedisConfig  项目并发锁配置 */
+    /** @var RedisConfig  项目并发锁配置 */
     protected $RedisCacheConfig;
 
     /**
