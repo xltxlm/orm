@@ -8,8 +8,10 @@
 
 namespace xltxlm\ormTool\Template;
 
+use xltxlm\helper\Basic\Str;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
+use xltxlm\redis\Config\RedisConfig;
 
 /**
  * out:更新数据的底层
@@ -28,6 +30,29 @@ class Update extends PdoAction
 
     /** @var array 被更新影响到的字段 */
     protected $_updateFields = [];
+
+    /** @var RedisConfig  项目并发锁配置 */
+    protected $RedisCacheConfig;
+
+    /**
+     * @return RedisConfig
+     */
+    public function getRedisCacheConfig()
+    {
+        return $this->RedisCacheConfig;
+    }
+
+    /**
+     * @param RedisConfig $RedisCacheConfig
+     * @return $this
+     */
+    public function setRedisCacheConfig(RedisConfig $RedisCacheConfig)
+    {
+        $this->RedisCacheConfig = $RedisCacheConfig;
+        return $this;
+    }
+
+
 
     /**
      * @return bool
@@ -116,6 +141,7 @@ class Update extends PdoAction
             ->__invoke();
 
         $this->pdoInterface = (new PdoInterface())
+            ->setRedisCacheConfig($this->getRedisCacheConfig())
             ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)
@@ -129,6 +155,10 @@ class Update extends PdoAction
         if ($updatenum) {
             //并且还存在后续的操作，那么继续执行
             $className = static::class . 'More';
+            $setValue = (new Str())->setValue($className);
+            if ($setValue->Strpos('InsertOrUpdate')) {
+                $className = $setValue->Strtr('InsertOrUpdate', 'Update');
+            }
             if ($this->is_Hook() && $this->get_UpdateMainId() && $updatenum == 1 && class_exists($className)) {
                 $this->callUpdate();
             }

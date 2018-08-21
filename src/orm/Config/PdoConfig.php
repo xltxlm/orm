@@ -267,14 +267,14 @@ abstract class PdoConfig implements TestConfig
      */
     final public static function rollback()
     {
-        foreach (self::$instance as $key => $item) {
+        foreach (self::$instance as $key => $PDOObject) {
             //如果不是提交类型的
             if (substr($key, -1) == 0) {
                 continue;
             }
             try {
-                $item->rollBack();//提交之后,继续事务
-                $item->beginTransaction();
+                $PDOObject->rollBack();//提交之后,继续事务
+                $PDOObject->beginTransaction();
             } catch (\Throwable $e) {
             }
         }
@@ -287,6 +287,7 @@ abstract class PdoConfig implements TestConfig
     public function resetInstance($buff = true)
     {
         $tns = $this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff;
+        self::$instance[$tns] = null;
         unset(self::$instance[$tns]);
         return $this->instanceSelf($buff);
     }
@@ -294,8 +295,19 @@ abstract class PdoConfig implements TestConfig
     //注销完毕之后删除掉实例
     final public static function unsetinstance($tns)
     {
+        self::$instance[$tns] = null;
         unset(self::$instance[$tns]);
     }
+
+    //注销完毕之后删除掉实例
+    final public static function unsetAllinstance()
+    {
+        foreach (self::$instance as $tns => &$PDOObject) {
+            $PDOObject = null;
+            unset(self::$instance[$tns]);
+        }
+    }
+
 
     /**
      * @return \PDO

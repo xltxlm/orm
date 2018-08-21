@@ -9,19 +9,20 @@
 namespace xltxlm\orm;
 
 use Psr\Log\LogLevel;
-use xltxlm\logger\Operation\Action\PdoRead;
-use xltxlm\h5skin\Request\UserCookieModel;
-use xltxlm\helper\Ctroller\LoadClass;
+use xltxlm\crontab\Config\RedisCacheConfig;
+use xltxlm\helper\Hclass\ConvertObject;
 use xltxlm\helper\Util;
 use xltxlm\logger\Log\DefineLog;
+use xltxlm\logger\Operation\Action\PdoRead;
+use xltxlm\logger\Operation\Action\PdoRunLog;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
-use xltxlm\logger\Operation\Action\PdoRunLog;
-use xltxlm\orm\Sql\SqlParser;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
+use xltxlm\redis\Config\RedisConfig;
+use xltxlm\redis\LockKey;
 
 /**
  *  out:最基础的数据库执行方式.
@@ -48,6 +49,32 @@ class PdoInterface
 
     /** @var bool 是否正常数据量查询. false:准备查询超级大数据，并且不开启事务 */
     protected $buff = true;
+
+    /** @var RedisConfig  在是新更新,写入的时候,进行并发锁 */
+    protected $RedisCacheConfig;
+
+    /** @var LockKey */
+    private $lockKeyObject;
+
+    /**
+     * @return RedisConfig
+     */
+
+    public function getRedisCacheConfig()
+    {
+        return $this->RedisCacheConfig;
+    }
+
+    /**
+     * @param RedisConfig $RedisCacheConfig
+     * @return PdoInterface
+     */
+    public function setRedisCacheConfig($RedisCacheConfig): PdoInterface
+    {
+        $this->RedisCacheConfig = $RedisCacheConfig;
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -309,7 +336,10 @@ class PdoInterface
 
     public function insert()
     {
-        return $this->pdoexecute(__FUNCTION__);
+        $this->并发上锁(__FUNCTION__);
+        $insertId = $this->pdoexecute(__FUNCTION__);
+        $this->并发释放锁();
+        return $insertId;
     }
 
     /**
@@ -319,7 +349,10 @@ class PdoInterface
      */
     public function execute()
     {
-        return $this->pdoexecute(__FUNCTION__);
+        $this->并发上锁(__FUNCTION__);
+        $Statement = $this->pdoexecute(__FUNCTION__);
+        $this->并发释放锁();
+        return $Statement;
     }
 
     /**
@@ -335,7 +368,43 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
-        return $this->pdoexecute(__FUNCTION__);
+        $this->并发上锁(__FUNCTION__);
+        $updated = $this->pdoexecute(__FUNCTION__);
+        $this->并发释放锁();
+
+        return $updated;
+    }
+
+    /**
+     * 防止并发更新,写入同一张表
+     */
+    protected function 并发上锁($function = null)
+    {
+        return true;
+        //如果存在redis配置,执行并发改串行操作
+        if ($this->getRedisCacheConfig() instanceof RedisConfig && $_SERVER['dockername']) {
+            $toJson = (new ConvertObject())->setObject($this->getSqlParserd())->toJson();
+            $this->lockKeyObject = (new LockKey())
+                ->setKey("PDOLOCK_{$function}_".$_SERVER['dockername'] . $this->getTableName())
+                ->setValue($toJson)
+                ->setExpire(1)
+                ->setWaitForunlock(true)
+                ->setRedisConfig($this->getRedisCacheConfig());
+            //加上redis锁,防止并发操作
+            $SQl更新并发锁失败 = !$this->lockKeyObject
+                ->__invoke();
+            if ($SQl更新并发锁失败) {
+                throw new \Exception("SQL并发锁失败($function)." . $toJson);
+            }
+        }
+    }
+
+    protected function 并发释放锁()
+    {
+        return true;
+        if ($this->lockKeyObject instanceof LockKey) {
+            $this->lockKeyObject->free();
+        }
     }
 
     /**
@@ -428,7 +497,6 @@ class PdoInterface
                     $error,
                     $this->getSqlParserd()->getSql(),
                     $this->getSqlParserd()->getBindArray(),
-                    PdoConfig::getInstance(),
                 ], JSON_UNESCAPED_UNICODE
             ));
         }
@@ -449,6 +517,11 @@ class PdoInterface
                 ->setFetchnum($inserid ? 1 : 0)
                 ->__invoke();
             return $inserid;
+        }elseif(in_array($action,['selectOne','selectColumn','selectAll']))
+        {
+            $PdoRunLog
+                ->setWritefilelog(false);
+            return $stmt;
         } else {
             $PdoRunLog
                 ->__invoke();

@@ -146,15 +146,15 @@ class Select extends PdoAction
             $this->result = $this->pdoInterface
                 ->selectOne();
 
-            //如果指定查询单条的数据,一半返回空就是有问题
-            if ($this->result == $empty && !$this->isExistTest()) {
-                (new PdoRead($this->pdoInterface))
-                    ->setTableName($this->getTableObject()->getName())
-                    ->setMessageDescribe('查询结果为空')
-                    ->setException('查询结果为空')
-                    ->setType(LogLevel::ERROR)
-                    ->__invoke();
-            }
+//            //如果指定查询单条的数据,一半返回空就是有问题
+//            if ($this->result == $empty && !$this->isExistTest()) {
+//                (new PdoRead($this->pdoInterface))g
+//                    ->setTableName($this->getTableObject()->getName())
+//                    ->setMessageDescribe('查询结果为空')
+//                    ->setException('查询结果为空')
+//                    ->setType(LogLevel::ERROR)
+//                    ->__invoke();
+//            }
             return $this->result;
         }
     }

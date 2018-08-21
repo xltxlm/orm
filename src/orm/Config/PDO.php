@@ -51,11 +51,11 @@ class PDO extends \PDO
         $this->setPosixGetpid(posix_getpid());
         //设置客户端的各个参数
         $userCookieModel = new UserCookieModel();
-        $userCookieModel->url = urldecode($_SERVER['REQUEST_URI']) ?: join(",", $_SERVER['argv']);
-        $userCookieModel->hostname = $_SERVER['HOSTNAME'];
-        $userCookieModel->dockername = $_SERVER['dockername'];
-        $userCookieModel->pid = $this->getPosixGetpid();
-        $userCookieModel->uniqid = DefineLog::getUniqid_static();
+        $userCookieModel->setUrl(substr(urldecode($_SERVER['REQUEST_URI']) ?: join(",", $_SERVER['argv']), 0, 1000));
+        $userCookieModel->setHostname($_SERVER['HOSTNAME']);
+        $userCookieModel->setDockername($_SERVER['dockername']);
+        $userCookieModel->setPid($this->getPosixGetpid());
+        $userCookieModel->setUniqid(DefineLog::getUniqid_static());
 
         $stmt = $this->prepare("set  @userflag=:userflag ,@username=:username ,@ip=:ip");
         $stmt->bindValue('userflag', $userCookieModel->__toString());
@@ -168,13 +168,13 @@ class PDO extends \PDO
     public function commit()
     {
         //记录日志
-        (new PdoConnectLog(
-            (new PdoInterface())
-                ->setBuff($this->isTransaction())
-                ->setPdoConfig($this->getPdoConfig())
-        ))
-            ->setAction(PdoConnectLog::TI_JIAO_SHI_WU)
-            ->__invoke();
+//        (new PdoConnectLog(
+//            (new PdoInterface())
+//                ->setBuff($this->isTransaction())
+//                ->setPdoConfig($this->getPdoConfig())
+//        ))
+//            ->setAction(PdoConnectLog::TI_JIAO_SHI_WU)
+//            ->__invoke();
         return parent::commit();
     }
 

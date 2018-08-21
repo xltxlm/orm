@@ -12,5 +12,5 @@ namespace xltxlm\orm\Exception\I18N\EN;
  */
 class SqlParserI18N extends \xltxlm\orm\Exception\I18N\CH\SqlParserI18N
 {
-    protected $bindError = 'binds pairs error,need:%s,actually:%s';
+    protected $bindError = 'binds pairs error,need:%s,actually:%s,binds:%s';
 }
