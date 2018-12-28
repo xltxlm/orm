@@ -116,7 +116,7 @@ final class SqlParser
                 [
                     json_encode($sqlBinds, JSON_UNESCAPED_UNICODE),
                     json_encode($binds, JSON_UNESCAPED_UNICODE),
-                    json_encode($this->getBind(),JSON_UNESCAPED_UNICODE)
+                    json_encode($this->getBind(), JSON_UNESCAPED_UNICODE)
                 ]
             );
             (new BasicLog($this))
