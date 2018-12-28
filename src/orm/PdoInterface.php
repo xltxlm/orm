@@ -328,17 +328,13 @@ class PdoInterface
             if ($this->isConvertToArray()) {
                 $return = get_object_vars($return);
             }
-            //每次循环开始，都重置日志记录。
-            DefineLog::resetUniqids();
             yield $return;
         }
     }
 
     public function insert()
     {
-        $this->并发上锁(__FUNCTION__);
         $insertId = $this->pdoexecute(__FUNCTION__);
-        $this->并发释放锁();
         return $insertId;
     }
 
@@ -349,9 +345,7 @@ class PdoInterface
      */
     public function execute()
     {
-        $this->并发上锁(__FUNCTION__);
         $Statement = $this->pdoexecute(__FUNCTION__);
-        $this->并发释放锁();
         return $Statement;
     }
 
@@ -368,51 +362,19 @@ class PdoInterface
                     ->getUpdateNoWhere()
             );
         }
-        $this->并发上锁(__FUNCTION__);
         $updated = $this->pdoexecute(__FUNCTION__);
-        $this->并发释放锁();
 
         return $updated;
     }
 
-    /**
-     * 防止并发更新,写入同一张表
-     */
-    protected function 并发上锁($function = null)
-    {
-        return true;
-        //如果存在redis配置,执行并发改串行操作
-        if ($this->getRedisCacheConfig() instanceof RedisConfig && $_SERVER['dockername']) {
-            $toJson = (new ConvertObject())->setObject($this->getSqlParserd())->toJson();
-            $this->lockKeyObject = (new LockKey())
-                ->setKey("PDOLOCK_{$function}_".$_SERVER['dockername'] . $this->getTableName())
-                ->setValue($toJson)
-                ->setExpire(1)
-                ->setWaitForunlock(true)
-                ->setRedisConfig($this->getRedisCacheConfig());
-            //加上redis锁,防止并发操作
-            $SQl更新并发锁失败 = !$this->lockKeyObject
-                ->__invoke();
-            if ($SQl更新并发锁失败) {
-                throw new \Exception("SQL并发锁失败($function)." . $toJson);
-            }
-        }
-    }
 
-    protected function 并发释放锁()
-    {
-        return true;
-        if ($this->lockKeyObject instanceof LockKey) {
-            $this->lockKeyObject->free();
-        }
-    }
 
     /**
      * @param PageObject $pageObject
      *
      * @return array
      */
-    public function page(PageObject &$pageObject)
+    public function page(PageObject &$pageObject, $selectColumn = '')
     {
         //如果已经处理过分页了，那么不要再折腾了
         if ($pageObject->getTotal()) {
@@ -441,7 +403,11 @@ class PdoInterface
         $this->getSqlParserd()
             ->setSql($this->getSqlParserd()->getSql() . ' limit ' . $pageObject->getFrom() . ',' . $pageObject->getPrepage());
 
-        return $this->selectAll();
+        if ($selectColumn) {
+            return $this->selectColumn($selectColumn);
+        } else {
+            return $this->selectAll();
+        }
     }
 
     /**
@@ -517,8 +483,7 @@ class PdoInterface
                 ->setFetchnum($inserid ? 1 : 0)
                 ->__invoke();
             return $inserid;
-        }elseif(in_array($action,['selectOne','selectColumn','selectAll']))
-        {
+        } elseif (in_array($action, ['selectOne', 'selectColumn', 'selectAll'])) {
             $PdoRunLog
                 ->setWritefilelog(false);
             return $stmt;

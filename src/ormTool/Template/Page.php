@@ -87,6 +87,28 @@ class Page extends PdoAction
         return $this;
     }
 
+    /** @var string 设置查询的列名称 */
+    protected $columnName = "";
+
+    /**
+     * @return string
+     */
+    public function getColumnName(): string
+    {
+        return $this->columnName;
+    }
+
+    /**
+     * @param string $columnName
+     * @return Page
+     */
+    public function setColumnName(string $columnName): Page
+    {
+        $this->columnName = $columnName;
+        return $this;
+    }
+
+
     /**
      * @return mixed
      */
@@ -94,12 +116,12 @@ class Page extends PdoAction
     {
         $where = '';
         if ($this->getSqls()) {
-            $where = ' WHERE '.implode(' AND ', $this->getSqls());
+            $where = ' WHERE ' . implode(' AND ', $this->getSqls());
         }
-        $sql = 'SELECT * FROM '.$this->tableObject->getName(). ($this->get_Index() ? " force index({$this->get_Index()}) " : '') .$where;
+        $sql = 'SELECT * FROM ' . $this->tableObject->getName() . ($this->get_Index() ? " force index({$this->get_Index()}) " : '') . $where;
         //有排序要求
         if ($this->getSqlsOrder()) {
-            $sql .= ' Order By '.implode(',', $this->getSqlsOrder());
+            $sql .= ' Order By ' . implode(',', $this->getSqlsOrder());
         }
 
         $SqlParserd = (new SqlParser())
@@ -116,7 +138,15 @@ class Page extends PdoAction
             ->setConvertToArray($this->isConvertToArray())
             ->setClassName($this->modelClass);
 
-        return $this->pdoInterface
-            ->page($this->pageObject);
+        if ($this->getColumnName()) {
+            //ModelIndex
+            $keys = array_keys((new $this->modelClass)());
+            $index = (int)array_search($this->getColumnName(), $keys);
+            return $this->pdoInterface
+                ->page($this->pageObject,$index);
+        } else {
+            return $this->pdoInterface
+                ->page($this->pageObject);
+        }
     }
 }

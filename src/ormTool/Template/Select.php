@@ -26,7 +26,7 @@ class Select extends PdoAction
     /** @var bool 是否把结果转换成数组格式 */
     protected $convertToArray = false;
 
-    /** @var bool 测试查询是否存在,不要求一定存在此数据 */
+    /** @var bool 测试查询是否存在,不存在数据的时候,抛出异常[用于前提条件的要求] */
     protected $existTest = false;
 
     /** @var string 设置查询的列名称 */
@@ -146,22 +146,23 @@ class Select extends PdoAction
             $this->result = $this->pdoInterface
                 ->selectOne();
 
-//            //如果指定查询单条的数据,一半返回空就是有问题
-//            if ($this->result == $empty && !$this->isExistTest()) {
-//                (new PdoRead($this->pdoInterface))g
-//                    ->setTableName($this->getTableObject()->getName())
-//                    ->setMessageDescribe('查询结果为空')
-//                    ->setException('查询结果为空')
-//                    ->setType(LogLevel::ERROR)
-//                    ->__invoke();
-//            }
+            //如果指定查询单条的数据,一半返回空就是有问题
+            if ($this->result == $empty && $this->isExistTest()) {
+                (new PdoRead($this->pdoInterface))
+                    ->setTableName($this->getTableObject()->getName())
+                    ->setMessageDescribe('查询结果为空')
+                    ->setException('查询结果为空:'.json_encode($this->getBinds(),JSON_UNESCAPED_UNICODE))
+                    ->setType(LogLevel::ERROR)
+                    ->__invoke();
+                throw new \Exception("表:{$this->getTableObject()->getName()}查询结果为空 |".json_encode($this->getBinds(),JSON_UNESCAPED_UNICODE));
+            }
             return $this->result;
         }
     }
 
     protected function makePdoInterface($addsql = "")
     {
-        $sql = 'SELECT ' . $this->getJoinTable() . ' FROM ' . $this->tableObject->getName() .
+        $sql = 'SELECT ' . $this->getJoinTable() . ' FROM ' . $this->getTableObject()->getName() .
             join(" ", $this->joinSql) . ($this->get_Index() ? " force index({$this->get_Index()}) " : '') .
             ' WHERE ' . implode(' AND ', $this->getSqls());
 

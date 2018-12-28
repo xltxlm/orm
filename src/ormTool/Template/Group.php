@@ -27,7 +27,7 @@ class Group extends PdoAction
     //主检索字段的计算方式
     protected $groupMethod = self::COUNT;
     //
-    protected $mainField = '*';
+    protected $mainField = '(*)';
 
     /**
      * @return string
@@ -108,13 +108,13 @@ class Group extends PdoAction
     public function __invoke()
     {
         if ($this->getGroupbyfield()) {
-            $sql = "SELECT {$this->getGroupMethod()}({$this->getMainField()}) as _num," . join(',', $this->getGroupbyfield()) . " FROM " . $this->tableObject->getName() .
+            $sql = "SELECT {$this->getGroupMethod()}{$this->getMainField()} as _num," . join(',', $this->getGroupbyfield()) . " FROM " . $this->tableObject->getName() .
                 join(" ", $this->joinSql) .
                 ($this->getSqls() ? ' WHERE ' . implode(' AND ', $this->getSqls()) : '') .
                 " Group by " . join(',', $this->getGroupbysql()).
                 " Order by " . join(',', $this->getGroupbysql());
         } else {
-            $sql = "SELECT {$this->getGroupMethod()}({$this->getMainField()}) as _num   FROM " . $this->tableObject->getName() .
+            $sql = "SELECT {$this->getGroupMethod()}{$this->getMainField()} as _num   FROM " . $this->tableObject->getName() .
                 join(" ", $this->joinSql) .
                 ($this->getSqls() ? ' WHERE ' . implode(' AND ', $this->getSqls()) : '');
         }

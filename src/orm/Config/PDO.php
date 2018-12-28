@@ -167,15 +167,20 @@ class PDO extends \PDO
      */
     public function commit()
     {
-        //记录日志
+        //$start = microtime(true);
+        $commit = parent::commit();
+        //$time = sprintf('%.4f', microtime(true) - $start);
+//        //记录日志
 //        (new PdoConnectLog(
 //            (new PdoInterface())
 //                ->setBuff($this->isTransaction())
 //                ->setPdoConfig($this->getPdoConfig())
 //        ))
 //            ->setAction(PdoConnectLog::TI_JIAO_SHI_WU)
+//            ->setPdoSql($this->getTns())
+//            ->setRunTime($time)
 //            ->__invoke();
-        return parent::commit();
+        return $commit;
     }
 
     /**
