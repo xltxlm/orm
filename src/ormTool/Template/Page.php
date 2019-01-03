@@ -143,7 +143,7 @@ class Page extends PdoAction
             $keys = array_keys((new $this->modelClass)());
             $index = (int)array_search($this->getColumnName(), $keys);
             return $this->pdoInterface
-                ->page($this->pageObject,$index);
+                ->page($this->pageObject, $index);
         } else {
             return $this->pdoInterface
                 ->page($this->pageObject);
