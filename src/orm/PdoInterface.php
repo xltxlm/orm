@@ -15,6 +15,7 @@ use xltxlm\helper\Util;
 use xltxlm\logger\Log\DefineLog;
 use xltxlm\logger\Operation\Action\PdoRead;
 use xltxlm\logger\Operation\Action\PdoRunLog;
+use xltxlm\logger\Thelostlog\Thelostlog_DB;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
@@ -249,6 +250,7 @@ class PdoInterface
      */
     public function selectOne()
     {
+        (new Thelostlog_DB());
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
@@ -276,6 +278,7 @@ class PdoInterface
      */
     public function selectColumn($ColumnName = 0): array
     {
+        (new Thelostlog_DB());
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
@@ -296,6 +299,7 @@ class PdoInterface
      */
     public function selectAll()
     {
+        (new Thelostlog_DB());
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
@@ -321,6 +325,7 @@ class PdoInterface
      */
     public function yield()
     {
+        (new Thelostlog_DB());
         $this->setBuff(false);
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
@@ -334,6 +339,7 @@ class PdoInterface
 
     public function insert()
     {
+        (new Thelostlog_DB());
         $insertId = $this->pdoexecute(__FUNCTION__);
         return $insertId;
     }
@@ -345,6 +351,7 @@ class PdoInterface
      */
     public function execute()
     {
+        (new Thelostlog_DB());
         $Statement = $this->pdoexecute(__FUNCTION__);
         return $Statement;
     }
@@ -356,6 +363,7 @@ class PdoInterface
      */
     public function update()
     {
+        (new Thelostlog_DB());
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
             throw new PdoInterfaceException(
                 (new PdoInterfaceI18N())
@@ -376,6 +384,7 @@ class PdoInterface
      */
     public function page(PageObject &$pageObject, $selectColumn = '')
     {
+        (new Thelostlog_DB());
         //如果已经处理过分页了，那么不要再折腾了
         if ($pageObject->getTotal()) {
         } else {
