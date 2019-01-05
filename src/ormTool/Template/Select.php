@@ -151,10 +151,10 @@ class Select extends PdoAction
                 (new PdoRead($this->pdoInterface))
                     ->setTableName($this->getTableObject()->getName())
                     ->setMessageDescribe('查询结果为空')
-                    ->setException('查询结果为空:'.json_encode($this->getBinds(),JSON_UNESCAPED_UNICODE))
+                    ->setException('查询结果为空:'.json_encode($this->getBinds(), JSON_UNESCAPED_UNICODE))
                     ->setType(LogLevel::ERROR)
                     ->__invoke();
-                throw new \Exception("表:{$this->getTableObject()->getName()}查询结果为空 |".json_encode($this->getBinds(),JSON_UNESCAPED_UNICODE));
+                throw new \Exception("表:{$this->getTableObject()->getName()}查询结果为空 |".json_encode($this->getBinds(), JSON_UNESCAPED_UNICODE));
             }
             return $this->result;
         }
