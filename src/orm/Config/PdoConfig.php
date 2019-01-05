@@ -10,6 +10,7 @@ namespace xltxlm\orm\Config;
 
 use xltxlm\config\TestConfig;
 use xltxlm\logger\Operation\Connect\PdoConnectLog;
+use xltxlm\logger\Resource_define\Resource_define_db;
 use xltxlm\orm\PdoInterface;
 
 /**
@@ -211,6 +212,14 @@ abstract class PdoConfig implements TestConfig
     {
         $tns = $this->getPdoString();
         try {
+            try {
+                $Resource_define_db = (new Resource_define_db)
+                    ->settns($this->getTNS())
+                    ->setuser($this->getUsername())
+                    ->setport($this->getPort());
+            } catch (\Exception $e) {
+            }
+
             $pdoConnectLog = new PdoConnectLog((new PdoInterface())->setBuff($buff)->setPdoConfig($this));
             $this->setPDOObject(new  PDO($tns, $this->getUsername(), $this->getPassword()));
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
@@ -223,6 +232,8 @@ abstract class PdoConfig implements TestConfig
                 $this->PDOObject->setTns($this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff);
             }
             $pdoConnectLog->__invoke();
+
+            unset($Resource_define_db);
         } catch (\PDOException $e) {
             throw new \PDOException(trim($e->getMessage()) . "[$tns]");
         }

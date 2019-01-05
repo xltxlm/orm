@@ -250,7 +250,10 @@ class PdoInterface
      */
     public function selectOne()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
@@ -267,7 +270,7 @@ class PdoInterface
             ->setSqlaction(__FUNCTION__)
             ->setFetchnum($return ? 1 : 0)
             ->__invoke();
-
+        unset($thelostlog_DB);
         return $return;
     }
 
@@ -299,7 +302,10 @@ class PdoInterface
      */
     public function selectAll()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
@@ -315,7 +321,7 @@ class PdoInterface
             ->setSqlaction(__FUNCTION__)
             ->setFetchnum(count($return))
             ->__invoke();
-
+        unset($thelostlog_DB);
         return $return;
     }
 
@@ -325,7 +331,10 @@ class PdoInterface
      */
     public function yield()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         $this->setBuff(false);
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
@@ -335,12 +344,17 @@ class PdoInterface
             }
             yield $return;
         }
+        unset($thelostlog_DB);
     }
 
     public function insert()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         $insertId = $this->pdoexecute(__FUNCTION__);
+        unset($thelostlog_DB);
         return $insertId;
     }
 
@@ -351,8 +365,12 @@ class PdoInterface
      */
     public function execute()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         $Statement = $this->pdoexecute(__FUNCTION__);
+        unset($thelostlog_DB);
         return $Statement;
     }
 
@@ -363,7 +381,10 @@ class PdoInterface
      */
     public function update()
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
             throw new PdoInterfaceException(
                 (new PdoInterfaceI18N())
@@ -371,10 +392,9 @@ class PdoInterface
             );
         }
         $updated = $this->pdoexecute(__FUNCTION__);
-
+        unset($thelostlog_DB);
         return $updated;
     }
-
 
 
     /**
@@ -384,7 +404,10 @@ class PdoInterface
      */
     public function page(PageObject &$pageObject, $selectColumn = '')
     {
-        (new Thelostlog_DB());
+        try {
+            $thelostlog_DB = new Thelostlog_DB();
+        } catch (\Exception $e) {
+        }
         //如果已经处理过分页了，那么不要再折腾了
         if ($pageObject->getTotal()) {
         } else {
@@ -413,9 +436,13 @@ class PdoInterface
             ->setSql($this->getSqlParserd()->getSql() . ' limit ' . $pageObject->getFrom() . ',' . $pageObject->getPrepage());
 
         if ($selectColumn) {
-            return $this->selectColumn($selectColumn);
+            $selectColumn1 = $this->selectColumn($selectColumn);
+            unset($thelostlog_DB);
+            return $selectColumn1;
         } else {
-            return $this->selectAll();
+            $selectAll = $this->selectAll();
+            unset($thelostlog_DB);
+            return $selectAll;
         }
     }
 
