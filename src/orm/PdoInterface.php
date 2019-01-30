@@ -8,13 +8,8 @@
 
 namespace xltxlm\orm;
 
-use Psr\Log\LogLevel;
-use xltxlm\crontab\Config\RedisCacheConfig;
-use xltxlm\helper\Hclass\ConvertObject;
 use xltxlm\helper\Util;
-use xltxlm\logger\Log\DefineLog;
-use xltxlm\logger\Operation\Action\PdoRead;
-use xltxlm\logger\Operation\Action\PdoRunLog;
+use xltxlm\logger\Mysqllog\Mysqllog_TraitClass;
 use xltxlm\logger\Thelostlog\Thelostlog_DB;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
@@ -243,6 +238,16 @@ class PdoInterface
         return current(get_object_vars($this->selectOne()));
     }
 
+
+    private function getMysqllog_TraitClass(): Mysqllog_TraitClass
+    {
+        return (new Mysqllog_TraitClass())
+            ->settns($this->getPdoConfig()->getTNS())
+            ->setpdoSql($this->getSqlParserd()->getSql())
+            ->setsqlbinds(json_encode($this->getSqlParserd()->getBindArray() ?: [], JSON_UNESCAPED_UNICODE))
+            ->settable_name($this->getTableName());
+    }
+
     /**
      * @throws Exception\PdoInterfaceException
      *
@@ -250,14 +255,10 @@ class PdoInterface
      */
     public function selectOne()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $pdoRead = new PdoRead($this);
+        $mysqllog_TraitClass = $this->getMysqllog_TraitClass();
         $return = $stmt->fetchObject($this->className);
         if (empty($return)) {
             $return = new $this->className();
@@ -265,12 +266,10 @@ class PdoInterface
         if ($this->isConvertToArray()) {
             $return = get_object_vars($return);
         }
-        $pdoRead
-            ->setTableName($this->getTableName())
+        $mysqllog_TraitClass
             ->setSqlaction(__FUNCTION__)
             ->setFetchnum($return ? 1 : 0)
             ->__invoke();
-        unset($thelostlog_DB);
         return $return;
     }
 
@@ -281,15 +280,13 @@ class PdoInterface
      */
     public function selectColumn($ColumnName = 0): array
     {
-        (new Thelostlog_DB());
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $pdoRead = new PdoRead($this);
+        $mysqllog_TraitClass = $this->getMysqllog_TraitClass();
         $return = $stmt->fetchAll(\PDO::FETCH_COLUMN, $ColumnName);
 
-        $pdoRead
-            ->setTableName($this->getTableName())
+        $mysqllog_TraitClass
             ->setSqlaction(__FUNCTION__)
             ->setFetchnum(count($return))
             ->__invoke();
@@ -302,26 +299,20 @@ class PdoInterface
      */
     public function selectAll()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $pdoRead = new PdoRead($this);
+        $mysqllog_TraitClass = $this->getMysqllog_TraitClass();
         $return = $stmt->fetchAll(\PDO::FETCH_CLASS, $this->className);
         if ($this->isConvertToArray()) {
             foreach ($return as &$v) {
                 $v = get_object_vars($v);
             }
         }
-        $pdoRead
-            ->setTableName($this->getTableName())
+        $mysqllog_TraitClass
             ->setSqlaction(__FUNCTION__)
             ->setFetchnum(count($return))
             ->__invoke();
-        unset($thelostlog_DB);
         return $return;
     }
 
@@ -331,10 +322,6 @@ class PdoInterface
      */
     public function yield()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         $this->setBuff(false);
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
@@ -344,17 +331,11 @@ class PdoInterface
             }
             yield $return;
         }
-        unset($thelostlog_DB);
     }
 
     public function insert()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         $insertId = $this->pdoexecute(__FUNCTION__);
-        unset($thelostlog_DB);
         return $insertId;
     }
 
@@ -365,12 +346,7 @@ class PdoInterface
      */
     public function execute()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         $Statement = $this->pdoexecute(__FUNCTION__);
-        unset($thelostlog_DB);
         return $Statement;
     }
 
@@ -381,10 +357,6 @@ class PdoInterface
      */
     public function update()
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
             throw new PdoInterfaceException(
                 (new PdoInterfaceI18N())
@@ -392,7 +364,6 @@ class PdoInterface
             );
         }
         $updated = $this->pdoexecute(__FUNCTION__);
-        unset($thelostlog_DB);
         return $updated;
     }
 
@@ -404,10 +375,6 @@ class PdoInterface
      */
     public function page(PageObject &$pageObject, $selectColumn = '')
     {
-        try {
-            $thelostlog_DB = new Thelostlog_DB();
-        } catch (\Exception $e) {
-        }
         //如果已经处理过分页了，那么不要再折腾了
         if ($pageObject->getTotal()) {
         } else {
@@ -426,6 +393,7 @@ class PdoInterface
                 ->setSqlParserd($SqlParserd)
                 ->setDebug($this->getDebug())
                 ->setClassName(\stdClass::class)
+                ->setTableName($this->getTableName())
                 ->selectVar();
 
             $pageObject
@@ -437,11 +405,9 @@ class PdoInterface
 
         if ($selectColumn) {
             $selectColumn1 = $this->selectColumn($selectColumn);
-            unset($thelostlog_DB);
             return $selectColumn1;
         } else {
             $selectAll = $this->selectAll();
-            unset($thelostlog_DB);
             return $selectAll;
         }
     }
@@ -457,19 +423,16 @@ class PdoInterface
         tryagain:
         $PDO = $this->getPdoConfig()->instanceSelf($this->isBuff());
         //记录日志
-        $PdoRunLog = (new PdoRunLog($this))
-            ->setTableName($this->getTableName())
+        $Mysqllog_TraitClass = $this->getMysqllog_TraitClass()
             ->setSqlaction($action);
 
         //执行sql
         try {
             $stmt = $PDO->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
-            $PdoRunLog
-                ->setMessage(mb_convert_encoding($e->getMessage(), 'UTF-8'))
-                ->setMessageDescribe('链接服务器异常')
-                ->setException($e->getMessage())
-                ->setType(LogLevel::ERROR)
+            $Mysqllog_TraitClass
+                ->setexception(mb_convert_encoding($e->getMessage(), 'UTF-8'))
+                ->setmessagetype(Mysqllog_TraitClass::MESSAGETYPE_ERROR)
                 ->__invoke();
             throw $e;
         }
@@ -488,11 +451,9 @@ class PdoInterface
 
         if ($error[1] || $error[2]) {
             $this->isBuff() && $this->rollBack();
-            $PdoRunLog
-                ->setMessage(json_encode($error, JSON_UNESCAPED_UNICODE))
-                ->setException(json_encode($error, JSON_UNESCAPED_UNICODE))
-                ->setMessageDescribe('SQL运行错误')
-                ->setType(LogLevel::ERROR)
+            $Mysqllog_TraitClass
+                ->setexception(json_encode($error, JSON_UNESCAPED_UNICODE))
+                ->setmessagetype(Mysqllog_TraitClass::MESSAGETYPE_ERROR)
                 ->__invoke();
             throw new \Exception(json_encode(
                 [
@@ -509,22 +470,22 @@ class PdoInterface
         //如果是更新的话，返回的是被影响到的条数
         if ($action == 'update') {
             $num = $stmt->rowCount();
-            $PdoRunLog
+            $Mysqllog_TraitClass
                 ->setFetchnum($num)
                 ->__invoke();
             return $num;
         } elseif ($action == 'insert') {
             $inserid = $PDO->lastInsertId();
-            $PdoRunLog
+            $Mysqllog_TraitClass
                 ->setFetchnum($inserid ? 1 : 0)
                 ->__invoke();
             return $inserid;
         } elseif (in_array($action, ['selectOne', 'selectColumn', 'selectAll'])) {
-            $PdoRunLog
+            $Mysqllog_TraitClass
                 ->setWritefilelog(false);
             return $stmt;
         } else {
-            $PdoRunLog
+            $Mysqllog_TraitClass
                 ->__invoke();
             return $stmt;
         }

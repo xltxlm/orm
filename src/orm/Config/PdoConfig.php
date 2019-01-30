@@ -220,7 +220,6 @@ abstract class PdoConfig implements TestConfig
             } catch (\Exception $e) {
             }
 
-            $pdoConnectLog = new PdoConnectLog((new PdoInterface())->setBuff($buff)->setPdoConfig($this));
             $this->setPDOObject(new  PDO($tns, $this->getUsername(), $this->getPassword()));
             $this->PDOObject->setAttribute(\PDO::ATTR_TIMEOUT, 2);
             $this->PDOObject->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $buff);
@@ -231,8 +230,6 @@ abstract class PdoConfig implements TestConfig
                 //标注下：此链接的注销的时候，需要提交事务
                 $this->PDOObject->setTns($this->getPdoString() . '_' . (int)posix_getpid() . '_' . (int)$buff);
             }
-            $pdoConnectLog->__invoke();
-
             unset($Resource_define_db);
         } catch (\PDOException $e) {
             throw new \PDOException(trim($e->getMessage()) . "[$tns]");
