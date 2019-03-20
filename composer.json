@@ -17,7 +17,7 @@
     "xltxlm/page": "*",
     "xltxlm/logger": "@dev",
     "xltxlm/thrift": "*",
-    "xltxlm/h5skin": "*",
+    "xltxlm/h5skin": "@dev",
     "xltxlm/config": "*",
     "xltxlm/elasticsearch": "*"
   },
