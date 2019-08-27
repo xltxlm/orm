@@ -52,8 +52,8 @@ class PDO extends \PDO
         //设置客户端的各个参数
         $userCookieModel = new UserCookieModel();
         $userCookieModel->setUrl(substr(urldecode($_SERVER['REQUEST_URI']) ?: join(",", $_SERVER['argv']), 0, 1000));
-        $userCookieModel->setHostname($_SERVER['HOSTNAME']);
-        $userCookieModel->setDockername($_SERVER['dockername']);
+        $userCookieModel->setHostname((string)$_SERVER['HOSTNAME']);
+        $userCookieModel->setDockername((string)$_SERVER['dockername']);
         $userCookieModel->setPid($this->getPosixGetpid());
         $userCookieModel->setUniqid(DefineLog::getUniqid_static());
 
