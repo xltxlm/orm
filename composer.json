@@ -1,7 +1,6 @@
 {
   "name": "xltxlm/orm",
   "description": "ORM类库,根据数据库直接生成类",
-  "license": "Apache 2.0",
   "authors": [
     {
       "name": "xltxlm",
