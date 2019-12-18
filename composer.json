@@ -12,14 +12,13 @@
   "require": {
     "php": ">=7.0",
     "ext-pdo": "*",
-    "overtrue/pinyin": "3.0.5",
     "xltxlm/helper": "*",
     "xltxlm/page": "*",
     "xltxlm/logger": "@dev",
     "xltxlm/thrift": "*",
     "xltxlm/h5skin": "@dev",
     "xltxlm/config": "*",
-    "xltxlm/elasticsearch": "*"
+    "xltxlm/elasticsearch": "@dev"
   },
   "autoload": {
     "psr-4": {
