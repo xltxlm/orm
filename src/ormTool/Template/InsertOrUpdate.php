@@ -16,6 +16,11 @@ interface InsertOrUpdate
      * @return static
      */
     public function setIgnore(bool $ignore);
+    /**
+     * @param bool $debug
+     * @return static
+     */
+    public function setDebug(bool $debug);
 
     function __invoke() : int;
 }
