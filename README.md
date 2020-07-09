@@ -1,9 +1,9 @@
-<h1 align="center"> 类库[\xltxlm\orm\] </h1>
-<p align="center"> </p>
+<h1 align="center"> 类库[\xltxlm\] </h1>
+<p align="center"> 数据库操作类</p>
 
 ![](https://github.com/xltxlm/orm/workflows/单元测试/badge.svg)
 
-> ;
+> 数据库操作类;
 
 # 代码编写原则:
 - 遵循代码轮廓由后台配置生成,保证不会掺杂人为造成的错误

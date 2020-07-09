@@ -8,10 +8,8 @@
 
 namespace xltxlm\orm\Config;
 
-use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\logger\Operation\Connect\PdoConnectLog;
 use xltxlm\orm\PdoInterface;
-use \xltxlm\logger\Log\DefineLog;
 
 /**
  * 保证一个实例只有一次提交动作

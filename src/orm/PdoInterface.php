@@ -8,12 +8,13 @@
 
 namespace xltxlm\orm;
 
+use xltxlm\logger\LoggerTrack;
 use xltxlm\logger\Mysqllog\Mysqllog_TraitClass;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
-use xltxlm\orm\orm\PdoInterface\PdoInterface_implements;
+use xltxlm\orm\PdoInterface\PdoInterface_implements;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
 
@@ -30,16 +31,9 @@ class PdoInterface extends PdoInterface_implements
 
     /** @var SqlParserd */
     protected $sqlParserd;
-    /** @var bool 是否再转换成数组,如果是的话, $className= \stdClass:class */
-    protected $convertToArray = false;
-    /** @var string 查询是，默认数据对象结构 */
-    protected $className = \stdClass::class;
 
     /** @var int 整个会话里面执行sql的数量 */
     private static $sqlCount = 0;
-
-    /** @var bool 是否正常数据量查询. false:准备查询超级大数据，并且不开启事务 */
-    protected $buff = true;
 
     /**
      * @return string
@@ -56,27 +50,6 @@ class PdoInterface extends PdoInterface_implements
     public function setTableName(string $table_name): PdoInterface
     {
         $this->table_name = $table_name;
-        return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isBuff(): bool
-    {
-        return $this->buff;
-    }
-
-    /**
-     * @param bool $buff
-     *
-     * @return PdoInterface
-     */
-    public function setBuff(bool $buff): PdoInterface
-    {
-        $this->buff = $buff;
-
         return $this;
     }
 
@@ -105,19 +78,11 @@ class PdoInterface extends PdoInterface_implements
     }
 
     /**
-     * @return bool
-     */
-    public function isConvertToArray(): bool
-    {
-        return $this->convertToArray;
-    }
-
-    /**
      * @param bool $convertToArray
      *
      * @return PdoInterface
      */
-    public function setConvertToArray(bool $convertToArray): PdoInterface
+    public function setConvertToArray(bool $convertToArray = false): PdoInterface
     {
         $this->convertToArray = $convertToArray;
         if ($convertToArray) {
@@ -135,26 +100,6 @@ class PdoInterface extends PdoInterface_implements
     public function setPdoConfig(PdoConfig $pdoConfig): PdoInterface
     {
         $this->pdoConfig = $pdoConfig;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        return $this->className;
-    }
-
-    /**
-     * @param string $className
-     *
-     * @return PdoInterface
-     */
-    public function setClassName($className): PdoInterface
-    {
-        $this->className = $className;
 
         return $this;
     }
@@ -187,6 +132,25 @@ class PdoInterface extends PdoInterface_implements
         return current(get_object_vars($this->selectOne()));
     }
 
+    /**
+     *  生成日志记录对象，通用接口;
+     *
+     * @return :\xltxlm\logger\LoggerTrack;
+     */
+    protected function getLogger(): LoggerTrack
+    {
+        return (new LoggerTrack())
+            ->setresource_type('mysql')
+            ->setcontext(
+                [
+                    'tns' => $this->getPdoConfig()->getPdoString(),
+                    'sql' => $this->getSqlParserd()->getSql(),
+                    'bind' => $this->getSqlParserd()->getBindArray() ?: [],
+                    'tablename' => $this->getTableName(),
+                ]
+            );
+    }
+
 
     private function getMysqllog_TraitClass(): Mysqllog_TraitClass
     {
@@ -207,7 +171,7 @@ class PdoInterface extends PdoInterface_implements
         $stmt = $this->pdoexecute(__FUNCTION__);
         $this->checkClassName();
 
-        $mysqllog_TraitClass = $this->getMysqllog_TraitClass();
+        $logger = $this->getLogger();
         $return = $stmt->fetchObject($this->className);
         if (empty($return)) {
             $return = new $this->className();
@@ -215,10 +179,13 @@ class PdoInterface extends PdoInterface_implements
         if ($this->isConvertToArray()) {
             $return = get_object_vars($return);
         }
-        $mysqllog_TraitClass
-            ->setSqlaction(__FUNCTION__)
-            ->setFetchnum($return ? 1 : 0)
-            ->__invoke();
+        $logger
+            ->setcontext(
+                [
+                    'function' => __FUNCTION__,
+                    'num' => $return ? 1 : 0
+                ]
+            );
         return $return;
     }
 
@@ -303,16 +270,13 @@ class PdoInterface extends PdoInterface_implements
 
     /**
      * @return int
-     * @throws Exception\PdoInterfaceException
+     * @throws \Exception
      *
      */
     public function update()
     {
         if (stripos($this->getSqlParserd()->getSql(), 'where') === false) {
-            throw new PdoInterfaceException(
-                (new PdoInterfaceI18N())
-                    ->getUpdateNoWhere()
-            );
+            throw new \Exception("update操作没有包含where条件");
         }
         $updated = $this->pdoexecute(__FUNCTION__);
         return $updated;
@@ -388,17 +352,18 @@ class PdoInterface extends PdoInterface_implements
 
         tryagain:
         //记录日志
-        $Mysqllog_TraitClass = $this->getMysqllog_TraitClass()
-            ->setSqlaction($action);
+        $logger = $this->getLogger()
+            ->setcontext([
+                'function' => $action
+            ]);
 
         //执行sql
         try {
             $stmt = $PDO->prepare($this->getSqlParserd()->getSql());
         } catch (\Exception $e) {
-            $Mysqllog_TraitClass
-                ->setexception(mb_convert_encoding($e->getMessage(), 'UTF-8'))
-                ->setmessagetype(Mysqllog_TraitClass::MESSAGETYPE_ERROR)
-                ->__invoke();
+            $logger
+                ->setcontext(['exception' => "pdo-prepare 阶段出错" . mb_convert_encoding($e->getMessage(), 'UTF-8')]
+                );
             throw $e;
         }
         foreach ($this->getSqlParserd()->getBind() as $bind) {
@@ -416,10 +381,8 @@ class PdoInterface extends PdoInterface_implements
 
         if ($error[1] || $error[2]) {
             $this->isBuff() && $this->rollBack();
-            $Mysqllog_TraitClass
-                ->setexception(json_encode($error, JSON_UNESCAPED_UNICODE))
-                ->setmessagetype(Mysqllog_TraitClass::MESSAGETYPE_ERROR)
-                ->__invoke();
+            $logger
+                ->setcontext(['exception' => "pdo-execute sql出错" . ($this->isBuff() ? '并且整个事务被回滚了。' : '') . json_encode($error, JSON_UNESCAPED_UNICODE)]);
             throw new \Exception(json_encode(
                 [
                     $error,
@@ -435,22 +398,27 @@ class PdoInterface extends PdoInterface_implements
         //如果是更新的话，返回的是被影响到的条数
         if ($action == 'update') {
             $num = $stmt->rowCount();
-            $Mysqllog_TraitClass
-                ->setFetchnum($num)
-                ->__invoke();
+            $logger
+                ->setcontext(
+                    [
+                        'num' => $num
+                    ]
+                );
             return $num;
         } elseif ($action == 'insert') {
             $inserid = $PDO->lastInsertId();
-            $Mysqllog_TraitClass
-                ->setFetchnum($inserid ? 1 : 0)
-                ->__invoke();
+            $logger
+                ->setcontext(
+                    [
+                        'num' => $inserid ? 1 : 0,
+                        'inserid' => $inserid
+                    ]
+                );
             return $inserid;
         } elseif (in_array($action, ['selectOne', 'selectColumn', 'selectAll'])) {
-            $Mysqllog_TraitClass
-                ->setWritefilelog(false);
             return $stmt;
         } else {
-            $Mysqllog_TraitClass
+            $logger
                 ->__invoke();
             return $stmt;
         }

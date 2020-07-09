@@ -10,7 +10,6 @@ namespace xltxlm\ormTool\Template;
 
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
-use xltxlm\redis\Config\RedisConfig;
 use xltxlm\str\Str;
 
 /**

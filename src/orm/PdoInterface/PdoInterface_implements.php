@@ -1,5 +1,5 @@
 <?php
-namespace xltxlm\orm\orm\PdoInterface;
+namespace xltxlm\orm\PdoInterface;
 
 /**
  * :类;
@@ -45,15 +45,17 @@ abstract class PdoInterface_implements
 
 
 
-/* @var bool  继承上次查询的事务 */
-    protected $buff = false;
+/* @var bool  继承上次查询的事务。
+false:准备查询超级大数据，并且不开启事务 */
+    protected $buff = true;
     
 
 
 
 
     /**
-    * 继承上次查询的事务;
+    * 继承上次查询的事务。
+false:准备查询超级大数据，并且不开启事务;
     * @return bool;
     */
             public function getbuff():bool        {
@@ -73,7 +75,7 @@ abstract class PdoInterface_implements
 * @param bool $buff;
 * @return $this
 */
-    public function setbuff(bool $buff  = false)
+    public function setbuff(bool $buff  = true)
     {
     $this->buff = $buff;
     return $this;
@@ -81,4 +83,74 @@ abstract class PdoInterface_implements
 
 
 
+/* @var bool  返回结果转换成数组 */
+    protected $convertToArray = false;
+    
+
+
+
+
+    /**
+    * 返回结果转换成数组;
+    * @return bool;
+    */
+            public function getconvertToArray():bool        {
+                return $this->convertToArray;
+        }
+
+    
+            public function isconvertToArray():bool        {
+        return $this->getconvertToArray();
+        }
+    
+
+
+
+
+/**
+* @param bool $convertToArray;
+* @return $this
+*/
+    abstract public function setconvertToArray(bool $convertToArray  = false);
+
+
+
+/* @var string  返回的数据结构对象 */
+    protected $className=\stdClass::class;
+
+
+
+
+
+    /**
+    * 返回的数据结构对象;
+    * @return string;
+    */
+            public function getclassName():string        {
+                return $this->className;
+        }
+
+    
+    
+
+
+
+
+/**
+* @param string $className;
+* @return $this
+*/
+    public function setclassName(string $className )
+    {
+    $this->className = $className;
+    return $this;
+    }
+
+
+
+/**
+*  生成日志记录对象，通用接口;
+*  @return :\xltxlm\logger\LoggerTrack;
+*/
+abstract protected function getLogger():\xltxlm\logger\LoggerTrack;
 }

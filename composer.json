@@ -7,20 +7,17 @@
     }
   ],
   "minimum-stability": "dev",
-  "description":"",
+  "description":"数据库操作类",
   "require": {
     "php": "~7.1",
     "ext-pdo": "*",
-    "xltxlm/helper": "@dev",
     "xltxlm/page": "@dev",
     "xltxlm/logger": "@dev",
-    "xltxlm/h5skin": "@dev",
-    "xltxlm/config": "@dev",
-    "xltxlm/elasticsearch": "@dev"
+    "xltxlm/config": "@dev"
   },
   "autoload": {
     "psr-4": {
-      "xltxlm\\orm\\": [
+      "xltxlm\\": [
         "src/",
         "./"
       ]
