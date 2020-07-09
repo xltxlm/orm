@@ -1,38 +1,39 @@
 {
   "name": "xltxlm/orm",
-  "description": "ORM类库,根据数据库直接生成类",
   "authors": [
     {
-      "name": "xltxlm",
+      "name": "copygithub",
       "email": "xltxlm@qq.com"
     }
   ],
   "minimum-stability": "dev",
+  "description":"",
   "require": {
-    "php": ">=7.0",
+    "php": "~7.1",
     "ext-pdo": "*",
-    "xltxlm/helper": "*",
-    "xltxlm/page": "*",
+    "xltxlm/helper": "@dev",
+    "xltxlm/page": "@dev",
     "xltxlm/logger": "@dev",
     "xltxlm/h5skin": "@dev",
-    "xltxlm/config": "*",
+    "xltxlm/config": "@dev",
     "xltxlm/elasticsearch": "@dev"
   },
   "autoload": {
     "psr-4": {
-      "xltxlm\\": [
-        "src/"
-      ],
-      "xltxlm\\orm\\tests\\": [
-        "tests/"
+      "xltxlm\\orm\\": [
+        "src/",
+        "./"
       ]
-    }
+    },
+    "files": [
+    ]
   },
-  "autoload-dev": {
-    "psr-4": {
-      "": [
-        "demo/"
-      ]
-    }
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "scripts": {
+    "test": [
+      "vendor/bin/phpunit ./test -v --colors=auto --enforce-time-limit"
+    ]
   }
 }

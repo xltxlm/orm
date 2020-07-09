@@ -32,15 +32,15 @@ abstract class PdoConfig implements TestConfig
     /** @var string 数据库的驱动 */
     protected $driver = self::MYSQL;
     /** @var string 服务器的ip地址 */
-    protected $TNS;
+    protected $TNS = "";
     /** @var string 服务器的端口 */
     protected $port = 3306;
     /** @var string 数据的编码 */
     protected $encode = 'utf8';
     /** @var string 数据库账户 */
-    protected $username;
+    protected $username = "";
     /** @var string 数据密码 */
-    protected $password;
+    protected $password = "";
 
     /**
      * @return PDO
@@ -143,6 +143,7 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 数据如果没有设置,那么用类的名称
+     *
      * @return string
      */
     public function getDb(): string
@@ -206,6 +207,7 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 返回链接,重新链接.
+     *
      * @return PDO
      */
     private function instance($buff = true)
@@ -239,6 +241,7 @@ abstract class PdoConfig implements TestConfig
 
     /**
      * 返回链接,单例.
+     *
      * @param bool $buff 是否正常数据量查询. false:准备查询超级大数据,两种连接在一个进程里面只能各开一种
      * @return PDO
      */
@@ -358,6 +361,26 @@ abstract class PdoConfig implements TestConfig
         //强制UTF8编码
         if ($this->getDriver() == self::MYSQL) {
             $this->link .= ';charset=utf8mb4';
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * 获取PDO链接的字符串，bash下使用
+     *
+     * @return string
+     */
+    public function getPdoString_bash(): string
+    {
+        $this->link = ' --host=' . $this->getTNS() .
+            ' --port=' . $this->getPort() .
+            ' --user=' . $this->getUsername() .
+            ' --password=' . $this->getPassword() .
+            " --default-character-set=utf8mb4 {$this->getDb()}";
+        //强制UTF8编码
+        if ($this->getDriver() == self::MYSQL) {
+            $this->link = "mysql {$this->link}";
         }
 
         return $this->link;

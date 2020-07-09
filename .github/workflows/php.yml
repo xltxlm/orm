@@ -1,0 +1,35 @@
+name: 单元测试
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ "7.2","7.3", ]
+    steps:
+
+    - name: Setup PHP - ${{ matrix.php }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        tools: composer,phpunit
+
+
+    - name: 取出git代码 - Check out code
+      uses: actions/checkout@v2
+
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Test
+      run: composer run-script test
+

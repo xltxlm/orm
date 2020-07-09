@@ -25,3 +25,5 @@ coverage
 coverage.xml
 coverage.json
 *.7z
+/.php_cs.cache
+/composer.lock

@@ -8,23 +8,20 @@
 
 namespace xltxlm\orm;
 
-use xltxlm\helper\Util;
 use xltxlm\logger\Mysqllog\Mysqllog_TraitClass;
-use xltxlm\logger\Thelostlog\Thelostlog_DB;
 use xltxlm\orm\Config\PdoConfig;
 use xltxlm\orm\Exception\I18N\PdoInterfaceI18N;
 use xltxlm\orm\Exception\PdoInterfaceException;
 use xltxlm\orm\Exception\PdoSqlError;
+use xltxlm\orm\orm\PdoInterface\PdoInterface_implements;
 use xltxlm\orm\Sql\SqlParserd;
 use xltxlm\page\PageObject;
-use xltxlm\redis\Config\RedisConfig;
-use xltxlm\redis\LockKey;
 
 /**
  *  out:最基础的数据库执行方式.
  * Interface sqlInterface.
  */
-class PdoInterface
+class PdoInterface extends PdoInterface_implements
 {
     /** @var string 当前所处理的表格名称，由外部告诉，不去分析sql */
     protected $table_name = "";
@@ -37,40 +34,12 @@ class PdoInterface
     protected $convertToArray = false;
     /** @var string 查询是，默认数据对象结构 */
     protected $className = \stdClass::class;
-    /** @var bool 是否开启调试 */
-    protected $debug = false;
 
     /** @var int 整个会话里面执行sql的数量 */
     private static $sqlCount = 0;
 
     /** @var bool 是否正常数据量查询. false:准备查询超级大数据，并且不开启事务 */
     protected $buff = true;
-
-    /** @var RedisConfig  在是新更新,写入的时候,进行并发锁 */
-    protected $RedisCacheConfig;
-
-    /** @var LockKey */
-    private $lockKeyObject;
-
-    /**
-     * @return RedisConfig
-     */
-
-    public function getRedisCacheConfig()
-    {
-        return $this->RedisCacheConfig;
-    }
-
-    /**
-     * @param RedisConfig $RedisCacheConfig
-     * @return PdoInterface
-     */
-    public function setRedisCacheConfig($RedisCacheConfig): PdoInterface
-    {
-        $this->RedisCacheConfig = $RedisCacheConfig;
-        return $this;
-    }
-
 
     /**
      * @return string
@@ -171,26 +140,6 @@ class PdoInterface
     }
 
     /**
-     * @return bool
-     */
-    public function getDebug(): bool
-    {
-        return $this->debug;
-    }
-
-    /**
-     * @param bool $debug
-     *
-     * @return PdoInterface
-     */
-    public function setDebug(bool $debug): PdoInterface
-    {
-        $this->debug = $debug;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getClassName(): string
@@ -249,9 +198,9 @@ class PdoInterface
     }
 
     /**
+     * @return mixed
      * @throws Exception\PdoInterfaceException
      *
-     * @return mixed
      */
     public function selectOne()
     {
@@ -295,6 +244,7 @@ class PdoInterface
 
     /**
      * 查询多条数据,一次性全部返回
+     *
      * @return array
      */
     public function selectAll()
@@ -318,6 +268,7 @@ class PdoInterface
 
     /**
      * 查询多条数据,延迟返回
+     *
      * @return \Generator
      */
     public function yield()
@@ -351,9 +302,9 @@ class PdoInterface
     }
 
     /**
+     * @return int
      * @throws Exception\PdoInterfaceException
      *
-     * @return int
      */
     public function update()
     {
@@ -413,15 +364,29 @@ class PdoInterface
     }
 
     /**
-     * @throws PdoSqlError
+     * @return \PDOStatement | int
      * @throws \Exception
      *
-     * @return \PDOStatement | int
+     * @throws PdoSqlError
      */
     private function pdoexecute($action)
     {
-        tryagain:
         $PDO = $this->getPdoConfig()->instanceSelf($this->isBuff());
+        //设置客户端的各个参数
+        $userflag = [];
+        $debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        foreach ($debug_backtrace as $k => $item) {
+            if (strpos($item['file'], '/vendor/') !== false) {
+                unset($debug_backtrace[$k]);
+            }
+        }
+        $userflag['debug'] = $debug_backtrace;
+
+        $stmt = $PDO->prepare("set  @userflag=:userflag");
+        $stmt->bindValue('userflag', json_encode($userflag, JSON_UNESCAPED_UNICODE));
+        $stmt->execute();
+
+        tryagain:
         //记录日志
         $Mysqllog_TraitClass = $this->getMysqllog_TraitClass()
             ->setSqlaction($action);
@@ -494,9 +459,9 @@ class PdoInterface
     /**
      * @desc   回滚事务
      *
+     * @return bool
      * @since  2015-04-27 17:09:19
      *
-     * @return bool
      */
     public function rollBack()
     {
@@ -507,9 +472,9 @@ class PdoInterface
     /**
      * @desc   提交事务
      *
+     * @return bool
      * @since  2015-04-27 17:09:19
      *
-     * @return bool
      */
     public function commit()
     {
@@ -547,7 +512,7 @@ class PdoInterface
             echo "\nDEBUG:\n";
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             echo "\n=========================@in " . __FILE__ . ' on line ' . __LINE__ . "\n";
-            Util::d(ob_get_clean());
+            p(ob_get_clean());
         }
     }
 }

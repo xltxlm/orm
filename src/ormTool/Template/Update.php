@@ -8,10 +8,10 @@
 
 namespace xltxlm\ormTool\Template;
 
-use xltxlm\helper\Basic\Str;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
 use xltxlm\redis\Config\RedisConfig;
+use xltxlm\str\Str;
 
 /**
  * out:更新数据的底层
@@ -30,29 +30,6 @@ class Update extends PdoAction
 
     /** @var array 被更新影响到的字段 */
     protected $_updateFields = [];
-
-    /** @var RedisConfig  项目并发锁配置 */
-    protected $RedisCacheConfig;
-
-    /**
-     * @return RedisConfig
-     */
-    public function getRedisCacheConfig()
-    {
-        return $this->RedisCacheConfig;
-    }
-
-    /**
-     * @param RedisConfig $RedisCacheConfig
-     * @return $this
-     */
-    public function setRedisCacheConfig(RedisConfig $RedisCacheConfig)
-    {
-        $this->RedisCacheConfig = $RedisCacheConfig;
-        return $this;
-    }
-
-
 
     /**
      * @return bool
@@ -141,7 +118,6 @@ class Update extends PdoAction
             ->__invoke();
 
         $this->pdoInterface = (new PdoInterface())
-            ->setRedisCacheConfig($this->getRedisCacheConfig())
             ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)

@@ -8,10 +8,9 @@
 
 namespace xltxlm\ormTool\Template;
 
-use xltxlm\helper\Basic\Str;
 use xltxlm\orm\PdoInterface;
 use xltxlm\orm\Sql\SqlParser;
-use xltxlm\redis\Config\RedisConfig;
+use xltxlm\str\Str;
 
 /**
  * out:基础类 - 写入数据库
@@ -24,27 +23,6 @@ class Insert extends PdoAction
 
     /** @var bool 是否执行钩子代码 */
     protected $hook = true;
-
-    /** @var RedisConfig  项目并发锁配置 */
-    protected $RedisCacheConfig;
-
-    /**
-     * @return RedisConfig
-     */
-    public function getRedisCacheConfig()
-    {
-        return $this->RedisCacheConfig;
-    }
-
-    /**
-     * @param RedisConfig $RedisCacheConfig
-     * @return $this
-     */
-    public function setRedisCacheConfig(RedisConfig $RedisCacheConfig)
-    {
-        $this->RedisCacheConfig = $RedisCacheConfig;
-        return $this;
-    }
 
     /**
      * @return bool
@@ -100,7 +78,6 @@ class Insert extends PdoAction
 
         //执行sql
         $this->pdoInterface = (new PdoInterface())
-            ->setRedisCacheConfig($this->getRedisCacheConfig())
             ->setTableName($this->getTableObject()->getName())
             ->setPdoConfig($this->tableObject->getDbConfig())
             ->setSqlParserd($SqlParserd)

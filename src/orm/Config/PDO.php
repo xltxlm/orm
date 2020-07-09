@@ -16,6 +16,7 @@ use \xltxlm\logger\Log\DefineLog;
 /**
  * 保证一个实例只有一次提交动作
  * Class PDO
+ *
  * @package xltxlm\orm\Config
  */
 class PDO extends \PDO
@@ -38,11 +39,12 @@ class PDO extends \PDO
     /**
      * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
      * Creates a PDO instance representing a connection to a database
+     *
      * @link http://php.net/manual/en/pdo.construct.php
      * @param $dsn
      * @param $username [optional]
-     * @param $passwd [optional]
-     * @param $options [optional]
+     * @param $passwd   [optional]
+     * @param $options  [optional]
      */
     public function __construct($dsn, $username, $passwd, $options = [])
     {
@@ -50,17 +52,17 @@ class PDO extends \PDO
         $this->sign = $dsn . $username . $passwd;
         $this->setPosixGetpid(posix_getpid());
         //设置客户端的各个参数
-        $userCookieModel = new UserCookieModel();
-        $userCookieModel->setUrl(substr(urldecode($_SERVER['REQUEST_URI']) ?: join(",", $_SERVER['argv']), 0, 1000));
-        $userCookieModel->setHostname((string)$_SERVER['HOSTNAME']);
-        $userCookieModel->setDockername((string)$_SERVER['dockername']);
-        $userCookieModel->setPid($this->getPosixGetpid());
-        $userCookieModel->setUniqid(DefineLog::getUniqid_static());
+        $userflag = [];
+        $userflag['url'] = substr(urldecode($_SERVER['REQUEST_URI']) ?: join(",", $_SERVER['argv']), 0, 300);
+        $userflag['dockername'] = (string)$_SERVER['dockername'];
+        $userflag['dockername'] = (string)$_SERVER['dockername'];
+        $debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $userflag['debug'] = $debug_backtrace;
 
         $stmt = $this->prepare("set  @userflag=:userflag ,@username=:username ,@ip=:ip");
-        $stmt->bindValue('userflag', $userCookieModel->__toString());
-        $stmt->bindValue('username', $userCookieModel->getUsername());
-        $stmt->bindValue('ip', $userCookieModel->getIp());
+        $stmt->bindValue('userflag', json_encode($userflag, JSON_UNESCAPED_UNICODE));
+        $stmt->bindValue('username', (string)$_COOKIE['username']);
+        $stmt->bindValue('ip', (string)$_SERVER['HTTP_X_REAL_IP'] ?? $_SERVER['REMOTE_ADDR']);
         $stmt->execute();
     }
 
@@ -130,6 +132,7 @@ class PDO extends \PDO
     /**
      * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
      * Initiates a transaction
+     *
      * @link http://php.net/manual/en/pdo.begintransaction.php
      * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
      */
@@ -162,30 +165,20 @@ class PDO extends \PDO
     /**
      * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
      * Commits a transaction
+     *
      * @link http://php.net/manual/en/pdo.commit.php
      * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
      */
     public function commit()
     {
-        //$start = microtime(true);
         $commit = parent::commit();
-        //$time = sprintf('%.4f', microtime(true) - $start);
-//        //记录日志
-//        (new PdoConnectLog(
-//            (new PdoInterface())
-//                ->setBuff($this->isTransaction())
-//                ->setPdoConfig($this->getPdoConfig())
-//        ))
-//            ->setAction(PdoConnectLog::TI_JIAO_SHI_WU)
-//            ->setPdoSql($this->getTns())
-//            ->setRunTime($time)
-//            ->__invoke();
         return $commit;
     }
 
     /**
      * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
      * Rolls back a transaction
+     *
      * @link http://php.net/manual/en/pdo.rollback.php
      * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
      */
